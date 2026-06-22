@@ -1,0 +1,594 @@
+// generator client
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ─────────────────────────────────────────────
+// USERS
+// ─────────────────────────────────────────────
+model User {
+  id            String    @id @default(uuid())
+  email         String    @unique
+  passwordHash  String?   @map("password_hash")
+  name          String
+  nameMyanmar   String?   @map("name_myanmar")
+  avatar        String?
+  phone         String?   @unique
+  role          Role      @default(BUYER)
+  googleId      String?   @unique @map("google_id")
+  isActive      Boolean   @default(true) @map("is_active")
+  isVerified    Boolean   @default(false) @map("is_verified")
+  language      String    @default("en")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  seller        Seller?
+  orders        Order[]   @relation("BuyerOrders")
+  reviews       Review[]
+  notifications Notification[]
+  sentMessages      Message[] @relation("SentMessages")
+  buyerConversations  Conversation[] @relation("BuyerConversations")
+  wishlist      WishlistItem[]
+  cartItems     CartItem[]
+
+  @@map("users")
+  @@index([email])
+  @@index([role])
+}
+
+enum Role {
+  BUYER
+  SELLER
+  ADMIN
+}
+
+// ─────────────────────────────────────────────
+// SELLERS
+// ─────────────────────────────────────────────
+model Seller {
+  id            String    @id @default(uuid())
+  userId        String    @unique @map("user_id")
+  shopName      String    @map("shop_name")
+  shopNameMyanmar String? @map("shop_name_myanmar")
+  bio           String?
+  bioMyanmar    String?   @map("bio_myanmar")
+  avatar        String?
+  isApproved    Boolean   @default(false) @map("is_approved")
+  isActive      Boolean   @default(true) @map("is_active")
+  totalSales    Int       @default(0) @map("total_sales")
+  totalRevenue  Decimal   @default(0) @map("total_revenue")
+  rating        Float     @default(0)
+  reviewCount   Int       @default(0) @map("review_count")
+  responseRate  Float     @default(100) @map("response_rate")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accounts      Account[]
+  orders        Order[]   @relation("SellerOrders")
+  reviews       Review[]  @relation("SellerReviews")
+  sellerConversations Conversation[] @relation("SellerConversations")
+
+  @@map("sellers")
+  @@index([isApproved])
+  @@index([rating])
+}
+
+// ─────────────────────────────────────────────
+// ACCOUNTS (ML Accounts for sale)
+// ─────────────────────────────────────────────
+model Account {
+  id            String        @id @default(uuid())
+  listingCode   String?       @unique @map("listing_code")
+  sellerId      String        @map("seller_id")
+  title         String
+  titleMyanmar  String?       @map("title_myanmar")
+  description   String?
+  descMyanmar   String?       @map("desc_myanmar")
+  rank          String
+  heroCount     Int           @map("hero_count")
+  skinCount     Int           @map("skin_count")
+  emblemCount   Int           @default(0) @map("emblem_count")
+  price         Decimal
+  server        String
+  winRate       Float         @map("win_rate")
+  totalMatches  Int           @map("total_matches")
+  level         Int           @default(0)
+  isFeatured    Boolean       @default(false) @map("is_featured")
+  status        AccountStatus @default(AVAILABLE)
+  viewCount     Int           @default(0) @map("view_count")
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  seller        Seller        @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  images        AccountImage[]
+  heroes        AccountHero[]
+  skins         AccountSkin[]
+  orderItems    OrderItem[]
+  wishlistItems WishlistItem[]
+  cartItems     CartItem[]
+  reviews       Review[]
+
+  @@map("accounts")
+  @@index([sellerId])
+  @@index([status])
+  @@index([rank])
+  @@index([price])
+  @@index([isFeatured])
+  @@index([server])
+}
+
+enum AccountStatus {
+  AVAILABLE
+  SOLD
+  PENDING
+  REJECTED
+  HIDDEN
+}
+
+model AccountImage {
+  id         String  @id @default(uuid())
+  accountId  String  @map("account_id")
+  url        String
+  publicId   String  @map("public_id")
+  isPrimary  Boolean @default(false) @map("is_primary")
+  order      Int     @default(0)
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  account    Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@map("account_images")
+  @@index([accountId])
+}
+
+model AccountHero {
+  id        String  @id @default(uuid())
+  accountId String  @map("account_id")
+  heroName  String  @map("hero_name")
+  role      String?
+
+  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@map("account_heroes")
+  @@index([accountId])
+}
+
+model AccountSkin {
+  id        String  @id @default(uuid())
+  accountId String  @map("account_id")
+  skinName  String  @map("skin_name")
+  heroName  String? @map("hero_name")
+  rarity    String?
+
+  account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@map("account_skins")
+  @@index([accountId])
+}
+
+// ─────────────────────────────────────────────
+// DIAMOND PACKAGES
+// ─────────────────────────────────────────────
+model DiamondPackage {
+  id           String   @id @default(uuid())
+  amount       Int
+  bonusDiamonds Int     @default(0) @map("bonus_diamonds")
+  price        Decimal
+  label        String?
+  labelMyanmar String?  @map("label_myanmar")
+  isPopular    Boolean  @default(false) @map("is_popular")
+  isBestValue  Boolean  @default(false) @map("is_best_value")
+  isActive     Boolean  @default(true) @map("is_active")
+  sortOrder    Int      @default(0) @map("sort_order")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  orderItems   OrderItem[]
+
+  @@map("diamond_packages")
+  @@index([isActive])
+  @@index([sortOrder])
+}
+
+// ─────────────────────────────────────────────
+// ORDERS
+// ─────────────────────────────────────────────
+model Order {
+  id               String      @id @default(uuid())
+  orderNumber      String      @unique @map("order_number")
+  buyerId          String      @map("buyer_id")
+  sellerId         String?     @map("seller_id")
+  type             OrderType
+  totalPrice       Decimal     @map("total_price")
+  discountAmount   Decimal     @default(0) @map("discount_amount")
+  finalPrice       Decimal     @map("final_price")
+  status           OrderStatus @default(PENDING)
+  paymentMethod    String?     @map("payment_method")
+  paymentProof     String?     @map("payment_proof")
+  mlUserId         String?     @map("ml_user_id")
+  mlServerId       String?     @map("ml_server_id")
+  notes            String?
+  couponId         String?     @map("coupon_id")
+  completedAt      DateTime?   @map("completed_at")
+  createdAt        DateTime    @default(now()) @map("created_at")
+  updatedAt        DateTime    @updatedAt @map("updated_at")
+
+  buyer            User        @relation("BuyerOrders", fields: [buyerId], references: [id])
+  seller           Seller?     @relation("SellerOrders", fields: [sellerId], references: [id])
+  coupon           Coupon?     @relation(fields: [couponId], references: [id])
+  items            OrderItem[]
+  payment          Payment?
+  review           Review?
+
+  @@map("orders")
+  @@index([buyerId])
+  @@index([sellerId])
+  @@index([status])
+  @@index([type])
+  @@index([orderNumber])
+}
+
+enum OrderType {
+  ACCOUNT
+  DIAMOND
+}
+
+enum OrderStatus {
+  PENDING
+  PAYMENT_SUBMITTED
+  PAYMENT_VERIFIED
+  PROCESSING
+  COMPLETED
+  CANCELLED
+  REFUNDED
+  DISPUTED
+}
+
+model OrderItem {
+  id               String          @id @default(uuid())
+  orderId          String          @map("order_id")
+  accountId        String?         @map("account_id")
+  diamondPackageId String?         @map("diamond_package_id")
+  quantity         Int             @default(1)
+  unitPrice        Decimal         @map("unit_price")
+  subtotal         Decimal
+  createdAt        DateTime        @default(now()) @map("created_at")
+
+  order            Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  account          Account?        @relation(fields: [accountId], references: [id])
+  diamondPackage   DiamondPackage? @relation(fields: [diamondPackageId], references: [id])
+
+  @@map("order_items")
+  @@index([orderId])
+}
+
+// ─────────────────────────────────────────────
+// PAYMENTS
+// ─────────────────────────────────────────────
+model Payment {
+  id            String        @id @default(uuid())
+  orderId       String        @unique @map("order_id")
+  gateway       PaymentGateway
+  amount        Decimal
+  currency      String        @default("MMK")
+  status        PaymentStatus @default(PENDING)
+  transactionId String?       @map("transaction_id")
+  gatewayRef    String?       @map("gateway_ref")
+  proofImageUrl String?       @map("proof_image_url")
+  verifiedBy    String?       @map("verified_by")
+  verifiedAt    DateTime?     @map("verified_at")
+  metadata      Json?
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  order         Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+  @@index([orderId])
+  @@index([status])
+  @@index([gateway])
+}
+
+enum PaymentGateway {
+  KBZPAY
+  WAVEMONEY
+  AYAPAY
+  UABPAY
+  MANUAL
+}
+
+enum PaymentStatus {
+  PENDING
+  SUBMITTED
+  VERIFIED
+  FAILED
+  REFUNDED
+}
+
+// ─────────────────────────────────────────────
+// REVIEWS
+// ─────────────────────────────────────────────
+model Review {
+  id              String   @id @default(uuid())
+  orderId         String   @unique @map("order_id")
+  buyerId         String   @map("buyer_id")
+  sellerId        String   @map("seller_id")
+  accountId       String?  @map("account_id")
+  rating          Int
+  comment         String?
+  commentMyanmar  String?  @map("comment_myanmar")
+  images          Json?
+  isVerified      Boolean  @default(true) @map("is_verified")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  order           Order    @relation(fields: [orderId], references: [id])
+  buyer           User     @relation(fields: [buyerId], references: [id])
+  seller          Seller   @relation("SellerReviews", fields: [sellerId], references: [id])
+  account         Account? @relation(fields: [accountId], references: [id])
+
+  @@map("reviews")
+  @@index([sellerId])
+  @@index([accountId])
+  @@index([rating])
+}
+
+// ─────────────────────────────────────────────
+// MESSAGES & CONVERSATIONS
+// ─────────────────────────────────────────────
+model Conversation {
+  id         String    @id @default(uuid())
+  buyerId    String    @map("buyer_id")
+  sellerId   String    @map("seller_id")
+  lastMessage String?  @map("last_message")
+  lastMessageAt DateTime? @map("last_message_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+
+  buyer      User      @relation("BuyerConversations", fields: [buyerId], references: [id])
+  seller     Seller    @relation("SellerConversations", fields: [sellerId], references: [id])
+  messages   Message[]
+
+  @@unique([buyerId, sellerId])
+  @@map("conversations")
+  @@index([buyerId])
+  @@index([sellerId])
+}
+
+model Message {
+  id             String    @id @default(uuid())
+  conversationId String    @map("conversation_id")
+  senderId       String    @map("sender_id")
+  content        String?
+  imageUrl       String?   @map("image_url")
+  imagePublicId  String?   @map("image_public_id")
+  readAt         DateTime? @map("read_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         User         @relation("SentMessages", fields: [senderId], references: [id])
+
+  @@map("messages")
+  @@index([conversationId])
+  @@index([senderId])
+}
+
+// ─────────────────────────────────────────────
+// NOTIFICATIONS
+// ─────────────────────────────────────────────
+model Notification {
+  id          String           @id @default(uuid())
+  userId      String           @map("user_id")
+  type        NotificationType
+  title       String
+  titleMyanmar String?         @map("title_myanmar")
+  message     String
+  messageMyanmar String?       @map("message_myanmar")
+  data        Json?
+  readAt      DateTime?        @map("read_at")
+  createdAt   DateTime         @default(now()) @map("created_at")
+
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+  @@index([userId])
+  @@index([readAt])
+}
+
+enum NotificationType {
+  NEW_ORDER
+  PAYMENT_COMPLETED
+  PAYMENT_VERIFIED
+  MESSAGE_RECEIVED
+  ACCOUNT_SOLD
+  ORDER_CANCELLED
+  REVIEW_RECEIVED
+  SELLER_APPROVED
+  SYSTEM
+}
+
+// ─────────────────────────────────────────────
+// COUPONS
+// ─────────────────────────────────────────────
+model Coupon {
+  id             String       @id @default(uuid())
+  code           String       @unique
+  description    String?
+  descMyanmar    String?      @map("desc_myanmar")
+  discountType   DiscountType @map("discount_type")
+  discountValue  Decimal      @map("discount_value")
+  minOrderAmount Decimal?     @map("min_order_amount")
+  maxDiscount    Decimal?     @map("max_discount")
+  maxUses        Int?         @map("max_uses")
+  usedCount      Int          @default(0) @map("used_count")
+  applicableTo   String       @default("ALL") @map("applicable_to")
+  isActive       Boolean      @default(true) @map("is_active")
+  expiresAt      DateTime?    @map("expires_at")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+
+  orders         Order[]
+
+  @@map("coupons")
+  @@index([code])
+  @@index([isActive])
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED
+}
+
+// ─────────────────────────────────────────────
+// BANNERS
+// ─────────────────────────────────────────────
+model Banner {
+  id          String   @id @default(uuid())
+  title       String
+  titleMyanmar String? @map("title_myanmar")
+  subtitle    String?
+  subtitleMyanmar String? @map("subtitle_myanmar")
+  imageUrl    String   @map("image_url")
+  publicId    String?  @map("public_id")
+  link        String?
+  position    String   @default("HOME_HERO")
+  isActive    Boolean  @default(true) @map("is_active")
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("banners")
+  @@index([position])
+  @@index([isActive])
+}
+
+// ─────────────────────────────────────────────
+// ANNOUNCEMENT POPUP (Home page)
+// ─────────────────────────────────────────────
+model AnnouncementPopup {
+  id          String   @id @default(uuid())
+  title       String
+  content     String   @db.Text
+  imageUrl    String?  @map("image_url")
+  publicId    String?  @map("public_id")
+  buttonText  String?  @map("button_text")
+  buttonUrl   String?  @map("button_url")
+  isActive    Boolean  @default(false) @map("is_active") // Usually only 1 active at a time
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("announcement_popups")
+}
+
+// ─────────────────────────────────────────────
+// EVENT PHOTOS (Hero Showcase)
+// ─────────────────────────────────────────────
+// ─────────────────────────────────────────────
+// HERO BANNER (Home page)
+// ─────────────────────────────────────────────
+model HeroBanner {
+  id          String   @id @default(uuid())
+  title       String
+  subtitle    String?
+  buttonText  String?  @map("button_text")
+  buttonUrl   String?  @map("button_url")
+  imageUrl    String?  @map("image_url")
+  publicId    String?  @map("public_id")
+  isActive    Boolean  @default(true) @map("is_active")
+  displayOrder Int     @default(0) @map("display_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("hero_banners")
+}
+
+model EventPhoto {
+
+  id           String   @id @default(uuid())
+  title        String
+  imageUrl     String   @map("image_url")
+  publicId     String?  @map("public_id")
+  displayOrder Int      @default(0) @map("display_order")
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@map("event_photos")
+  @@index([displayOrder])
+  @@index([isActive])
+}
+
+// ─────────────────────────────────────────────
+// GAMES (for Top Up System)
+// ─────────────────────────────────────────────
+model Game {
+  id           String   @id @default(uuid())
+  name         String
+  logo         String?
+  publicId     String?  @map("public_id")
+  status       String   @default("ACTIVE") @map("status")
+  displayOrder Int      @default(0) @map("display_order")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  packages     TopUpPackage[]
+
+  @@map("games")
+  @@index([status])
+  @@index([displayOrder])
+}
+
+// ─────────────────────────────────────────────
+// TOP UP PACKAGES
+// ─────────────────────────────────────────────
+model TopUpPackage {
+  id           String   @id @default(uuid())
+  gameId       String   @map("game_id")
+  packageName  String   @map("package_name")
+  price        Decimal  @db.Decimal(10, 2)
+  category     String
+  status       String   @default("ACTIVE") @map("status")
+  displayOrder Int      @default(0) @map("display_order")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+  game         Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@map("topup_packages")
+  @@index([gameId])
+  @@index([status])
+  @@index([category])
+  @@index([displayOrder])
+}
+
+// ─────────────────────────────────────────────
+// WISHLIST & CART
+// ─────────────────────────────────────────────
+model WishlistItem {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  accountId String   @map("account_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, accountId])
+  @@map("wishlist_items")
+}
+
+model CartItem {
+  id        String   @id @default(uuid())
+  userId    String   @map("user_id")
+  accountId String   @map("account_id")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  account   Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, accountId])
+  @@map("cart_items")
+}

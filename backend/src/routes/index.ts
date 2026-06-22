@@ -1,0 +1,38 @@
+import { Router } from 'express';
+import authRoutes from './auth.routes';
+import accountsRoutes from './accounts.routes';
+import diamondsRoutes from './diamonds.routes';
+import ordersRoutes from './orders.routes';
+import usersRoutes from './users.routes';
+import sellersRoutes from './sellers.routes';
+import reviewsRoutes from './reviews.routes';
+import messagesRoutes from './messages.routes';
+import adminRoutes from './admin.routes';
+import couponsRoutes from './coupons.routes';
+import bannersRoutes from './banners.routes';
+import heroBannerRoutes from './heroBanner.routes';
+import announcementRoutes from './announcement.routes';
+import eventPhotosRoutes from './eventPhotos.routes';
+import gamesRoutes from './games.routes';
+import topupPackagesRoutes from './topupPackages.routes';
+
+const router = Router();
+
+router.use('/auth', authRoutes);
+router.use('/accounts', accountsRoutes);
+router.use('/diamonds', diamondsRoutes);
+router.use('/orders', ordersRoutes);
+router.use('/users', usersRoutes);
+router.use('/sellers', sellersRoutes);
+router.use('/reviews', reviewsRoutes);
+router.use('/messages', messagesRoutes);
+router.use('/admin', adminRoutes);
+router.use('/coupons', couponsRoutes);
+router.use('/banners', bannersRoutes);
+router.use('/hero-banners', heroBannerRoutes);
+router.use('/announcements', announcementRoutes);
+router.use('/event-photos', eventPhotosRoutes);
+router.use('/games', gamesRoutes);
+router.use('/topup-packages', topupPackagesRoutes);
+
+export { router as apiRouter };
