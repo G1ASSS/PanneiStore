@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { Home, ShoppingBag, Sparkles, Receipt, User } from "lucide-react";
+import { Home, ShoppingBag, Sparkles, Receipt, User, Wallet } from "lucide-react";
 import { cn } from "@/utils/cn";
 
 export const FloatingBottomNav: React.FC = () => {
@@ -13,7 +13,7 @@ export const FloatingBottomNav: React.FC = () => {
   const tabs = [
     { name: "Home", href: "/", icon: Home },
     { name: "Market", href: "/market", icon: ShoppingBag },
-    { name: "Top Up", href: "/topup", icon: Sparkles },
+    { name: "Top Up", href: "/topup", icon: Wallet },
     { name: "Orders", href: "/orders", icon: Receipt },
     { name: "Profile", href: "/profile", icon: User },
   ];

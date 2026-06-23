@@ -11,6 +11,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Sparkles,
+  Gamepad2,
 } from 'lucide-react';
 import { AccountCard, AccountData } from '@/components/ui/AccountCard';
 import { DEMO_POPULAR_ACCOUNTS } from '@/data/demoAccounts';
@@ -565,7 +566,7 @@ export default function MarketPage() {
       fallback={
         <div className="mk-page">
           <div className="mk-loading">
-            <Sparkles size={24} className="mk-loading-icon" />
+            <Gamepad2 size={24} className="mk-loading-icon" />
             <span>Loading marketplace…</span>
           </div>
         </div>

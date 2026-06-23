@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import {
   ArrowLeft, Check, Shield, Zap, Star,
-  ShoppingCart, User, Layers, X,
+  ShoppingCart, User, Layers, X, Gamepad2,
 } from "lucide-react";
 import { cn } from "@/utils/cn";
 
@@ -124,8 +124,8 @@ export default function GameTopUpPage() {
         <div className="flex flex-col items-center gap-4">
           <div className="relative w-14 h-14">
             <div className="absolute inset-0 rounded-full bg-brand-pink/20 animate-ping" />
-            <div className="relative w-14 h-14 glass-panel rounded-full flex items-center justify-center">
-              <img src="/diamonds/d-large.png" alt="" className="w-8 h-8 object-contain animate-bounce" />
+            <div className="relative w-14 h-14 glass-panel rounded-full flex items-center justify-center text-brand-pink">
+              <Gamepad2 size={32} className="animate-bounce" />
             </div>
           </div>
           <p className="theme-muted text-sm font-medium">Loading packages…</p>

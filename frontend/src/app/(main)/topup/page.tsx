@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import axios from 'axios';
+import { Gamepad2 } from 'lucide-react';
 
 interface Package {
   id: string;
@@ -141,7 +142,7 @@ export default function DiamondsPage() {
         {/* Games Section */}
         <div className="diamonds-section">
           <h2 className="section-heading">
-            <span className="step-num">🎮</span> Select Game
+            <span className="step-num"><Gamepad2 size={18} /></span> Select Game
           </h2>
           
           {gamesLoading ? (
