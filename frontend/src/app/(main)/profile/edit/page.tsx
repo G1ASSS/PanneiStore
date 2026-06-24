@@ -405,7 +405,7 @@ export default function EditProfilePage() {
           disabled={changingPw}
           style={{
             display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-            padding: '13px 24px', borderRadius: 12, border: 'none', cursor: changingPw ? 'not-allowed' : 'pointer',
+            padding: '13px 24px', borderRadius: 12, cursor: changingPw ? 'not-allowed' : 'pointer',
             background: changingPw ? 'var(--card-border)' : 'var(--soft-surface)',
             color: changingPw ? 'var(--muted)' : 'var(--heading)',
             fontSize: 14, fontWeight: 700,
