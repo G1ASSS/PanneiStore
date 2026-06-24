@@ -87,5 +87,6 @@ export interface AdminAccount {
   titleMyanmar?: string;
   descMyanmar?: string;
   images?: { url: string; isPrimary: boolean; order: number }[];
+  skins?: { heroName: string; skinName: string; isLegend: boolean }[];
   createdAt: string;
 }
