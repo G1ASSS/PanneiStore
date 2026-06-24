@@ -5,6 +5,7 @@ import "./pages.css";
 import Providers from "@/components/Providers";
 import { RouteScrollReset } from "@/components/layout/RouteScrollReset";
 import Script from "next/script";
+import { Analytics } from '@vercel/analytics/react';
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -62,6 +63,7 @@ export default function RootLayout({
         <Providers>
           <RouteScrollReset />
           {children}
+          <Analytics />
         </Providers>
       </body>
     </html>
