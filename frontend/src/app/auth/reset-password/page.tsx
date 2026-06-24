@@ -4,6 +4,7 @@ import { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Lock, Eye, EyeOff, Loader2, AlertCircle, Gem, ShieldCheck, Zap, Sparkles, CheckCircle2 } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 function ResetPasswordForm() {
   const router = useRouter();
@@ -16,23 +17,24 @@ function ResetPasswordForm() {
   const [success, setSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const { t } = useLanguage();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
     if (!token) {
-      setError('Invalid or missing reset token. Please request a new password reset link.');
+      setError(t('Invalid or missing reset token. Please request a new password reset link.', 'ပြန်လည်သတ်မှတ်ရန် တိုကင် မှားယွင်းနေသည် သို့မဟုတ် မရှိပါ။ ကျေးဇူးပြု၍ စကားဝှက် ပြန်လည်သတ်မှတ်ရန် လင့်ခ်အသစ် တောင်းဆိုပါ။'));
       return;
     }
 
     if (form.newPassword.length < 6) {
-      setError('Password must be at least 6 characters long.');
+      setError(t('Password must be at least 6 characters long.', 'စကားဝှက်သည် အနည်းဆုံး စာလုံး ၆ လုံး ရှိရပါမည်။'));
       return;
     }
 
     if (form.newPassword !== form.confirmPassword) {
-      setError('Passwords do not match.');
+      setError(t('Passwords do not match.', 'စကားဝှက်များ မကိုက်ညီပါ။'));
       return;
     }
 
@@ -56,7 +58,7 @@ function ResetPasswordForm() {
         router.push('/auth/login');
       }, 3000);
     } catch (err: any) {
-      setError(err.message || 'Something went wrong. Please try again.');
+      setError(err.message || t('Something went wrong. Please try again.', 'တစ်ခုခု မှားယွင်းနေပါသည်။ ထပ်မံကြိုးစားကြည့်ပါ။'));
     } finally {
       setLoading(false);
     }
@@ -83,30 +85,30 @@ function ResetPasswordForm() {
           </Link>
 
           <div className="auth2-brand-hero">
-            <h2 className="auth2-brand-headline">Myanmar&apos;s #1 MLBB Marketplace</h2>
-            <p className="auth2-brand-sub">Buy, sell and top up Mobile Legends diamonds safely with our trusted escrow system.</p>
+            <h2 className="auth2-brand-headline">{t("Myanmar's #1 MLBB Marketplace", "မြန်မာနိုင်ငံ၏ နံပါတ် ၁ MLBB စျေးကွက်")}</h2>
+            <p className="auth2-brand-sub">{t("Buy, sell and top up Mobile Legends diamonds safely with our trusted escrow system.", "ကျွန်ုပ်တို့၏ ယုံကြည်စိတ်ချရသော ကြားခံဝန်ဆောင်မှုဖြင့် Mobile Legends စိန်များကို လုံခြုံစွာ ဝယ်ယူ၊ ရောင်းချ၊ ဖြည့်သွင်းပါ။")}</p>
           </div>
 
           <div className="auth2-features">
             <div className="auth2-feature-item">
               <div className="auth2-feature-icon"><ShieldCheck size={18} /></div>
               <div>
-                <p className="auth2-feature-title">Secure Escrow</p>
-                <p className="auth2-feature-desc">Every trade is protected by our verified escrow system</p>
+                <p className="auth2-feature-title">{t("Secure Escrow", "လုံခြုံသော ကြားခံစနစ်")}</p>
+                <p className="auth2-feature-desc">{t("Every trade is protected by our verified escrow system", "အရောင်းအဝယ်တိုင်းကို စစ်ဆေးအတည်ပြုထားသော ကြားခံစနစ်ဖြင့် ကာကွယ်ထားပါသည်")}</p>
               </div>
             </div>
             <div className="auth2-feature-item">
               <div className="auth2-feature-icon"><Zap size={18} /></div>
               <div>
-                <p className="auth2-feature-title">Instant Top-Up</p>
-                <p className="auth2-feature-desc">Diamonds delivered in minutes, 24/7</p>
+                <p className="auth2-feature-title">{t("Instant Top-Up", "ချက်ချင်း စိန်ဖြည့်မည်")}</p>
+                <p className="auth2-feature-desc">{t("Diamonds delivered in minutes, 24/7", "စိန်များကို မိနစ်ပိုင်းအတွင်း အချိန်မရွေး ပေးပို့ပါသည်")}</p>
               </div>
             </div>
             <div className="auth2-feature-item">
               <div className="auth2-feature-icon"><Sparkles size={18} /></div>
               <div>
-                <p className="auth2-feature-title">Verified Accounts</p>
-                <p className="auth2-feature-desc">All accounts manually verified before listing</p>
+                <p className="auth2-feature-title">{t("Verified Accounts", "စစ်ဆေးပြီးသော အကောင့်များ")}</p>
+                <p className="auth2-feature-desc">{t("All accounts manually verified before listing", "အကောင့်အားလုံးကို မတင်မီ လူကိုယ်တိုင် စစ်ဆေးအတည်ပြုထားပါသည်")}</p>
               </div>
             </div>
           </div>
@@ -121,8 +123,8 @@ function ResetPasswordForm() {
               <div className="auth2-card-icon">
                 <Lock size={28} strokeWidth={2} />
               </div>
-              <h1 className="auth2-card-title">Reset Password</h1>
-              <p className="auth2-card-sub">Create a new secure password</p>
+              <h1 className="auth2-card-title">{t("Reset Password", "စကားဝှက် အသစ်သတ်မှတ်မည်")}</h1>
+              <p className="auth2-card-sub">{t("Create a new secure password", "လုံခြုံသော စကားဝှက်အသစ်ကို ဖန်တီးပါ")}</p>
             </div>
 
             {error && (
@@ -137,12 +139,12 @@ function ResetPasswordForm() {
                 <div className="w-16 h-16 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center mb-6 text-green-500 shadow-[0_0_24px_rgba(34,197,94,0.2)]">
                   <CheckCircle2 size={32} />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">Password Reset Successful</h3>
+                <h3 className="text-xl font-bold text-white mb-2">{t("Password Reset Successful", "စကားဝှက် ပြန်လည်သတ်မှတ်ခြင်း အောင်မြင်ပါသည်")}</h3>
                 <p className="text-brand-muted text-sm leading-relaxed max-w-xs mx-auto mb-8">
-                  Your password has been successfully updated. Redirecting to login...
+                  {t("Your password has been successfully updated. Redirecting to login...", "သင့်စကားဝှက်ကို အောင်မြင်စွာ အပ်ဒိတ်လုပ်ပြီးပါပြီ။ အကောင့်ဝင်ရန် စာမျက်နှာသို့ ပြန်လည်ညွှန်းပေးနေပါသည်...")}
                 </p>
                 <Link href="/auth/login" className="auth2-back-btn">
-                  Go to Login Now
+                  {t("Go to Login Now", "ယခု အကောင့်ဝင်မည်")}
                 </Link>
               </div>
             ) : !token ? (
@@ -150,18 +152,18 @@ function ResetPasswordForm() {
                 <div className="w-16 h-16 rounded-full bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-6 text-red-500 shadow-[0_0_24px_rgba(239,68,68,0.2)]">
                   <AlertCircle size={32} />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">Invalid Link</h3>
+                <h3 className="text-xl font-bold text-white mb-2">{t("Invalid Link", "လင့်ခ် မှားယွင်းနေပါသည်")}</h3>
                 <p className="text-brand-muted text-sm leading-relaxed max-w-xs mx-auto mb-8">
-                  This password reset link is invalid or missing the token. Please request a new one.
+                  {t("This password reset link is invalid or missing the token. Please request a new one.", "ဤစကားဝှက် ပြန်လည်သတ်မှတ်ရန် လင့်ခ်သည် မှားယွင်းနေသည် သို့မဟုတ် တိုကင်မရှိပါ။ အသစ်တစ်ခု ပြန်တောင်းပါ။")}
                 </p>
                 <Link href="/auth/forgot-password" className="auth2-back-btn">
-                  Request New Link
+                  {t("Request New Link", "လင့်ခ်အသစ် တောင်းဆိုမည်")}
                 </Link>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="auth2-form">
                 <div className="auth2-field">
-                  <label className="auth2-label">New Password</label>
+                  <label className="auth2-label">{t("New Password", "စကားဝှက် အသစ်")}</label>
                   <div className="auth2-input-wrap">
                     <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-muted/50" />
                     <input
@@ -184,7 +186,7 @@ function ResetPasswordForm() {
                 </div>
 
                 <div className="auth2-field">
-                  <label className="auth2-label">Confirm New Password</label>
+                  <label className="auth2-label">{t("Confirm New Password", "စကားဝှက် အသစ်ကို အတည်ပြုပါ")}</label>
                   <div className="auth2-input-wrap">
                     <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-muted/50" />
                     <input
@@ -211,7 +213,7 @@ function ResetPasswordForm() {
                   disabled={loading || !form.newPassword || !form.confirmPassword}
                   className="auth2-submit-btn mt-6"
                 >
-                  {loading ? <Loader2 size={18} className="animate-spin" /> : 'Reset Password'}
+                  {loading ? <Loader2 size={18} className="animate-spin" /> : t('Reset Password', 'စကားဝှက် အသစ်သတ်မှတ်မည်')}
                 </button>
               </form>
             )}

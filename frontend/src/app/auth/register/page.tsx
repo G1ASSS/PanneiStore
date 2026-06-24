@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { Mail, Lock, Eye, EyeOff, User, Phone, Loader2, AlertCircle, Gem, Sparkles, ShieldCheck, Zap, ArrowRight, ArrowLeft } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -12,6 +13,7 @@ export default function RegisterPage() {
   const [error, setError] = useState('');
   const [step, setStep] = useState(1);
   const [showPassword, setShowPassword] = useState(false);
+  const { t } = useLanguage();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,30 +57,30 @@ export default function RegisterPage() {
           </Link>
 
           <div className="auth2-brand-hero">
-            <h2 className="auth2-brand-headline">Join Myanmar&apos;s #1 MLBB Community</h2>
-            <p className="auth2-brand-sub">Create your free account and start buying, selling, or topping up in minutes.</p>
+            <h2 className="auth2-brand-headline">{t("Join Myanmar's #1 MLBB Community", "မြန်မာနိုင်ငံ၏ နံပါတ် ၁ MLBB အသိုက်အဝန်းသို့ ဝင်ရောက်ပါ")}</h2>
+            <p className="auth2-brand-sub">{t("Create your free account and start buying, selling, or topping up in minutes.", "သင်၏ အခမဲ့အကောင့်ကို ဖန်တီးပြီး မိနစ်ပိုင်းအတွင်း ဝယ်ယူ၊ ရောင်းချ၊ သို့မဟုတ် စိန်ဖြည့်လိုက်ပါ။")}</p>
           </div>
 
           <div className="auth2-features">
             <div className="auth2-feature-item">
               <div className="auth2-feature-icon"><ShieldCheck size={18} /></div>
               <div>
-                <p className="auth2-feature-title">Safe & Secure</p>
-                <p className="auth2-feature-desc">Every trade protected by our verified escrow</p>
+                <p className="auth2-feature-title">{t("Safe & Secure", "လုံခြုံစိတ်ချရမှု")}</p>
+                <p className="auth2-feature-desc">{t("Every trade protected by our verified escrow", "အရောင်းအဝယ်တိုင်းကို စစ်ဆေးအတည်ပြုထားသော ကြားခံစနစ်ဖြင့် ကာကွယ်ထားပါသည်")}</p>
               </div>
             </div>
             <div className="auth2-feature-item">
               <div className="auth2-feature-icon"><Zap size={18} /></div>
               <div>
-                <p className="auth2-feature-title">Instant Top-Up</p>
-                <p className="auth2-feature-desc">Diamonds delivered in minutes, 24/7</p>
+                <p className="auth2-feature-title">{t("Instant Top-Up", "ချက်ချင်း စိန်ဖြည့်မည်")}</p>
+                <p className="auth2-feature-desc">{t("Diamonds delivered in minutes, 24/7", "စိန်များကို မိနစ်ပိုင်းအတွင်း အချိန်မရွေး ပေးပို့ပါသည်")}</p>
               </div>
             </div>
             <div className="auth2-feature-item">
               <div className="auth2-feature-icon"><Sparkles size={18} /></div>
               <div>
-                <p className="auth2-feature-title">Free to Join</p>
-                <p className="auth2-feature-desc">No fees to create or maintain your account</p>
+                <p className="auth2-feature-title">{t("Free to Join", "အခမဲ့ ပါဝင်ပါ")}</p>
+                <p className="auth2-feature-desc">{t("No fees to create or maintain your account", "အကောင့်ဖွင့်ရန် သို့မဟုတ် ထိန်းသိမ်းရန် အခကြေးငွေ မရှိပါ")}</p>
               </div>
             </div>
           </div>
@@ -93,8 +95,8 @@ export default function RegisterPage() {
               <div className="auth2-card-icon">
                 <User size={22} strokeWidth={1.8} className="text-brand-pink" />
               </div>
-              <h1 className="auth2-card-title">Create Account</h1>
-              <p className="auth2-card-sub">Get started with your free PanneiStore account</p>
+              <h1 className="auth2-card-title">{t("Create Account", "အကောင့်သစ်ဖွင့်မည်")}</h1>
+              <p className="auth2-card-sub">{t("Get started with your free PanneiStore account", "သင်၏ အခမဲ့ PanneiStore အကောင့်ဖြင့် စတင်လိုက်ပါ")}</p>
             </div>
 
             {/* Step Indicator */}
@@ -103,12 +105,12 @@ export default function RegisterPage() {
                 <div className="auth2-step-dot">
                   {step > 1 ? <span>✓</span> : <span>1</span>}
                 </div>
-                <span className="auth2-step-label">Your Info</span>
+                <span className="auth2-step-label">{t("Your Info", "သင့်အချက်အလက်များ")}</span>
               </div>
               <div className={`auth2-step-line ${step >= 2 ? 'active' : ''}`} />
               <div className={`auth2-step ${step >= 2 ? 'active' : ''}`}>
                 <div className="auth2-step-dot"><span>2</span></div>
-                <span className="auth2-step-label">Security</span>
+                <span className="auth2-step-label">{t("Security", "လုံခြုံရေး")}</span>
               </div>
             </div>
 
@@ -125,7 +127,7 @@ export default function RegisterPage() {
                 <>
                   <div className="auth2-field">
                     <label htmlFor="name" className="auth2-label">
-                      <User size={14} /> Full Name
+                      <User size={14} /> {t("Full Name", "အမည်အပြည့်အစုံ")}
                     </label>
                     <input
                       id="name"
@@ -140,7 +142,7 @@ export default function RegisterPage() {
                   </div>
                   <div className="auth2-field">
                     <label htmlFor="reg-email" className="auth2-label">
-                      <Mail size={14} /> Email Address
+                      <Mail size={14} /> {t("Email Address", "အီးမေးလ် လိပ်စာ")}
                     </label>
                     <input
                       id="reg-email"
@@ -160,7 +162,7 @@ export default function RegisterPage() {
                 <>
                   <div className="auth2-field">
                     <label htmlFor="reg-password" className="auth2-label">
-                      <Lock size={14} /> Password
+                      <Lock size={14} /> {t("Password", "စကားဝှက်")}
                     </label>
                     <div className="auth2-input-wrap">
                       <input
@@ -186,7 +188,7 @@ export default function RegisterPage() {
                   </div>
                   <div className="auth2-field">
                     <label htmlFor="phone" className="auth2-label">
-                      <Phone size={14} /> Phone Number
+                      <Phone size={14} /> {t("Phone Number", "ဖုန်းနံပါတ်")}
                     </label>
                     <input
                       id="phone"
@@ -208,11 +210,11 @@ export default function RegisterPage() {
                 disabled={loading || (step === 2 && (!form.password || !form.phone))}
               >
                 {loading ? (
-                  <><Loader2 size={18} className="animate-spin" /> Creating Account…</>
+                  <><Loader2 size={18} className="animate-spin" /> {t("Creating Account…", "အကောင့် ဖန်တီးနေပါသည်...")}</>
                 ) : step === 1 ? (
-                  <>Continue <ArrowRight size={16} /></>
+                  <>{t("Continue", "ဆက်လက်လုပ်ဆောင်မည်")} <ArrowRight size={16} /></>
                 ) : (
-                  'Create Account'
+                  t('Create Account', 'အကောင့်သစ်ဖွင့်မည်')
                 )}
               </button>
 
@@ -222,14 +224,14 @@ export default function RegisterPage() {
                   className="auth2-back-btn"
                   onClick={() => setStep(1)}
                 >
-                  <ArrowLeft size={16} /> Back
+                  <ArrowLeft size={16} /> {t("Back", "နောက်သို့")}
                 </button>
               )}
             </form>
 
             <p className="auth2-switch">
-              Already have an account?{' '}
-              <Link href="/auth/login">Sign in</Link>
+              {t("Already have an account?", "အကောင့် ရှိပြီးသားလား?")}{' '}
+              <Link href="/auth/login">{t("Sign in", "အကောင့်ဝင်မည်")}</Link>
             </p>
           </div>
         </div>

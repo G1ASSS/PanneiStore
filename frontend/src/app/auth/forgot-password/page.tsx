@@ -3,17 +3,19 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { Mail, Loader2, AlertCircle, Gem, ShieldCheck, Zap, Sparkles, CheckCircle2 } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+  const { t } = useLanguage();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) {
-      setError('Please enter your email address');
+      setError(t('Please enter your email address', 'ကျေးဇူးပြု၍ သင့်အီးမေးလ်လိပ်စာကို ထည့်ပါ'));
       return;
     }
 
@@ -30,7 +32,7 @@ export default function ForgotPasswordPage() {
       if (!res.ok) throw new Error(data.message || 'Something went wrong');
       setSuccess(true);
     } catch (err: any) {
-      setError(err.message || 'Something went wrong. Please try again.');
+      setError(err.message || t('Something went wrong. Please try again.', 'တစ်ခုခု မှားယွင်းနေပါသည်။ ထပ်မံကြိုးစားကြည့်ပါ။'));
     } finally {
       setLoading(false);
     }
@@ -57,30 +59,30 @@ export default function ForgotPasswordPage() {
           </Link>
 
           <div className="auth2-brand-hero">
-            <h2 className="auth2-brand-headline">Myanmar&apos;s #1 MLBB Marketplace</h2>
-            <p className="auth2-brand-sub">Buy, sell and top up Mobile Legends diamonds safely with our trusted escrow system.</p>
+            <h2 className="auth2-brand-headline">{t("Myanmar's #1 MLBB Marketplace", "မြန်မာနိုင်ငံ၏ နံပါတ် ၁ MLBB စျေးကွက်")}</h2>
+            <p className="auth2-brand-sub">{t("Buy, sell and top up Mobile Legends diamonds safely with our trusted escrow system.", "ကျွန်ုပ်တို့၏ ယုံကြည်စိတ်ချရသော ကြားခံဝန်ဆောင်မှုဖြင့် Mobile Legends စိန်များကို လုံခြုံစွာ ဝယ်ယူ၊ ရောင်းချ၊ ဖြည့်သွင်းပါ။")}</p>
           </div>
 
           <div className="auth2-features">
             <div className="auth2-feature-item">
               <div className="auth2-feature-icon"><ShieldCheck size={18} /></div>
               <div>
-                <p className="auth2-feature-title">Secure Escrow</p>
-                <p className="auth2-feature-desc">Every trade is protected by our verified escrow system</p>
+                <p className="auth2-feature-title">{t("Secure Escrow", "လုံခြုံသော ကြားခံစနစ်")}</p>
+                <p className="auth2-feature-desc">{t("Every trade is protected by our verified escrow system", "အရောင်းအဝယ်တိုင်းကို စစ်ဆေးအတည်ပြုထားသော ကြားခံစနစ်ဖြင့် ကာကွယ်ထားပါသည်")}</p>
               </div>
             </div>
             <div className="auth2-feature-item">
               <div className="auth2-feature-icon"><Zap size={18} /></div>
               <div>
-                <p className="auth2-feature-title">Instant Top-Up</p>
-                <p className="auth2-feature-desc">Diamonds delivered in minutes, 24/7</p>
+                <p className="auth2-feature-title">{t("Instant Top-Up", "ချက်ချင်း စိန်ဖြည့်မည်")}</p>
+                <p className="auth2-feature-desc">{t("Diamonds delivered in minutes, 24/7", "စိန်များကို မိနစ်ပိုင်းအတွင်း အချိန်မရွေး ပေးပို့ပါသည်")}</p>
               </div>
             </div>
             <div className="auth2-feature-item">
               <div className="auth2-feature-icon"><Sparkles size={18} /></div>
               <div>
-                <p className="auth2-feature-title">Verified Accounts</p>
-                <p className="auth2-feature-desc">All accounts manually verified before listing</p>
+                <p className="auth2-feature-title">{t("Verified Accounts", "စစ်ဆေးပြီးသော အကောင့်များ")}</p>
+                <p className="auth2-feature-desc">{t("All accounts manually verified before listing", "အကောင့်အားလုံးကို မတင်မီ လူကိုယ်တိုင် စစ်ဆေးအတည်ပြုထားပါသည်")}</p>
               </div>
             </div>
           </div>
@@ -95,8 +97,8 @@ export default function ForgotPasswordPage() {
               <div className="auth2-card-icon">
                 <Mail size={28} strokeWidth={2} />
               </div>
-              <h1 className="auth2-card-title">Forgot Password</h1>
-              <p className="auth2-card-sub">Enter your email to receive a reset link</p>
+              <h1 className="auth2-card-title">{t("Forgot Password", "စကားဝှက် မေ့နေသည်")}</h1>
+              <p className="auth2-card-sub">{t("Enter your email to receive a reset link", "စကားဝှက် ပြန်လည်သတ်မှတ်ရန် လင့်ခ် ရယူရန် သင့်အီးမေးလ်ကို ထည့်ပါ")}</p>
             </div>
 
             {error && (
@@ -111,18 +113,18 @@ export default function ForgotPasswordPage() {
                 <div className="w-16 h-16 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center mb-6 text-green-500 shadow-[0_0_24px_rgba(34,197,94,0.2)]">
                   <CheckCircle2 size={32} />
                 </div>
-                <h3 className="text-xl font-bold text-white mb-2">Check your email</h3>
+                <h3 className="text-xl font-bold text-white mb-2">{t("Check your email", "သင့်အီးမေးလ်ကို စစ်ဆေးပါ")}</h3>
                 <p className="text-brand-muted text-sm leading-relaxed max-w-xs mx-auto mb-8">
-                  We have sent a password reset link to <strong className="text-white">{email}</strong>. Please check your inbox.
+                  {t("We have sent a password reset link to", "စကားဝှက် ပြန်လည်သတ်မှတ်ရန် လင့်ခ်ကို အောက်ပါသို့ ပေးပို့ထားပါသည်")} <strong className="text-white">{email}</strong>. {t("Please check your inbox.", "ကျေးဇူးပြု၍ သင့်ဝင်စာပုံးကို စစ်ဆေးပါ။")}
                 </p>
                 <Link href="/auth/login" className="auth2-back-btn">
-                  Back to Login
+                  {t("Back to Login", "အကောင့်ဝင်ရန် သို့ ပြန်သွားမည်")}
                 </Link>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="auth2-form">
                 <div className="auth2-field">
-                  <label className="auth2-label">Email Address</label>
+                  <label className="auth2-label">{t("Email Address", "အီးမေးလ် လိပ်စာ")}</label>
                   <div className="auth2-input-wrap">
                     <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-brand-muted/50" />
                     <input
@@ -141,12 +143,12 @@ export default function ForgotPasswordPage() {
                   disabled={loading || !email}
                   className="auth2-submit-btn mt-4"
                 >
-                  {loading ? <Loader2 size={18} className="animate-spin" /> : 'Send Reset Link'}
+                  {loading ? <Loader2 size={18} className="animate-spin" /> : t('Send Reset Link', 'လင့်ခ် ပေးပို့မည်')}
                 </button>
 
                 <div className="auth2-switch mt-6">
-                  Remember your password? 
-                  <Link href="/auth/login">Back to Login</Link>
+                  {t("Remember your password?", "စကားဝှက်ကို မှတ်မိပြီလား?")}{' '}
+                  <Link href="/auth/login">{t("Back to Login", "အကောင့်ဝင်ရန် သို့ ပြန်သွားမည်")}</Link>
                 </div>
               </form>
             )}

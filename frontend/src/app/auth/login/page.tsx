@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { signIn, getSession } from 'next-auth/react';
 import { Mail, Lock, Eye, EyeOff, Loader2, AlertCircle, Gem, Sparkles, ShieldCheck, Zap } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 function LoginForm() {
   const router = useRouter();
@@ -14,6 +15,7 @@ function LoginForm() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const { t } = useLanguage();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,14 +28,14 @@ function LoginForm() {
         password: form.password,
       });
       if (res?.error) {
-        setError('Invalid email or password. Please try again.');
+        setError(t('Invalid email or password. Please try again.', 'အီးမေးလ် သို့မဟုတ် စကားဝှက် မှားယွင်းနေပါသည်။ ထပ်မံကြိုးစားကြည့်ပါ။'));
         return;
       }
       await getSession();
       router.refresh();
       router.push(callbackUrl);
     } catch {
-      setError('Something went wrong. Please try again.');
+      setError(t('Something went wrong. Please try again.', 'တစ်ခုခု မှားယွင်းနေပါသည်။ ထပ်မံကြိုးစားကြည့်ပါ။'));
     } finally {
       setLoading(false);
     }
@@ -62,30 +64,30 @@ function LoginForm() {
           </Link>
 
           <div className="auth2-brand-hero">
-            <h2 className="auth2-brand-headline">Myanmar&apos;s #1 MLBB Marketplace</h2>
-            <p className="auth2-brand-sub">Buy, sell and top up Mobile Legends diamonds safely with our trusted escrow system.</p>
+            <h2 className="auth2-brand-headline">{t("Myanmar's #1 MLBB Marketplace", "မြန်မာနိုင်ငံ၏ နံပါတ် ၁ MLBB စျေးကွက်")}</h2>
+            <p className="auth2-brand-sub">{t("Buy, sell and top up Mobile Legends diamonds safely with our trusted escrow system.", "ကျွန်ုပ်တို့၏ ယုံကြည်စိတ်ချရသော ကြားခံဝန်ဆောင်မှုဖြင့် Mobile Legends စိန်များကို လုံခြုံစွာ ဝယ်ယူ၊ ရောင်းချ၊ ဖြည့်သွင်းပါ။")}</p>
           </div>
 
           <div className="auth2-features">
             <div className="auth2-feature-item">
               <div className="auth2-feature-icon"><ShieldCheck size={18} /></div>
               <div>
-                <p className="auth2-feature-title">Secure Escrow</p>
-                <p className="auth2-feature-desc">Every trade is protected by our verified escrow system</p>
+                <p className="auth2-feature-title">{t("Secure Escrow", "လုံခြုံသော ကြားခံစနစ်")}</p>
+                <p className="auth2-feature-desc">{t("Every trade is protected by our verified escrow system", "အရောင်းအဝယ်တိုင်းကို စစ်ဆေးအတည်ပြုထားသော ကြားခံစနစ်ဖြင့် ကာကွယ်ထားပါသည်")}</p>
               </div>
             </div>
             <div className="auth2-feature-item">
               <div className="auth2-feature-icon"><Zap size={18} /></div>
               <div>
-                <p className="auth2-feature-title">Instant Top-Up</p>
-                <p className="auth2-feature-desc">Diamonds delivered in minutes, 24/7</p>
+                <p className="auth2-feature-title">{t("Instant Top-Up", "ချက်ချင်း စိန်ဖြည့်မည်")}</p>
+                <p className="auth2-feature-desc">{t("Diamonds delivered in minutes, 24/7", "စိန်များကို မိနစ်ပိုင်းအတွင်း အချိန်မရွေး ပေးပို့ပါသည်")}</p>
               </div>
             </div>
             <div className="auth2-feature-item">
               <div className="auth2-feature-icon"><Sparkles size={18} /></div>
               <div>
-                <p className="auth2-feature-title">Verified Accounts</p>
-                <p className="auth2-feature-desc">All accounts manually verified before listing</p>
+                <p className="auth2-feature-title">{t("Verified Accounts", "စစ်ဆေးပြီးသော အကောင့်များ")}</p>
+                <p className="auth2-feature-desc">{t("All accounts manually verified before listing", "အကောင့်အားလုံးကို မတင်မီ လူကိုယ်တိုင် စစ်ဆေးအတည်ပြုထားပါသည်")}</p>
               </div>
             </div>
           </div>
@@ -100,16 +102,16 @@ function LoginForm() {
               <div className="auth2-card-icon">
                 <Lock size={22} strokeWidth={1.8} className="text-brand-pink" />
               </div>
-              <h1 className="auth2-card-title">Welcome back</h1>
+              <h1 className="auth2-card-title">{t("Welcome back", "ပြန်လည်ကြိုဆိုပါသည်")}</h1>
               <p className="auth2-card-sub">
-                {isAdminLogin ? 'Sign in with your admin account' : 'Sign in to your PanneiStore account'}
+                {isAdminLogin ? t('Sign in with your admin account', 'Admin အကောင့်ဖြင့် ဝင်ရောက်ပါ') : t('Sign in to your PanneiStore account', 'PanneiStore အကောင့်သို့ ဝင်ရောက်ပါ')}
               </p>
             </div>
 
             {isAdminLogin && (
               <div className="auth2-notice">
                 <ShieldCheck size={15} />
-                Admin login: <strong>admin@panneistore.com</strong>
+                {t('Admin login:', 'Admin အကောင့်:')} <strong>admin@panneistore.com</strong>
               </div>
             )}
 
@@ -125,10 +127,10 @@ function LoginForm() {
                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
                 <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
               </svg>
-              Continue with Google
+              {t("Continue with Google", "Google ဖြင့် ဆက်လက်လုပ်ဆောင်မည်")}
             </button>
 
-            <div className="auth2-divider"><span>or sign in with email</span></div>
+            <div className="auth2-divider"><span>{t("or sign in with email", "သို့မဟုတ် အီးမေးလ်ဖြင့် ဝင်ရောက်မည်")}</span></div>
 
             {/* Form */}
             <form onSubmit={handleSubmit} className="auth2-form">
@@ -141,7 +143,7 @@ function LoginForm() {
 
               <div className="auth2-field">
                 <label htmlFor="email" className="auth2-label">
-                  <Mail size={14} /> Email Address
+                  <Mail size={14} /> {t("Email Address", "အီးမေးလ် လိပ်စာ")}
                 </label>
                 <input
                   id="email"
@@ -157,7 +159,7 @@ function LoginForm() {
 
               <div className="auth2-field">
                 <label htmlFor="password" className="auth2-label">
-                  <Lock size={14} /> Password
+                  <Lock size={14} /> {t("Password", "စကားဝှက်")}
                 </label>
                 <div className="auth2-input-wrap">
                   <input
@@ -182,21 +184,21 @@ function LoginForm() {
               </div>
 
               <div className="auth2-forgot">
-                <Link href="/auth/forgot-password">Forgot password?</Link>
+                <Link href="/auth/forgot-password">{t("Forgot password?", "စကားဝှက် မေ့နေပါသလား?")}</Link>
               </div>
 
               <button type="submit" className="auth2-submit-btn" disabled={loading}>
                 {loading ? (
-                  <><Loader2 size={18} className="animate-spin" /> Signing in…</>
+                  <><Loader2 size={18} className="animate-spin" /> {t("Signing in…", "ဝင်ရောက်နေပါသည်...")}</>
                 ) : (
-                  'Sign In'
+                  t('Sign In', 'အကောင့်ဝင်မည်')
                 )}
               </button>
             </form>
 
             <p className="auth2-switch">
-              Don&apos;t have an account?{' '}
-              <Link href="/auth/register">Create account</Link>
+              {t("Don't have an account?", "အကောင့် မရှိသေးဘူးလား?")}{' '}
+              <Link href="/auth/register">{t("Create account", "အကောင့်သစ်ဖွင့်မည်")}</Link>
             </p>
           </div>
         </div>
