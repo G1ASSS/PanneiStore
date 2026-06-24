@@ -4,6 +4,7 @@ import "./globals.css";
 import "./pages.css";
 import Providers from "@/components/Providers";
 import { RouteScrollReset } from "@/components/layout/RouteScrollReset";
+import Script from "next/script";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -49,7 +50,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${outfit.variable} h-full`} suppressHydrationWarning>
       <head>
-        <script
+        <Script
+          id="theme-initializer"
+          strategy="beforeInteractive"
           dangerouslySetInnerHTML={{
             __html: `(function(){try{var t=localStorage.getItem("panneistore-color-theme-v2");if(t==="blue-dark"||t==="light"){document.documentElement.dataset.theme=t;}}catch(e){}})();`,
           }}
