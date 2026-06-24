@@ -4,7 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { Home, ShoppingBag, Sparkles, Receipt, User, Wallet } from "lucide-react";
+import { Home, ShoppingBag, Receipt, User, Wallet } from "lucide-react";
 import { cn } from "@/utils/cn";
 import { useLanguage } from '@/contexts/LanguageContext';
 
