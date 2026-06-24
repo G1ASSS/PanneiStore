@@ -66,7 +66,7 @@ export function AccountListingForm({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  const set = (key: keyof AccountFormValues, val: string | boolean) => {
+  const set = <K extends keyof AccountFormValues>(key: K, val: AccountFormValues[K]) => {
     setValues((prev) => ({ ...prev, [key]: val }));
   };
 
