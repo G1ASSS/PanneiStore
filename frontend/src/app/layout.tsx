@@ -5,7 +5,7 @@ import "./pages.css";
 import Providers from "@/components/Providers";
 import { RouteScrollReset } from "@/components/layout/RouteScrollReset";
 import Script from "next/script";
-import { Analytics } from '@vercel/analytics/react';
+import { Analytics } from '@vercel/analytics/next';
 
 const outfit = Outfit({
   subsets: ["latin"],
