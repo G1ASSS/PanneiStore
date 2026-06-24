@@ -14,8 +14,6 @@ import {
   Gamepad2,
 } from 'lucide-react';
 import { AccountCard, AccountData } from '@/components/ui/AccountCard';
-import { DEMO_POPULAR_ACCOUNTS } from '@/data/demoAccounts';
-import { getLocalListings, localListingToCard } from '@/lib/localListings';
 import { MARKET_FILTER_TIERS } from '@/data/collectorTiers';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -43,59 +41,7 @@ const getSortOptions = (t: (en: string, my: string) => string) => [
   { label: t('Most Viewed', 'ကြည့်ရှုမှု အများဆုံး'), value: 'viewCount-desc' },
 ];
 
-function filterDemoAccounts(
-  accounts: AccountData[],
-  filters: { rank: string; minPrice: string; maxPrice: string; search: string; sort: string }
-): Account[] {
-  let result = [...accounts] as Account[];
 
-  if (filters.rank !== 'All') {
-    result = result.filter((a) =>
-      a.rank.toLowerCase().includes(filters.rank.toLowerCase())
-    );
-  }
-
-  if (filters.search.trim()) {
-    const q = filters.search.toLowerCase();
-    result = result.filter(
-      (a) =>
-        a.title.toLowerCase().includes(q) ||
-        a.rank.toLowerCase().includes(q) ||
-        a.seller.shopName.toLowerCase().includes(q)
-    );
-  }
-
-  if (filters.minPrice) {
-    result = result.filter((a) => Number(a.price) >= Number(filters.minPrice));
-  }
-  if (filters.maxPrice) {
-    result = result.filter((a) => Number(a.price) <= Number(filters.maxPrice));
-  }
-
-  const [sortBy, sortOrder] = filters.sort.split('-');
-  result.sort((a, b) => {
-    if (sortBy === 'price') {
-      return sortOrder === 'asc'
-        ? Number(a.price) - Number(b.price)
-        : Number(b.price) - Number(a.price);
-    }
-    return 0;
-  });
-
-  return result;
-}
-
-function withLocalListings(
-  accounts: Account[],
-  filters: { rank: string; minPrice: string; maxPrice: string; search: string; sort: string }
-): Account[] {
-  const local = filterDemoAccounts(
-    getLocalListings().map((l) => localListingToCard(l) as AccountData),
-    filters
-  ) as Account[];
-  const localIds = new Set(local.map((a) => a.id));
-  return [...local, ...accounts.filter((a) => !localIds.has(a.id))];
-}
 
 function formatAvailableCount(count: number, language: string): string {
   if (language === 'my') {
@@ -251,7 +197,7 @@ function MarketContent() {
   const [total, setTotal] = useState(0);
   const [availableTotal, setAvailableTotal] = useState<number | null>(null);
   const [page, setPage] = useState(1);
-  const [usingDemo, setUsingDemo] = useState(false);
+
 
   const [filters, setFilters] = useState({
     rank: searchParams.get('rank') || 'All',
@@ -300,19 +246,18 @@ function MarketContent() {
   }, [filters, page]);
 
   const fetchAvailableCount = async () => {
-    const localAvailable = getLocalListings().filter((a) => a.status === 'AVAILABLE').length;
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/accounts/count?status=AVAILABLE`
       );
       const data = await res.json();
       if (data.success) {
-        setAvailableTotal((data.data?.total ?? 0) + localAvailable);
+        setAvailableTotal(data.data?.total ?? 0);
       } else {
-        setAvailableTotal(localAvailable || DEMO_POPULAR_ACCOUNTS.length);
+        setAvailableTotal(0);
       }
     } catch {
-      setAvailableTotal(localAvailable || DEMO_POPULAR_ACCOUNTS.length);
+      setAvailableTotal(0);
     }
   };
 
@@ -331,48 +276,21 @@ function MarketContent() {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/accounts?${params}`);
       const data = await res.json();
       if (data.success) {
-        const apiAccounts = data.data.accounts || [];
-        const apiTotal = data.data.pagination?.total ?? 0;
-        if (apiAccounts.length > 0) {
-          setAccounts(apiAccounts);
-          setTotal(apiTotal);
-          setUsingDemo(false);
-        } else if (apiTotal === 0) {
-          const demo = withLocalListings(
-            filterDemoAccounts(DEMO_POPULAR_ACCOUNTS, filters),
-            filters
-          );
-          setAccounts(demo);
-          setTotal(demo.length);
-          setUsingDemo(true);
-        } else {
-          setAccounts([]);
-          setTotal(apiTotal);
-          setUsingDemo(false);
-        }
+        setAccounts(data.data.accounts || []);
+        setTotal(data.data.pagination?.total ?? 0);
       } else {
-        const demo = withLocalListings(
-          filterDemoAccounts(DEMO_POPULAR_ACCOUNTS, filters),
-          filters
-        );
-        setAccounts(demo);
-        setTotal(demo.length);
-        setUsingDemo(true);
+        setAccounts([]);
+        setTotal(0);
       }
     } catch {
-      const demo = withLocalListings(
-        filterDemoAccounts(DEMO_POPULAR_ACCOUNTS, filters),
-        filters
-      );
-      setAccounts(demo);
-      setTotal(demo.length);
-      setUsingDemo(true);
+      setAccounts([]);
+      setTotal(0);
     } finally {
       setLoading(false);
     }
   };
 
-  const totalPages = usingDemo ? 1 : Math.ceil(total / 12);
+  const totalPages = Math.ceil(total / 12);
 
   const resetFilters = () => {
     setFilters({ rank: 'All', minPrice: '', maxPrice: '', sort: 'createdAt-desc', search: '' });
@@ -495,9 +413,7 @@ function MarketContent() {
             </label>
           </div>
 
-          {usingDemo && !loading && accounts.length > 0 && (
-            <p className="mk-demo-note">Showing featured demo listings — connect API for live inventory.</p>
-          )}
+
 
           {loading ? (
             <div className="mk-grid">

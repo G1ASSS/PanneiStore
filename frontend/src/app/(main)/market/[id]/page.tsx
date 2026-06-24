@@ -17,8 +17,7 @@ import {
   ZoomIn,
 } from 'lucide-react';
 import { AccountDetail } from '@/types/account';
-import { DEMO_ACCOUNT_IDS, getDemoAccountById } from '@/data/demoAccounts';
-import { getLocalListingById } from '@/lib/localListings';
+
 import { buildAccountInquiryMessage, buildOwnerTelegramUrl } from '@/utils/telegram';
 import { useLanguage } from '@/contexts/LanguageContext';
 
@@ -62,21 +61,6 @@ export default function AccountDetailPage() {
     setActiveImage(0);
     setActiveTab('overview');
 
-    const localAccount = getLocalListingById(accountId);
-    if (localAccount) {
-      setAccount(localAccount);
-      setLoading(false);
-      return;
-    }
-
-    const demoAccount = getDemoAccountById(accountId);
-
-    if (DEMO_ACCOUNT_IDS.has(accountId)) {
-      setAccount(demoAccount);
-      setLoading(false);
-      return;
-    }
-
     let cancelled = false;
 
     fetch(`${process.env.NEXT_PUBLIC_API_URL}/accounts/${accountId}`)
@@ -85,15 +69,13 @@ export default function AccountDetailPage() {
         if (cancelled) return;
         if (data.success) {
           setAccount(data.data);
-        } else if (demoAccount) {
-          setAccount(demoAccount);
         } else {
           setAccount(null);
         }
       })
       .catch(() => {
         if (!cancelled) {
-          setAccount(demoAccount ?? null);
+          setAccount(null);
         }
       })
       .finally(() => {

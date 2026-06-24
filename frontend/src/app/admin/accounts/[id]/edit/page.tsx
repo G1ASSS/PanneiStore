@@ -7,11 +7,7 @@ import Link from 'next/link';
 import { AccountListingForm, AccountFormValues } from '@/components/admin/AccountListingForm';
 import { adminFetch, AdminAccount } from '@/lib/adminApi';
 import { hasDevAdminSession, isDevAdminEnabled } from '@/lib/devAdmin';
-import {
-  filesToImages,
-  getLocalListingById,
-  updateLocalListing,
-} from '@/lib/localListings';
+
 
 export default function AdminEditAccountPage() {
   const params = useParams();
@@ -19,58 +15,20 @@ export default function AdminEditAccountPage() {
   const accountId = String(params.id);
   const { data: session } = useSession();
   const token = (session as { accessToken?: string } | null)?.accessToken ?? '';
-  const useLocal = isDevAdminEnabled() && hasDevAdminSession() && accountId.startsWith('local-');
+
   const [account, setAccount] = useState<AdminAccount | null>(null);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    if (useLocal) {
-      const local = getLocalListingById(accountId);
-      if (local) {
-        setAccount({
-          ...local,
-          price: local.price,
-          createdAt: local.createdAt,
-          skins: local.skins || [],
-        } as AdminAccount);
-      } else {
-        setError('Listing not found');
-      }
-      return;
-    }
+
     if (!token) return;
     adminFetch<AdminAccount>(`/accounts/${accountId}`, { token })
       .then((res) => setAccount(res.data))
       .catch((err) => setError(err.message));
-  }, [token, accountId, useLocal]);
+  }, [token, accountId]);
 
   const handleSubmit = async (values: AccountFormValues, images: File[]) => {
-    if (useLocal) {
-      const patch: Parameters<typeof updateLocalListing>[1] = {
-        listingCode: values.listingCode.trim(),
-        title: values.title.trim(),
-        titleMyanmar: values.titleMyanmar || undefined,
-        description: values.description || undefined,
-        price: Number(values.price),
-        rank: values.rank,
-        server: values.server.trim(),
-        heroCount: Number(values.heroCount),
-        skinCount: Number(values.skinCount),
-        emblemCount: Number(values.emblemCount),
-        winRate: Number(values.winRate),
-        totalMatches: Number(values.totalMatches),
-        level: Number(values.level),
-        status: values.status,
-        isFeatured: values.isFeatured,
-        skins: values.skins,
-      };
-      if (images.length > 0) {
-        patch.images = await filesToImages(images);
-      }
-      updateLocalListing(accountId, patch);
-      router.push('/admin/accounts');
-      return;
-    }
+
 
     const form = new FormData();
     form.append('listingCode', values.listingCode.trim());

@@ -9,11 +9,16 @@ import { OrderStatus, Prisma } from '@prisma/client';
 
 export const getAdminAnalytics = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+    sevenDaysAgo.setHours(0, 0, 0, 0);
+
     const [
       totalUsers, totalSellers, pendingSellers,
       totalCompletedOrders, totalRevenueResult,
       accountSalesCount, diamondSalesCount,
       recentPayments, pendingPayments,
+      recentOrders, recentUsers, popularHeroesRaw
     ] = await Promise.all([
       prisma.user.count(),
       prisma.seller.count({ where: { isApproved: true } }),
@@ -30,7 +35,52 @@ export const getAdminAnalytics = async (req: AuthRequest, res: Response, next: N
         where: { status: 'SUBMITTED' },
         include: { order: { include: { buyer: { select: { name: true } } } } },
       }),
+      prisma.order.findMany({
+        where: { status: 'COMPLETED', createdAt: { gte: sevenDaysAgo } },
+        select: { createdAt: true, finalPrice: true }
+      }),
+      prisma.user.findMany({
+        where: { createdAt: { gte: sevenDaysAgo } },
+        select: { createdAt: true }
+      }),
+      prisma.accountHero.groupBy({
+        by: ['heroName'],
+        _count: { heroName: true },
+        orderBy: { _count: { heroName: 'desc' } },
+        take: 5,
+      })
     ]);
+
+    // Format salesData and usersData for the last 7 days
+    const salesMap = new Map<string, number>();
+    const usersMap = new Map<string, number>();
+    
+    // Initialize last 7 days
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      salesMap.set(dateStr, 0);
+      usersMap.set(dateStr, 0);
+    }
+
+    recentOrders.forEach(o => {
+      const dateStr = o.createdAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      if (salesMap.has(dateStr)) {
+        salesMap.set(dateStr, salesMap.get(dateStr)! + Number(o.finalPrice));
+      }
+    });
+
+    recentUsers.forEach(u => {
+      const dateStr = u.createdAt.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      if (usersMap.has(dateStr)) {
+        usersMap.set(dateStr, usersMap.get(dateStr)! + 1);
+      }
+    });
+
+    const salesData = Array.from(salesMap.entries()).map(([date, sales]) => ({ date, sales }));
+    const usersData = Array.from(usersMap.entries()).map(([date, active]) => ({ date, active }));
+    const heroData = popularHeroesRaw.map(h => ({ name: h.heroName, value: h._count.heroName }));
 
     return successResponse(res, {
       stats: {
@@ -38,6 +88,9 @@ export const getAdminAnalytics = async (req: AuthRequest, res: Response, next: N
         totalCompletedOrders, accountSalesCount, diamondSalesCount,
         totalRevenue: totalRevenueResult._sum.finalPrice ?? 0,
       },
+      salesData,
+      usersData,
+      heroData,
       recentPayments, pendingPayments,
     }, 'Admin analytics fetched');
   } catch (err) {

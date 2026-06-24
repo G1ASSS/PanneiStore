@@ -5,7 +5,6 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { adminFetch } from '@/lib/adminApi';
 import { hasDevAdminSession, isDevAdminEnabled } from '@/lib/devAdmin';
-import { getLocalListings } from '@/lib/localListings';
 import { Users, Store, Clock, CheckCircle2, Banknote, Gamepad2, Gem } from 'lucide-react';
 import {
   AreaChart,
@@ -41,35 +40,10 @@ interface Analytics {
       buyer: { name: string };
     };
   }[];
+  salesData: { date: string; sales: number }[];
+  usersData: { date: string; active: number }[];
+  heroData: { name: string; value: number }[];
 }
-
-const mockSalesData = [
-  { date: 'Jun 19', sales: 150000 },
-  { date: 'Jun 20', sales: 220000 },
-  { date: 'Jun 21', sales: 180000 },
-  { date: 'Jun 22', sales: 300000 },
-  { date: 'Jun 23', sales: 250000 },
-  { date: 'Jun 24', sales: 420000 },
-  { date: 'Jun 25', sales: 550000 },
-];
-
-const mockUsersData = [
-  { date: 'Jun 19', active: 120 },
-  { date: 'Jun 20', active: 145 },
-  { date: 'Jun 21', active: 130 },
-  { date: 'Jun 22', active: 180 },
-  { date: 'Jun 23', active: 165 },
-  { date: 'Jun 24', active: 210 },
-  { date: 'Jun 25', active: 280 },
-];
-
-const mockHeroData = [
-  { name: 'Fanny', value: 35 },
-  { name: 'Gusion', value: 25 },
-  { name: 'Chou', value: 20 },
-  { name: 'Ling', value: 15 },
-  { name: 'Other', value: 5 },
-];
 
 const COLORS = ['#ec4899', '#a855f7', '#3b82f6', '#10b981', '#f59e0b'];
 
@@ -87,7 +61,6 @@ export default function AdminDashboardPage() {
   }, [token]);
 
   const stats = data?.stats;
-  const useLocal = isDevAdminEnabled() && hasDevAdminSession();
 
   return (
     <div className="flex flex-col gap-8">
@@ -100,13 +73,6 @@ export default function AdminDashboardPage() {
           + New Listing
         </Link>
       </div>
-
-      {useLocal && (
-        <div className="admin-success">
-          Running in local mode (no database). Listings are saved in your browser —{' '}
-          {getLocalListings().length} listing(s) so far.
-        </div>
-      )}
 
       {error && <div className="admin-error">{error}</div>}
 
@@ -148,7 +114,7 @@ export default function AdminDashboardPage() {
           </div>
           <div className="h-[300px] w-full text-xs">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={mockSalesData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
+              <AreaChart data={data?.salesData || []} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                 <defs>
                   <linearGradient id="colorSales" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#ec4899" stopOpacity={0.8} />
@@ -180,7 +146,7 @@ export default function AdminDashboardPage() {
           </div>
           <div className="h-[300px] w-full text-xs">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={mockUsersData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <BarChart data={data?.usersData || []} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                 <XAxis dataKey="date" stroke="#888888" tickLine={false} axisLine={false} />
                 <YAxis stroke="#888888" tickLine={false} axisLine={false} />
                 <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.1)" />
@@ -196,48 +162,9 @@ export default function AdminDashboardPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Popular Heroes Pie Chart */}
-        <div className="admin-card lg:col-span-1">
-          <div className="section-header mb-6">
-            <h2>Most Popular Heroes</h2>
-          </div>
-          <div className="h-[250px] w-full text-xs">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={mockHeroData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={60}
-                  outerRadius={80}
-                  paddingAngle={5}
-                  dataKey="value"
-                  stroke="none"
-                >
-                  {mockHeroData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                  ))}
-                </Pie>
-                <RechartsTooltip
-                  contentStyle={{ backgroundColor: '#13111c', borderColor: 'rgba(255,255,255,0.1)', borderRadius: '8px' }}
-                  itemStyle={{ color: '#fff' }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-          <div className="flex flex-wrap gap-3 justify-center mt-4">
-            {mockHeroData.map((entry, index) => (
-              <div key={entry.name} className="flex items-center gap-2 text-sm text-[var(--text-muted)]">
-                <span className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
-                {entry.name}
-              </div>
-            ))}
-          </div>
-        </div>
-
+      <div className="grid grid-cols-1 gap-6">
         {/* Pending Payments Table */}
-        <div className="admin-card lg:col-span-2">
+        <div className="admin-card">
           <div className="section-header">
             <h2>Pending Payment Reviews</h2>
             <Link href="/admin/orders" className="btn-sm">
@@ -271,3 +198,5 @@ export default function AdminDashboardPage() {
         </div>
       </div>
     </div>
+  );
+}

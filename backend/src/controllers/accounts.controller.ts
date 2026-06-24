@@ -132,9 +132,20 @@ export const getAccountDetails = async (req: Request, res: Response, next: NextF
 
 export const createAccount = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
-    const seller = await prisma.seller.findUnique({ where: { userId: req.user!.id } });
+    let seller = await prisma.seller.findUnique({ where: { userId: req.user!.id } });
+    
+    if (!seller && req.user!.role === 'ADMIN') {
+      seller = await prisma.seller.create({
+        data: {
+          userId: req.user!.id,
+          shopName: 'Pannei Store Admin',
+          isApproved: true,
+        }
+      });
+    }
+
     if (!seller) throw new ApiError(403, 'Only registered sellers can create listings');
-    if (!seller.isApproved) throw new ApiError(403, 'Your seller account is pending admin approval');
+    if (!seller.isApproved && req.user!.role !== 'ADMIN') throw new ApiError(403, 'Your seller account is pending admin approval');
 
     const {
       title, titleMyanmar, description, descMyanmar,

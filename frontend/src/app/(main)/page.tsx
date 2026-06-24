@@ -23,7 +23,7 @@ import { LiquidCard } from "@/components/ui/LiquidCard";
 import { EventPhotoSlider } from "@/components/ui/EventPhotoSlider";
 import { HeroBannerSlider } from "@/components/ui/HeroBannerSlider";
 import { AnnouncementPopup } from "@/components/ui/AnnouncementPopup";
-import { DEMO_POPULAR_ACCOUNTS } from "@/data/demoAccounts";
+
 import { useLanguage } from "@/contexts/LanguageContext";
 
 const platformStats = [
@@ -76,7 +76,7 @@ export default function HomePage() {
   const [eventPhotos, setEventPhotos] = React.useState<any[]>([]);
   const [banners, setBanners] = React.useState<any[]>([]);
   const [announcement, setAnnouncement] = React.useState<any>(null);
-  const [popularAccounts, setPopularAccounts] = React.useState<any[]>(DEMO_POPULAR_ACCOUNTS);
+  const [popularAccounts, setPopularAccounts] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {

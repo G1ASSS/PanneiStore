@@ -5,41 +5,13 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { AccountListingForm, AccountFormValues } from '@/components/admin/AccountListingForm';
 import { adminFetch } from '@/lib/adminApi';
-import { hasDevAdminSession, isDevAdminEnabled } from '@/lib/devAdmin';
-import { createLocalListing, filesToImages } from '@/lib/localListings';
 
 export default function AdminNewAccountPage() {
   const router = useRouter();
   const { data: session } = useSession();
   const token = (session as { accessToken?: string } | null)?.accessToken ?? '';
-  const useLocal = isDevAdminEnabled() && hasDevAdminSession() && !token;
 
   const handleSubmit = async (values: AccountFormValues, images: File[]) => {
-    if (useLocal) {
-      const imageData = await filesToImages(images);
-      createLocalListing({
-        listingCode: values.listingCode.trim(),
-        title: values.title.trim(),
-        titleMyanmar: values.titleMyanmar || undefined,
-        description: values.description || undefined,
-        price: Number(values.price),
-        rank: values.rank,
-        server: values.server.trim(),
-        heroCount: Number(values.heroCount),
-        skinCount: Number(values.skinCount),
-        emblemCount: Number(values.emblemCount),
-        winRate: Number(values.winRate),
-        totalMatches: Number(values.totalMatches),
-        level: Number(values.level),
-        status: 'AVAILABLE',
-        isFeatured: values.isFeatured,
-        images: imageData,
-        skins: values.skins,
-      });
-      router.push('/admin/accounts');
-      return;
-    }
-
     const form = new FormData();
     form.append('listingCode', values.listingCode.trim());
     form.append('title', values.title.trim());
@@ -69,7 +41,6 @@ export default function AdminNewAccountPage() {
           <h2>New Listing</h2>
           <p>
             Create a listing with a custom Listing ID for Telegram inquiries
-            {useLocal && ' (stored locally — no database)'}
           </p>
         </div>
         <Link href="/admin/accounts" className="btn-secondary">
