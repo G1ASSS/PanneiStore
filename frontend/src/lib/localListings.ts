@@ -51,7 +51,7 @@ export async function filesToImages(files: File[]): Promise<LocalListing['images
 }
 
 export function createLocalListing(
-  data: Omit<LocalListing, 'id' | 'createdAt' | 'seller' | 'heroes' | 'skins' | 'reviews'> & {
+  data: Omit<LocalListing, 'id' | 'createdAt' | 'seller' | 'heroes' | 'reviews'> & {
     images: LocalListing['images'];
   }
 ): LocalListing {
@@ -66,7 +66,7 @@ export function createLocalListing(
     id: `local-${code}`,
     listingCode: code,
     heroes: [],
-    skins: [],
+    skins: data.skins || [],
     reviews: [],
     seller: {
       id: 'panneistore',
