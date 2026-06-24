@@ -10,6 +10,7 @@ import {
   ShoppingCart, User, Layers, X, Gamepad2, Wallet
 } from "lucide-react";
 import { cn } from "@/utils/cn";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 /* ─── Types ─────────────────────────────────────────────────────── */
 interface Game { id: string; name: string; logo: string | null }
@@ -73,6 +74,7 @@ const PAYMENTS = [
 /* ══════════════════════════════════════════════════════════════════ */
 export default function GameTopUpPage() {
   const { id } = useParams();
+  const { t } = useLanguage();
 
   const [game, setGame] = useState<Game | null>(null);
   const [pkgs, setPkgs] = useState<TopupPackage[]>([]);
@@ -142,7 +144,7 @@ export default function GameTopUpPage() {
               <Gamepad2 size={32} className="animate-bounce" />
             </div>
           </div>
-          <p className="theme-muted text-sm font-medium">Loading packages…</p>
+          <p className="theme-muted text-sm font-medium">{t("Loading packages…", "ပက်ကေ့ချ်များကို ရှာဖွေနေပါသည်...")}</p>
         </div>
       </div>
     );
@@ -161,7 +163,7 @@ export default function GameTopUpPage() {
                 <div className="w-7 h-7 rounded-full bg-[var(--background)] flex items-center justify-center transition-colors group-hover:bg-brand-pink/10">
                   <ArrowLeft size={14} className="text-[var(--heading)] group-hover:text-brand-pink group-hover:-translate-x-0.5 transition-all" />
                 </div>
-                <span className="text-xs font-bold text-[var(--heading)] group-hover:text-brand-pink transition-colors uppercase tracking-widest">Back to Games</span>
+                <span className="text-xs font-bold text-[var(--heading)] group-hover:text-brand-pink transition-colors uppercase tracking-widest">{t("Back to Games", "ဂိမ်းများသို့ ပြန်သွားရန်")}</span>
               </button>
             </Link>
           </motion.div>
@@ -186,12 +188,12 @@ export default function GameTopUpPage() {
                 </div>
                 <div className="flex-1 min-w-0 flex flex-col items-center">
                   <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black theme-heading truncate w-full text-center">{game?.name}</h1>
-                  <p className="theme-muted text-sm sm:text-base mt-2 mb-5">Choose a package below to get started</p>
+                  <p className="theme-muted text-sm sm:text-base mt-2 mb-5">{t("Choose a package below to get started", "စတင်ရန် အောက်ပါ ပက်ကေ့ချ်တစ်ခုကို ရွေးချယ်ပါ")}</p>
                   <div className="flex flex-wrap justify-center gap-2.5">
                     {[
-                      { icon: <Zap size={12} fill="currentColor" />, label: "Instant", cls: "text-brand-pink   bg-brand-pink/10   border-brand-pink/25" },
-                      { icon: <Shield size={12} />, label: "Secure", cls: "text-brand-purple bg-brand-purple/10 border-brand-purple/25" },
-                      { icon: <Star size={12} fill="currentColor" />, label: "Best Price", cls: "text-brand-cyan   bg-brand-cyan/10   border-brand-cyan/25" },
+                      { icon: <Zap size={12} fill="currentColor" />, label: t("Instant", "ချက်ချင်းရရှိ"), cls: "text-brand-pink   bg-brand-pink/10   border-brand-pink/25" },
+                      { icon: <Shield size={12} />, label: t("Secure", "လုံခြုံစိတ်ချရသော"), cls: "text-brand-purple bg-brand-purple/10 border-brand-purple/25" },
+                      { icon: <Star size={12} fill="currentColor" />, label: t("Best Price", "အကောင်းဆုံးစျေးနှုန်း"), cls: "text-brand-cyan   bg-brand-cyan/10   border-brand-cyan/25" },
                     ].map(b => (
                       <span key={b.label} className={cn("flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold border", b.cls)}>
                         {b.icon}{b.label}
@@ -208,28 +210,28 @@ export default function GameTopUpPage() {
 
             {/* 2x Diamonds */}
             {twoDiamonds.length > 0 && (
-              <PackageSection title="2x Diamonds" accent="#ff2e93" packages={twoDiamonds} selPkg={selPkg} onSelect={setSelPkg} />
+              <PackageSection title={t("2x Diamonds", "ဆတိုး စိန်များ")} accent="#ff2e93" packages={twoDiamonds} selPkg={selPkg} onSelect={setSelPkg} />
             )}
 
             {/* Mobile Legends Pass */}
             {passPkgs.length > 0 && (
-              <PackageSection title="Mobile Legends Pass" accent="#10b981" packages={passPkgs} selPkg={selPkg} onSelect={setSelPkg} />
+              <PackageSection title={t("Mobile Legends Pass", "Mobile Legends လက်မှတ်များ")} accent="#10b981" packages={passPkgs} selPkg={selPkg} onSelect={setSelPkg} />
             )}
 
             {/* Diamond List */}
             {diamondPkgs.length > 0 && (
-              <PackageSection title="Diamond List" accent="#a12cff" packages={diamondPkgs} selPkg={selPkg} onSelect={setSelPkg} />
+              <PackageSection title={t("Diamond List", "စိန်စာရင်း")} accent="#a12cff" packages={diamondPkgs} selPkg={selPkg} onSelect={setSelPkg} />
             )}
 
             {/* Fallback: Show all packages if none are categorized */}
             {twoDiamonds.length === 0 && passPkgs.length === 0 && diamondPkgs.length === 0 && pkgs.length > 0 && (
-              <PackageSection title="All Packages" accent="#a12cff" packages={pkgs} selPkg={selPkg} onSelect={setSelPkg} />
+              <PackageSection title={t("All Packages", "ပက်ကေ့ချ်အားလုံး")} accent="#a12cff" packages={pkgs} selPkg={selPkg} onSelect={setSelPkg} />
             )}
 
             {pkgs.length === 0 && (
               <div className="flex flex-col items-center py-20 theme-muted">
                 <img src="/diamonds/d-large.png" alt="" className="w-16 h-16 object-contain opacity-30 mb-4" />
-                <p className="text-sm">No packages available yet</p>
+                <p className="text-sm">{t("No packages available yet", "ပက်ကေ့ချ်များ မရရှိနိုင်သေးပါ")}</p>
               </div>
             )}
           </div>
@@ -463,6 +465,7 @@ function CheckoutCard({
   canOrder: boolean; onOrder: () => void; onClose: () => void;
   isMobile?: boolean;
 }) {
+  const { t } = useLanguage();
   const sectionAccent =
     sectionOf(pkg) === "2x" ? "#ff2e93" :
       sectionOf(pkg) === "pass" ? "#10b981" : "#a12cff";
@@ -481,7 +484,7 @@ function CheckoutCard({
       <div className="mk-sidebar-head">
         <h3 className="flex items-center gap-2">
           <ShoppingCart size={18} className="text-brand-pink" /> 
-          Checkout Details
+          {t("Checkout Details", "ဝယ်ယူမှု အသေးစိတ်")}
         </h3>
         <button onClick={onClose} className="mk-sidebar-close" aria-label="Close checkout">
           <X size={18} />
@@ -504,7 +507,7 @@ function CheckoutCard({
             <img src={getPkgIcon(pkg)} alt={pkg.packageName} className="w-12 h-12 object-contain drop-shadow-md" />
           </div>
           <div className="relative z-10">
-            <span className="text-[10px] font-extrabold uppercase tracking-widest" style={{ color: sectionAccent }}>Selected Package</span>
+            <span className="text-[10px] font-extrabold uppercase tracking-widest" style={{ color: sectionAccent }}>{t("Selected Package", "ရွေးချယ်ထားသော ပက်ကေ့ချ်")}</span>
             <p className="font-bold text-sm theme-heading mt-0.5">{pkg.packageName}</p>
             <p className="font-black text-brand-pink text-xl leading-tight mt-1">
               {pkg.price.toLocaleString()} <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">MMK</span>
@@ -514,7 +517,7 @@ function CheckoutCard({
 
         {/* Game Account Inputs */}
         <div className="mk-filter-group">
-          <span className="mk-filter-label flex items-center gap-1.5"><User size={14} className="text-brand-pink"/> Game Account</span>
+          <span className="mk-filter-label flex items-center gap-1.5"><User size={14} className="text-brand-pink"/> {t("Game Account", "ဂိမ်းအကောင့်")}</span>
           <div className="space-y-3 mt-3">
             <div className="relative">
               <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 theme-muted opacity-50" />
@@ -522,7 +525,7 @@ function CheckoutCard({
                 type="text"
                 value={userId}
                 onChange={e => setUserId(e.target.value)}
-                placeholder="User ID (e.g. 123456789)"
+                placeholder={t("User ID (e.g. 123456789)", "User ID (ဥပမာ - 123456789)")}
                 className="w-full h-[42px] rounded-xl text-sm font-semibold transition-colors outline-none"
                 style={{ paddingLeft: '44px', paddingRight: '16px', border: '1px solid var(--card-border)', background: 'var(--background)', color: 'var(--heading)' }}
                 onFocus={e => { e.currentTarget.style.borderColor = '#ff2e93'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(255,46,147,0.1)'; }}
@@ -535,7 +538,7 @@ function CheckoutCard({
                 type="text"
                 value={serverId}
                 onChange={e => setServerId(e.target.value)}
-                placeholder="Server ID (e.g. 2501)"
+                placeholder={t("Server ID (e.g. 2501)", "Server ID (ဥပမာ - 2501)")}
                 className="w-full h-[42px] rounded-xl text-sm font-semibold transition-colors outline-none"
                 style={{ paddingLeft: '44px', paddingRight: '16px', border: '1px solid var(--card-border)', background: 'var(--background)', color: 'var(--heading)' }}
                 onFocus={e => { e.currentTarget.style.borderColor = '#ff2e93'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(255,46,147,0.1)'; }}
@@ -547,7 +550,7 @@ function CheckoutCard({
 
         {/* Payment Method Selector */}
         <div className="mk-filter-group">
-          <span className="mk-filter-label flex items-center gap-1.5"><Wallet size={14} className="text-brand-pink"/> Payment Method</span>
+          <span className="mk-filter-label flex items-center gap-1.5"><Wallet size={14} className="text-brand-pink"/> {t("Payment Method", "ငွေပေးချေမည့်နည်းလမ်း")}</span>
           <div className="grid grid-cols-2 gap-3 mt-3">
             {PAYMENTS.map(m => {
               const sel = payment === m.id;
@@ -583,7 +586,7 @@ function CheckoutCard({
         {!canOrder && (
           <p className="text-[11px] font-bold text-center text-red-500 mb-1 flex items-center justify-center gap-1">
             <span>*</span>
-            {!userId || !serverId ? "Please enter your User ID and Server ID" : "Please select a payment method"}
+            {!userId || !serverId ? t("Please enter your User ID and Server ID", "ကျေးဇူးပြု၍ သင့်၏ User ID နှင့် Server ID ကို ထည့်သွင်းပါ") : t("Please select a payment method", "ကျေးဇူးပြု၍ ငွေပေးချေမည့်နည်းလမ်းကို ရွေးချယ်ပါ")}
           </p>
         )}
         <button
@@ -593,7 +596,7 @@ function CheckoutCard({
           style={{ opacity: canOrder ? 1 : 0.5, cursor: canOrder ? 'pointer' : 'not-allowed' }}
         >
           <ShoppingCart size={18} />
-          Place Order via Telegram
+          {t("Place Order via Telegram", "Telegram ဖြင့် ဝယ်ယူမည်")}
         </button>
       </div>
     </div>

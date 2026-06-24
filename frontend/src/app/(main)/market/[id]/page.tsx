@@ -20,8 +20,10 @@ import { AccountDetail } from '@/types/account';
 import { DEMO_ACCOUNT_IDS, getDemoAccountById } from '@/data/demoAccounts';
 import { getLocalListingById } from '@/lib/localListings';
 import { buildAccountInquiryMessage, buildOwnerTelegramUrl } from '@/utils/telegram';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function AccountDetailPage() {
+  const { t } = useLanguage();
   const params = useParams();
   const accountId = String(params.id);
   const [account, setAccount] = useState<AccountDetail | null>(null);
@@ -129,11 +131,11 @@ export default function AccountDetailPage() {
       <div className="ad-page ad-not-found">
         <div className="ad-not-found-card">
           <Trophy size={40} strokeWidth={1.5} className="ad-not-found-icon" />
-          <h2>Account Not Found</h2>
-          <p>This listing may have been removed or sold. Browse the market for more accounts.</p>
+          <h2>{t("Account Not Found", "အကောင့် မတွေ့ပါ")}</h2>
+          <p>{t("This listing may have been removed or sold. Browse the market for more accounts.", "ဤအကောင့်သည် ရောင်းထွက်သွားပြီ (သို့) ဖြုတ်ချခံရခြင်း ဖြစ်နိုင်ပါသည်။ စျေးကွက်ထဲတွင် အခြားအကောင့်များကို ဆက်လက်လေ့လာပါ။")}</p>
           <Link href="/market" className="hero-cta hero-cta-primary ad-back-btn">
             <ArrowLeft size={16} />
-            Back to Market
+            {t("Back to Market", "အရောင်းစင်တာသို့ ပြန်သွားရန်")}
           </Link>
         </div>
       </div>
@@ -146,26 +148,26 @@ export default function AccountDetailPage() {
   const telegramBuyUrl = buildOwnerTelegramUrl(buildAccountInquiryMessage(account));
 
   const quickStats = [
-    { icon: Users, label: 'Heroes', value: account.heroCount, accent: 'ad-stat-pill--pink' },
-    { icon: Sparkles, label: 'Skins', value: account.skinCount, accent: 'ad-stat-pill--purple' },
-    { icon: Swords, label: 'Win Rate', value: `${account.winRate}%`, accent: 'ad-stat-pill--cyan' },
-    { icon: Trophy, label: 'Level', value: account.level, accent: 'ad-stat-pill--gold' },
+    { icon: Users, label: t('Heroes', 'ဟီးရိုးများ'), value: account.heroCount, accent: 'ad-stat-pill--pink' },
+    { icon: Sparkles, label: t('Skins', 'စကင်များ'), value: account.skinCount, accent: 'ad-stat-pill--purple' },
+    { icon: Swords, label: t('Win Rate', 'နိုင်နှုန်း'), value: `${account.winRate}%`, accent: 'ad-stat-pill--cyan' },
+    { icon: Trophy, label: t('Level', 'အဆင့်'), value: account.level, accent: 'ad-stat-pill--gold' },
   ];
 
   const overviewStats = [
-    { label: 'Rank', value: account.rank },
-    { label: 'Server', value: account.server },
-    { label: 'Level', value: account.level },
-    { label: 'Win Rate', value: `${account.winRate}%` },
-    { label: 'Total Matches', value: account.totalMatches.toLocaleString() },
-    { label: 'Hero Count', value: account.heroCount },
-    { label: 'Skin Count', value: account.skinCount },
-    { label: 'Collection Level', value: account.emblemCount },
+    { label: t('Rank', 'အဆင့်သတ်မှတ်ချက်'), value: account.rank },
+    { label: t('Server', 'ဆာဗာ'), value: account.server },
+    { label: t('Level', 'အဆင့်'), value: account.level },
+    { label: t('Win Rate', 'နိုင်နှုန်း'), value: `${account.winRate}%` },
+    { label: t('Total Matches', 'ပွဲအရေအတွက်'), value: account.totalMatches.toLocaleString() },
+    { label: t('Hero Count', 'ဟီးရိုးအရေအတွက်'), value: account.heroCount },
+    { label: t('Skin Count', 'စကင်အရေအတွက်'), value: account.skinCount },
+    { label: t('Collection Level', 'စုဆောင်းမှုအဆင့်'), value: account.emblemCount },
   ];
 
   const tabs = [
-    { id: 'overview' as const, label: 'Overview' },
-    { id: 'skins' as const, label: 'Skins', count: account.skins.length },
+    { id: 'overview' as const, label: t('Overview', 'အကျဉ်းချုပ်') },
+    { id: 'skins' as const, label: t('Skins', 'စကင်များ'), count: account.skinCount },
   ];
 
   return (
@@ -173,7 +175,7 @@ export default function AccountDetailPage() {
       <div className="ad-topbar">
         <Link href="/market" className="ad-back-btn" aria-label="Back to market">
           <ArrowLeft size={20} strokeWidth={2} aria-hidden />
-          Back
+          {t("Back", "နောက်သို့")}
         </Link>
       </div>
 
@@ -188,7 +190,7 @@ export default function AccountDetailPage() {
             {account.isFeatured && (
               <span className="ad-featured-badge">
                 <Star size={12} fill="currentColor" />
-                Featured
+                {t("Featured", "အထူးအကောင့်")}
               </span>
             )}
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -196,14 +198,14 @@ export default function AccountDetailPage() {
             <div className="ad-image-gradient" aria-hidden />
             <span className="ad-zoom-hint">
               <ZoomIn size={14} strokeWidth={2.25} />
-              Tap to enlarge
+              {t("Tap to enlarge", "ပုံကြီးချဲ့ရန် နှိပ်ပါ")}
             </span>
             {imageCount > 1 && (
               <span className="ad-image-counter">
                 {activeImage + 1} / {imageCount}
               </span>
             )}
-            {!isAvailable && <div className="ad-sold-overlay">SOLD</div>}
+            {!isAvailable && <div className="ad-sold-overlay">{t("SOLD", "ရောင်းထွက်သွားပြီ")}</div>}
           </button>
 
           {imageCount > 1 && (
@@ -233,14 +235,14 @@ export default function AccountDetailPage() {
                 {account.rank}
               </span>
               <span className="ad-server-badge">{account.server}</span>
-              {isAvailable && <span className="ad-status-badge">Available</span>}
+              {isAvailable && <span className="ad-status-badge">{t("Available", "ဝယ်ယူနိုင်ပါသည်")}</span>}
             </div>
 
             <h1 className="ad-title">{account.title}</h1>
             {account.titleMyanmar && <p className="ad-title-mm">{account.titleMyanmar}</p>}
 
             <div className="ad-price-block ad-price-block--mobile">
-              <span className="ad-price-label">Price</span>
+              <span className="ad-price-label">{t("Price", "စျေးနှုန်း")}</span>
               <div className="ad-price-row">
                 <span className="ad-price-amount">{Number(account.price).toLocaleString()}</span>
                 <span className="ad-price-currency">MMK</span>
@@ -260,7 +262,7 @@ export default function AccountDetailPage() {
             </div>
 
             <div className="ad-price-block ad-price-block--full">
-              <span className="ad-price-label">Price</span>
+              <span className="ad-price-label">{t("Price", "စျေးနှုန်း")}</span>
               <div className="ad-price-row">
                 <span className="ad-price-amount">{Number(account.price).toLocaleString()}</span>
                 <span className="ad-price-currency">MMK</span>
@@ -276,10 +278,10 @@ export default function AccountDetailPage() {
                   className="hero-cta hero-cta-primary ad-buy-btn"
                 >
                   <ShoppingBag size={18} strokeWidth={2} />
-                  Buy Now
+                  {t("Buy Now", "ယခုဝယ်မည်")}
                 </a>
               ) : (
-                <div className="ad-sold-msg">This account has been sold.</div>
+                <div className="ad-sold-msg">{t("This account has been sold.", "ဤအကောင့်သည် ရောင်းထွက်သွားပြီဖြစ်သည်။")}</div>
               )}
             </div>
           </div>
@@ -295,7 +297,7 @@ export default function AccountDetailPage() {
             className="hero-cta hero-cta-primary ad-mobile-buy"
           >
             <ShoppingBag size={16} strokeWidth={2} />
-            Buy Now
+            {t("Buy Now", "ယခုဝယ်မည်")}
           </a>
         </div>
       )}
@@ -330,7 +332,7 @@ export default function AccountDetailPage() {
               </div>
               {account.description && (
                 <div className="ad-description">
-                  <h3>About this account</h3>
+                  <h3>{t("About this account", "အကောင့်အချက်အလက်များ")}</h3>
                   <p>{account.description}</p>
                   {account.descMyanmar && <p className="ad-description-mm">{account.descMyanmar}</p>}
                 </div>
@@ -347,7 +349,7 @@ export default function AccountDetailPage() {
                   <span className="ad-chip-sub">({skin.heroName})</span>
                 </div>
               ))}
-              {account.skins.length === 0 && <p className="ad-empty">No skin data available.</p>}
+              {account.skins.length === 0 && <p className="ad-empty">{t("Detailed skin list not provided. Please review the screenshots above.", "အသေးစိတ် စကင်စာရင်း မပါဝင်ပါ။ အထက်ပါ ဓာတ်ပုံများကို ကြည့်ရှုပါ။")}</p>}
             </div>
           )}
         </div>

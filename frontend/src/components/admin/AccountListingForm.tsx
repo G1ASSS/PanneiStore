@@ -19,6 +19,7 @@ export interface AccountFormValues {
   level: string;
   status: string;
   isFeatured: boolean;
+  skins: Array<{ heroName: string; skinName: string; isLegend: boolean }>;
 }
 
 const DEFAULT_VALUES: AccountFormValues = {
@@ -37,6 +38,7 @@ const DEFAULT_VALUES: AccountFormValues = {
   level: '0',
   status: 'AVAILABLE',
   isFeatured: false,
+  skins: [],
 };
 
 const STATUS_OPTIONS = ['AVAILABLE', 'SOLD', 'PENDING', 'HIDDEN', 'REJECTED'];
@@ -283,6 +285,68 @@ export function AccountListingForm({
               {images.length} file(s) selected
             </p>
           )}
+        </div>
+
+        <div className="admin-form-group full-width" style={{ marginTop: '1rem', borderTop: '1px solid var(--border)', paddingTop: '1rem' }}>
+          <h3 style={{ fontSize: '1.1rem', marginBottom: '1rem', color: 'var(--heading)' }}>Detailed Skins List (Optional)</h3>
+          
+          {values.skins?.map((skin, idx) => (
+            <div key={idx} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto auto', gap: '0.5rem', marginBottom: '0.5rem', alignItems: 'center' }}>
+              <input
+                type="text"
+                placeholder="Hero Name (e.g. Alucard)"
+                value={skin.heroName}
+                onChange={(e) => {
+                  const newSkins = [...(values.skins || [])];
+                  newSkins[idx].heroName = e.target.value;
+                  set('skins', newSkins);
+                }}
+                className="admin-input"
+              />
+              <input
+                type="text"
+                placeholder="Skin Name (e.g. Child of the Fall)"
+                value={skin.skinName}
+                onChange={(e) => {
+                  const newSkins = [...(values.skins || [])];
+                  newSkins[idx].skinName = e.target.value;
+                  set('skins', newSkins);
+                }}
+                className="admin-input"
+              />
+              <label style={{ display: 'flex', alignItems: 'center', gap: '4px', margin: 0, fontSize: '0.85rem' }}>
+                <input
+                  type="checkbox"
+                  checked={skin.isLegend}
+                  onChange={(e) => {
+                    const newSkins = [...(values.skins || [])];
+                    newSkins[idx].isLegend = e.target.checked;
+                    set('skins', newSkins);
+                  }}
+                />
+                Legend?
+              </label>
+              <button 
+                type="button" 
+                onClick={() => {
+                  const newSkins = (values.skins || []).filter((_, i) => i !== idx);
+                  set('skins', newSkins);
+                }}
+                style={{ padding: '0.25rem 0.5rem', background: '#fee2e2', color: '#ef4444', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem' }}
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+
+          <button 
+            type="button"
+            className="btn-secondary"
+            onClick={() => set('skins', [...(values.skins || []), { heroName: '', skinName: '', isLegend: false }])}
+            style={{ marginTop: '0.5rem', padding: '0.4rem 0.8rem', fontSize: '0.9rem' }}
+          >
+            + Add Skin
+          </button>
         </div>
       </div>
 

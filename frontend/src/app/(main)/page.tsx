@@ -24,74 +24,82 @@ import { EventPhotoSlider } from "@/components/ui/EventPhotoSlider";
 import { HeroBannerSlider } from "@/components/ui/HeroBannerSlider";
 import { AnnouncementPopup } from "@/components/ui/AnnouncementPopup";
 import { DEMO_POPULAR_ACCOUNTS } from "@/data/demoAccounts";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const platformStats = [
   {
     value: "5,000+",
-    label: "Accounts Sold",
+    label: { en: "Accounts Sold", my: "ရောင်းချပြီးသော အကောင့်များ" },
     icon: Users,
     accent: "stat-accent-gold",
   },
   {
     value: "99.8%",
-    label: "Happy Escrow Ratings",
+    label: { en: "Happy Escrow Ratings", my: "စိတ်ချယုံကြည်ရသော ဝန်ဆောင်မှု" },
     icon: Star,
     accent: "stat-accent-pink",
   },
   {
     value: "< 3 Mins",
-    label: "Average Diamond Delivery",
+    label: { en: "Average Diamond Delivery", my: "စိန်ထည့်သွင်းမှု ကြာချိန်" },
     icon: Clock,
     accent: "stat-accent-cyan",
   },
 ];
 
-const popularAccounts = DEMO_POPULAR_ACCOUNTS;
+// Removed hardcoded popularAccounts definition
 
 const howItWorks = [
   {
     step: "01",
-    title: "Browse & Choose",
-    description: "Pick an account or diamond package that fits your budget.",
+    title: { en: "Browse & Choose", my: "ရှာဖွေပြီး ရွေးချယ်ပါ" },
+    description: { en: "Pick an account or diamond package that fits your budget.", my: "သင့်ဘတ်ဂျက်နှင့် ကိုက်ညီသော အကောင့် သို့မဟုတ် စိန်ပက်ကေ့ချ်ကို ရွေးချယ်ပါ။" },
     icon: Search,
   },
   {
     step: "02",
-    title: "Pay Securely",
-    description: "Pay with KBZ Pay, Wave Money, and other local options.",
+    title: { en: "Pay Securely", my: "လုံခြုံစွာ ငွေပေးချေပါ" },
+    description: { en: "Pay with KBZ Pay, Wave Money, and other local options.", my: "KBZ Pay, Wave Money နှင့် အခြား ငွေပေးချေမှုများဖြင့် ပေးချေနိုင်ပါသည်။" },
     icon: CreditCard,
   },
   {
     step: "03",
-    title: "Receive Instantly",
-    description: "Get account details or diamonds within minutes.",
+    title: { en: "Receive Instantly", my: "ချက်ချင်း ရယူပါ" },
+    description: { en: "Get account details or diamonds within minutes.", my: "အကောင့် အချက်အလက် သို့မဟုတ် စိန်များကို မိနစ်ပိုင်းအတွင်း ရရှိမည်ဖြစ်ပါသည်။" },
     icon: PackageCheck,
   },
 ];
 
 export default function HomePage() {
   const router = useRouter();
+  const { t } = useLanguage();
   const [eventPhotos, setEventPhotos] = React.useState<any[]>([]);
   const [banners, setBanners] = React.useState<any[]>([]);
   const [announcement, setAnnouncement] = React.useState<any>(null);
+  const [popularAccounts, setPopularAccounts] = React.useState<any[]>(DEMO_POPULAR_ACCOUNTS);
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     const fetchEventPhotos = async () => {
       try {
-        const [photosRes, bannersRes, announcementRes] = await Promise.all([
+        const [photosRes, bannersRes, announcementRes, accountsRes] = await Promise.all([
           fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api/v1'}/event-photos/active`),
           fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api/v1'}/hero-banners/active`),
-          fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api/v1'}/announcements/active`)
+          fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api/v1'}/announcements/active`),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api/v1'}/accounts?isFeatured=true&limit=6`)
         ]);
         
         const photosData = await photosRes.json();
         const bannersData = await bannersRes.json();
         const announcementData = await announcementRes.json();
+        const accountsData = await accountsRes.json();
 
         if (photosData.success) setEventPhotos(photosData.data);
         if (bannersData.success) setBanners(bannersData.data);
         if (announcementData.success) setAnnouncement(announcementData.data);
+        if (accountsData.success && accountsData.data.accounts.length > 0) {
+          setPopularAccounts(accountsData.data.accounts);
+        }
       } catch (error) {
         console.error('Failed to fetch home data:', error);
       } finally {
@@ -139,8 +147,8 @@ export default function HomePage() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-4xl sm:text-[2.95rem] lg:text-[3.45rem] xl:text-[4rem] font-black theme-heading leading-tight uppercase"
           >
-            Level Up Your <br />
-            <span className="text-gradient-pink-purple">Gaming Legends</span>
+            {t("Level Up Your", "သင့်ရဲ့ ဂိမ်းကစားခြင်းကို")} <br />
+            <span className="text-gradient-pink-purple">{t("Gaming Legends", "အဆင့်မြှင့်တင်လိုက်ပါ")}</span>
           </motion.h1>
 
           <motion.p
@@ -149,7 +157,10 @@ export default function HomePage() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="theme-copy text-sm sm:text-base max-w-lg leading-relaxed"
           >
-            Safely buy and sell premium Mobile Legends accounts or top up diamonds instantly. Myanmar's most trusted gaming escrow platform supporting KBZ Pay, Wave Money, and more.
+            {t(
+              "Safely buy and sell premium Mobile Legends accounts or top up diamonds instantly. Myanmar's most trusted gaming escrow platform supporting KBZ Pay, Wave Money, and more.",
+              "ပရီမီယံ Mobile Legends အကောင့်များကို လုံခြုံစိတ်ချစွာ ရောင်းဝယ်နိုင်ပြီး စိန်များကို ချက်ချင်း ထည့်သွင်းနိုင်ပါသည်။ KBZ Pay, Wave Money နှင့် အခြား ငွေပေးချေမှုများကို ထောက်ပံ့ပေးထားသော မြန်မာနိုင်ငံ၏ ယုံကြည်ရဆုံး ဂိမ်းပလက်ဖောင်းဖြစ်ပါသည်။"
+            )}
           </motion.p>
 
           <motion.div
@@ -159,11 +170,11 @@ export default function HomePage() {
             className="home-hero-actions"
           >
             <Link href="/market" className="hero-cta hero-cta-primary">
-              Buy ML Accounts
+              {t("Buy ML Accounts", "အကောင့်များ ဝယ်ရန်")}
               <ArrowRight size={16} strokeWidth={2} />
             </Link>
             <Link href="/topup" className="hero-cta hero-cta-secondary">
-              Top up
+              {t("Top up", "စိန်ဖြည့်ရန်")}
             </Link>
           </motion.div>
         </div>
@@ -185,12 +196,12 @@ export default function HomePage() {
         {platformStats.map((stat) => {
           const Icon = stat.icon;
           return (
-            <div key={stat.label} className="home-stat">
+            <div key={stat.label.en} className="home-stat">
               <div className={`home-stat-icon ${stat.accent}`}>
                 <Icon size={20} strokeWidth={2} />
               </div>
               <div className={`home-stat-value ${stat.accent}`}>{stat.value}</div>
-              <div className="home-stat-label">{stat.label}</div>
+              <div className="home-stat-label">{t(stat.label.en, stat.label.my)}</div>
             </div>
           );
         })}
@@ -199,12 +210,12 @@ export default function HomePage() {
       {/* ─── MOST POPULAR ACCOUNTS ─── */}
       <section className="home-section home-popular-section home-centered-block">
         <div className="home-popular-header">
-          <span className="home-section-kicker">Trending Now</span>
+          <span className="home-section-kicker">{t("Trending Now", "ယခု ရေပန်းစားနေသော")}</span>
           <h2 className="home-section-title">
-            Most Popular <span className="text-gradient-pink-purple">Accounts</span>
+            {t("Most Popular", "လူကြိုက်အများဆုံး")} <span className="text-gradient-pink-purple">{t("Accounts", "အကောင့်များ")}</span>
           </h2>
           <p className="home-section-desc">
-            Top-rated ML accounts loved by buyers — verified stats, premium skins, and trusted sellers.
+            {t("Top-rated ML accounts loved by buyers — verified stats, premium skins, and trusted sellers.", "ဝယ်ယူသူများ အနှစ်သက်ဆုံး ထိပ်တန်း ML အကောင့်များ — စစ်ဆေးပြီးသား အချက်အလက်များ၊ ပရီမီယံ စကင်များနှင့် ယုံကြည်စိတ်ချရသော ရောင်းချသူများ")}
           </p>
         </div>
 
@@ -224,7 +235,7 @@ export default function HomePage() {
             }}
             className="home-see-more"
           >
-            <span>Browse all accounts</span>
+            <span>{t("Browse all accounts", "အကောင့်များအားလုံး ကြည့်ရှုရန်")}</span>
             <ArrowRight size={16} strokeWidth={2} className="home-see-more-icon" aria-hidden />
           </Link>
         </div>
@@ -234,12 +245,12 @@ export default function HomePage() {
       <section className="home-process home-centered-block">
         <div className="home-process-inner">
           <div className="home-process-copy">
-            <span className="home-section-kicker">Simple Process</span>
+            <span className="home-section-kicker">{t("Simple Process", "လွယ်ကူသော အဆင့်များ")}</span>
             <h2 className="home-section-title">
-              From Browse to <span className="text-gradient-pink-purple">Delivery</span>
+              {t("From Browse to", "ရွေးချယ်မှုမှ")} <span className="text-gradient-pink-purple">{t("Delivery", "ပေးပို့ခြင်းအထိ")}</span>
             </h2>
             <p className="home-section-desc max-w-md">
-              Whether you are buying an account or topping up diamonds, PanneiStore keeps every step clear, fast, and secure.
+              {t("Whether you are buying an account or topping up diamonds, PanneiStore keeps every step clear, fast, and secure.", "အကောင့်ဝယ်ယူခြင်း သို့မဟုတ် စိန်ထည့်သွင်းခြင်းများကို PanneiStore မှ ရှင်းလင်း၊ မြန်ဆန်ပြီး လုံခြုံစွာ ဆောင်ရွက်ပေးပါသည်။")}
             </p>
           </div>
 
@@ -255,9 +266,9 @@ export default function HomePage() {
                   <div className="home-process-step-content">
                     <h3 className="home-process-step-title">
                       <span className="home-process-number">{item.step}</span>
-                      {item.title}
+                      {t(item.title.en, item.title.my)}
                     </h3>
-                    <p className="home-process-step-desc">{item.description}</p>
+                    <p className="home-process-step-desc">{t(item.description.en, item.description.my)}</p>
                   </div>
                 </div>
               );

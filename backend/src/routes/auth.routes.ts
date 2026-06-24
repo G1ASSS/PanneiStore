@@ -8,6 +8,8 @@ import {
   getMe,
   updateProfile,
   changePassword,
+  forgotPassword,
+  resetPassword,
 } from '../controllers/auth.controller';
 import { authenticate } from '../middleware/auth.middleware';
 
@@ -22,5 +24,8 @@ router.post('/logout', logout);
 router.get('/me', authenticate, getMe);
 router.patch('/profile', authenticate, updateProfile);
 router.patch('/change-password', authenticate, changePassword);
+
+router.post('/forgot-password', forgotPassword);
+router.post('/reset-password', resetPassword);
 
 export default router;

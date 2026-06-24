@@ -9,6 +9,7 @@ import {
   CheckCircle2, XCircle, Shield, Star, Package,
   ArrowLeft, Check, RefreshCw, Gamepad2,
 } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 /* ─── Types ─── */
 interface Notification {
@@ -47,24 +48,25 @@ function NotifIcon({ type }: { type: string }) {
 }
 
 /* ─── Time ago ─── */
-function timeAgo(dateStr: string) {
+function timeAgo(dateStr: string, t: any) {
   const diff = Date.now() - new Date(dateStr).getTime();
   const m = Math.floor(diff / 60000);
   const h = Math.floor(diff / 3600000);
   const d = Math.floor(diff / 86400000);
-  if (m < 1) return 'Just now';
-  if (m < 60) return `${m}m ago`;
-  if (h < 24) return `${h}h ago`;
-  if (d < 7) return `${d}d ago`;
+  if (m < 1) return t('Just now', 'ယခုလေးတင်');
+  if (m < 60) return `${m}${t('m ago', ' မိနစ်အကြာက')}`;
+  if (h < 24) return `${h}${t('h ago', ' နာရီအကြာက')}`;
+  if (d < 7) return `${d}${t('d ago', ' ရက်အကြာက')}`;
   return new Date(dateStr).toLocaleDateString();
 }
 
 /* ─── Single notification row ─── */
 function NotifRow({
-  notif, onRead,
+  notif, onRead, t,
 }: {
   notif: Notification;
   onRead: (id: string) => void;
+  t: any;
 }) {
   const isUnread = !notif.readAt;
   const linkHref = notif.data?.orderId
@@ -94,7 +96,7 @@ function NotifRow({
             {notif.title}
           </p>
           <span style={{ fontSize: 11, color: 'var(--muted)', flexShrink: 0, fontWeight: 500 }}>
-            {timeAgo(notif.createdAt)}
+            {timeAgo(notif.createdAt, t)}
           </span>
         </div>
         <p style={{
@@ -123,6 +125,7 @@ function NotifRow({
 export default function NotificationsPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const { t } = useLanguage();
   const token = (session as any)?.accessToken;
 
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -174,7 +177,7 @@ export default function NotificationsPage() {
   if (status === 'loading') return (
     <div className="mk-loading">
       <Gamepad2 size={24} className="mk-loading-icon" />
-      <span>Loading…</span>
+      <span>{t("Loading…", "လုပ်ဆောင်နေပါသည်...")}</span>
     </div>
   );
 
@@ -194,7 +197,7 @@ export default function NotificationsPage() {
               <ArrowLeft size={20} />
             </Link>
             <h1 style={{ fontSize: 22, fontWeight: 900, color: 'var(--heading)', margin: 0, letterSpacing: '-0.02em' }}>
-              Notifications
+              {t("Notifications", "အသိပေးချက်များ")}
               {unreadCount > 0 && (
                 <span style={{
                   marginLeft: 10, fontSize: 12, fontWeight: 700,
@@ -221,7 +224,7 @@ export default function NotificationsPage() {
                   transition: 'all 0.2s',
                 }}
               >
-                <Check size={13} /> {markingAll ? 'Marking…' : 'Mark all read'}
+                <Check size={13} /> {markingAll ? t('Marking…', 'မှတ်သားနေပါသည်...') : t('Mark all read', 'အားလုံးကို ဖတ်ပြီးအဖြစ် မှတ်မည်')}
               </button>
             )}
             <button
@@ -242,7 +245,7 @@ export default function NotificationsPage() {
         {loading ? (
           <div className="mk-loading">
             <Gamepad2 size={24} className="mk-loading-icon" />
-            <span>Loading notifications…</span>
+            <span>{t("Loading notifications…", "အသိပေးချက်များကို ဆွဲယူနေပါသည်...")}</span>
           </div>
         ) : notifications.length === 0 ? (
           /* Empty state */
@@ -261,10 +264,10 @@ export default function NotificationsPage() {
             </div>
             <div>
               <p style={{ fontSize: 18, fontWeight: 800, color: 'var(--heading)', margin: '0 0 6px' }}>
-                All caught up!
+                {t("All caught up!", "ဖတ်ရန်မကျန်တော့ပါ!")}
               </p>
               <p style={{ fontSize: 14, color: 'var(--muted)', margin: 0, lineHeight: 1.6 }}>
-                No notifications yet. We'll notify you<br />when something happens.
+                {t("No notifications yet. We'll notify you when something happens.", "အသိပေးချက်များ မရှိသေးပါ။ ထူးခြားမှုရှိပါက အကြောင်းကြားပေးပါမည်။")}
               </p>
             </div>
           </div>
@@ -274,7 +277,7 @@ export default function NotificationsPage() {
             borderRadius: 20, overflow: 'hidden',
           }}>
             {notifications.map((n) => (
-              <NotifRow key={n.id} notif={n} onRead={markRead} />
+              <NotifRow key={n.id} notif={n} onRead={markRead} t={t} />
             ))}
           </div>
         )}

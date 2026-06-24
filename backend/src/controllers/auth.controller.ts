@@ -5,17 +5,26 @@ import { AuthRequest } from '../middleware/auth.middleware';
 import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '../utils/jwt.utils';
 import { ApiError, successResponse } from '../utils/response.utils';
 import { authRateLimiter } from '../middleware/rateLimit.middleware';
+import crypto from 'crypto';
+import { sendPasswordResetEmail } from '../services/email.service';
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { email, password, name, nameMyanmar, phone, language = 'en' } = req.body;
 
+    if (!phone || phone.trim() === '') {
+      throw new ApiError(400, 'Phone number is required');
+    }
+
     const existing = await prisma.user.findUnique({ where: { email } });
     if (existing) throw new ApiError(409, 'Email already registered');
 
+    const existingPhone = await prisma.user.findUnique({ where: { phone: phone.trim() } });
+    if (existingPhone) throw new ApiError(409, 'Phone number already registered');
+
     const passwordHash = await bcrypt.hash(password, 12);
     const user = await prisma.user.create({
-      data: { email, passwordHash, name, nameMyanmar, phone, language },
+      data: { email, passwordHash, name, nameMyanmar, phone: phone.trim(), language },
       select: { id: true, email: true, name: true, role: true, avatar: true, language: true, createdAt: true },
     });
 
@@ -148,5 +157,66 @@ export const changePassword = async (req: AuthRequest, res: Response, next: Next
     const passwordHash = await bcrypt.hash(newPassword, 12);
     await prisma.user.update({ where: { id: req.user!.id }, data: { passwordHash } });
     return successResponse(res, null, 'Password changed successfully');
+  } catch (err) { next(err); }
+};
+
+export const forgotPassword = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { email } = req.body;
+    if (!email) throw new ApiError(400, 'Email is required');
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      // Return success even if user not found to prevent email enumeration
+      return successResponse(res, null, 'If that email is registered, we have sent a reset link.');
+    }
+
+    // Generate random token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenExpiry = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { resetToken, resetTokenExpiry }
+    });
+
+    // In development, the URL goes to localhost. In prod, it should be the real frontend URL.
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+    const resetLink = `${frontendUrl}/auth/reset-password?token=${resetToken}`;
+
+    await sendPasswordResetEmail(user.email, resetLink);
+
+    return successResponse(res, null, 'If that email is registered, we have sent a reset link.');
+  } catch (err) { next(err); }
+};
+
+export const resetPassword = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { token, newPassword } = req.body;
+    if (!token || !newPassword) throw new ApiError(400, 'Token and new password are required');
+
+    const user = await prisma.user.findFirst({
+      where: {
+        resetToken: token,
+        resetTokenExpiry: { gt: new Date() } // Token must not be expired
+      }
+    });
+
+    if (!user) {
+      throw new ApiError(400, 'Invalid or expired password reset token');
+    }
+
+    const passwordHash = await bcrypt.hash(newPassword, 12);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        passwordHash,
+        resetToken: null,
+        resetTokenExpiry: null
+      }
+    });
+
+    return successResponse(res, null, 'Password successfully reset');
   } catch (err) { next(err); }
 };

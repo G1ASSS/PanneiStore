@@ -31,6 +31,7 @@ export default function AdminEditAccountPage() {
           ...local,
           price: local.price,
           createdAt: local.createdAt,
+          skins: local.skins || [],
         } as AdminAccount);
       } else {
         setError('Listing not found');
@@ -61,6 +62,7 @@ export default function AdminEditAccountPage() {
         level: Number(values.level),
         status: values.status,
         isFeatured: values.isFeatured,
+        skins: values.skins,
       };
       if (images.length > 0) {
         patch.images = await filesToImages(images);
@@ -86,6 +88,7 @@ export default function AdminEditAccountPage() {
     form.append('isFeatured', values.isFeatured ? 'true' : 'false');
     if (values.titleMyanmar) form.append('titleMyanmar', values.titleMyanmar);
     if (values.description) form.append('description', values.description);
+    if (values.skins && values.skins.length > 0) form.append('skins', JSON.stringify(values.skins));
     images.forEach((file) => form.append('images', file));
 
     await adminFetch(`/accounts/${accountId}`, { token, method: 'PATCH', body: form });
@@ -116,6 +119,11 @@ export default function AdminEditAccountPage() {
     level: String(account.level),
     status: account.status,
     isFeatured: account.isFeatured,
+    skins: account.skins?.map(s => ({
+      heroName: s.heroName,
+      skinName: s.skinName,
+      isLegend: s.isLegend
+    })) || [],
   };
 
   return (

@@ -6,16 +6,18 @@ import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
 import { Home, ShoppingBag, Sparkles, Receipt, User, Wallet } from "lucide-react";
 import { cn } from "@/utils/cn";
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export const FloatingBottomNav: React.FC = () => {
   const pathname = usePathname();
+  const { t } = useLanguage();
 
   const tabs = [
-    { name: "Home", href: "/", icon: Home },
-    { name: "Market", href: "/market", icon: ShoppingBag },
-    { name: "Top Up", href: "/topup", icon: Wallet },
-    { name: "Orders", href: "/orders", icon: Receipt },
-    { name: "Profile", href: "/profile", icon: User },
+    { name: t("Home", "ပင်မ"), href: "/", icon: Home },
+    { name: t("Market", "အကောင့်"), href: "/market", icon: ShoppingBag },
+    { name: t("Top Up", "စိန်ဖြည့်ရန်"), href: "/topup", icon: Wallet },
+    { name: t("Orders", "ဝယ်ယူမှုများ"), href: "/orders", icon: Receipt },
+    { name: t("Profile", "အကောင့်"), href: "/profile", icon: User },
   ];
 
   return (
@@ -29,7 +31,7 @@ export const FloatingBottomNav: React.FC = () => {
 
           return (
             <Link
-              key={tab.name}
+              key={tab.href}
               href={tab.href}
               className={cn("liquid-tab-item group", isActive && "is-active")}
               aria-current={isActive ? "page" : undefined}

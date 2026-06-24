@@ -8,6 +8,7 @@ import {
   LogIn, UserPlus, ChevronRight, LogOut,
   Heart, Bell, HelpCircle, Lock, ExternalLink, Gamepad2,
 } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 /* ─── Avatar component ─── */
 function Avatar({ name, image, size = 80 }: { name: string; image?: string | null; size?: number }) {
@@ -43,11 +44,11 @@ function Avatar({ name, image, size = 80 }: { name: string; image?: string | nul
 }
 
 /* ─── Role badge ─── */
-function RoleBadge({ role }: { role: string }) {
+function RoleBadge({ role, t }: { role: string; t: any }) {
   const cfg: Record<string, { label: string; color: string; bg: string; icon: React.ReactNode }> = {
-    ADMIN:  { label: 'Admin',  color: '#ff2e93', bg: 'rgba(255,46,147,0.12)',  icon: <Shield size={11} /> },
-    SELLER: { label: 'Seller', color: '#a12cff', bg: 'rgba(161,44,255,0.12)', icon: <Shield size={11} /> },
-    BUYER:  { label: 'Buyer',  color: '#3B82F6', bg: 'rgba(59,130,246,0.12)', icon: <User size={11} /> },
+    ADMIN:  { label: t('Admin', 'စီမံခန့်ခွဲသူ'),  color: '#ff2e93', bg: 'rgba(255,46,147,0.12)',  icon: <Shield size={11} /> },
+    SELLER: { label: t('Seller', 'ရောင်းသူ'), color: '#a12cff', bg: 'rgba(161,44,255,0.12)', icon: <Shield size={11} /> },
+    BUYER:  { label: t('Buyer', 'ဝယ်သူ'),  color: '#3B82F6', bg: 'rgba(59,130,246,0.12)', icon: <User size={11} /> },
   };
   const c = cfg[role] ?? cfg.BUYER;
   return (
@@ -120,6 +121,7 @@ function SectionCard({ children }: { children: React.ReactNode }) {
 /* ──────────────────────────────── Main Page ──────────────────────────────── */
 export default function ProfilePage() {
   const { data: session, status } = useSession();
+  const { t } = useLanguage();
   const [signingOut, setSigningOut] = useState(false);
 
   const user = session?.user;
@@ -152,19 +154,21 @@ export default function ProfilePage() {
             </div>
 
             <h2 style={{ fontSize: 26, fontWeight: 900, color: 'var(--heading)', marginBottom: 10 }}>
-              Your Profile
+              {t("Your Profile", "သင့်အကောင့်")}
             </h2>
             <p style={{ fontSize: 15, color: 'var(--muted)', lineHeight: 1.7, marginBottom: 32 }}>
-              Sign in to manage your account,<br />track orders and top-ups.
+              {t("Sign in to manage your account, track orders and top-ups.", "သင့်အကောင့်ကို စီမံရန်၊ ဝယ်ယူမှုများနှင့် စိန်ဖြည့်ခြင်းများကို မှတ်တမ်းကြည့်ရန် အကောင့်ဝင်ပါ။").split(', ').map((str, i, arr) => (
+                <span key={i}>{str}{i < arr.length - 1 && <><br /></>}</span>
+              ))}
             </p>
 
             {/* Features */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 32, textAlign: 'left' }}>
               {[
-                { icon: <ShoppingBag size={14} color="#3B82F6" />, text: 'View purchase history' },
-                { icon: <Gamepad2 size={14} color="#a12cff" />, text: 'Manage diamond top-ups' },
-                { icon: <Receipt size={14} color="#10B981" />, text: 'Track order status' },
-                { icon: <Shield size={14} color="#ff2e93" />, text: 'Secure account settings' },
+                { icon: <ShoppingBag size={14} color="#3B82F6" />, text: t('View purchase history', 'ဝယ်ယူမှု မှတ်တမ်းများကို ကြည့်ရန်') },
+                { icon: <Gamepad2 size={14} color="#a12cff" />, text: t('Manage diamond top-ups', 'စိန်ဖြည့်ခြင်းကို စီမံရန်') },
+                { icon: <Receipt size={14} color="#10B981" />, text: t('Track order status', 'ဝယ်ယူမှု အခြေအနေကို ကြည့်ရန်') },
+                { icon: <Shield size={14} color="#ff2e93" />, text: t('Secure account settings', 'လုံခြုံရေး ဆက်တင်များ') },
               ].map(({ icon, text }) => (
                 <div key={text} style={{
                   display: 'flex', alignItems: 'center', gap: 12,
@@ -188,7 +192,7 @@ export default function ProfilePage() {
               boxShadow: '0 8px 28px rgba(255,46,147,0.4)',
               marginBottom: 12,
             }}>
-              <LogIn size={16} /> Sign In
+              <LogIn size={16} /> {t("Sign In", "အကောင့်ဝင်မည်")}
             </Link>
             <Link href="/auth/register" style={{
               display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
@@ -196,7 +200,7 @@ export default function ProfilePage() {
               background: 'var(--card)', border: '1px solid var(--card-border)',
               color: 'var(--heading)', fontSize: 14, fontWeight: 700, textDecoration: 'none',
             }}>
-              <UserPlus size={16} /> Create Account
+              <UserPlus size={16} /> {t("Create Account", "အကောင့်သစ်ဖွင့်မည်")}
             </Link>
           </div>
         </div>
@@ -257,7 +261,7 @@ export default function ProfilePage() {
 
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ marginBottom: 6 }}>
-                <RoleBadge role={role} />
+                <RoleBadge role={role} t={t} />
               </div>
               <h1 style={{
                 fontSize: 20, fontWeight: 900, color: 'var(--heading)',
@@ -278,9 +282,9 @@ export default function ProfilePage() {
         <div style={{ marginBottom: 16 }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: 10 }}>
             {[
-              { label: 'My Orders', icon: <Receipt size={22} color="#ff2e93" />, href: '/orders', bg: 'rgba(255,46,147,0.1)' },
-              { label: 'Top Up',    icon: <Wallet size={22} color="#a12cff" />,  href: '/topup',  bg: 'rgba(161,44,255,0.1)' },
-              { label: 'Market',   icon: <ShoppingBag size={22} color="#3B82F6" />, href: '/market', bg: 'rgba(59,130,246,0.1)' },
+              { label: t('My Orders', 'ဝယ်ယူမှုများ'), icon: <Receipt size={22} color="#ff2e93" />, href: '/orders', bg: 'rgba(255,46,147,0.1)' },
+              { label: t('Top Up', 'စိန်ဖြည့်ရန်'),    icon: <Wallet size={22} color="#a12cff" />,  href: '/topup',  bg: 'rgba(161,44,255,0.1)' },
+              { label: t('Market', 'အရောင်းစင်တာ'),   icon: <ShoppingBag size={22} color="#3B82F6" />, href: '/market', bg: 'rgba(59,130,246,0.1)' },
             ].map(({ label, icon, href, bg }) => (
               <Link key={label} href={href} style={{ textDecoration: 'none' }}>
                 <div style={{
@@ -307,20 +311,20 @@ export default function ProfilePage() {
         {/* ── Account section ── */}
         <SectionCard>
           <div style={{ padding: '12px 18px 6px', fontSize: 11, fontWeight: 700, color: 'var(--muted)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-            Account
+            {t("Account", "အကောင့်")}
           </div>
-          <MenuItem icon={<User size={16} />} label="Edit Profile" href="/profile/edit" />
-          <MenuItem icon={<Bell size={16} />} label="Notifications" href="/notifications" />
-          <MenuItem icon={<Heart size={16} />} label="Wishlist" href="/wishlist" />
+          <MenuItem icon={<User size={16} />} label={t("Edit Profile", "ကိုယ်ရေးအချက်အလက် ပြင်ဆင်ရန်")} href="/profile/edit" />
+          <MenuItem icon={<Bell size={16} />} label={t("Notifications", "အသိပေးချက်များ")} href="/notifications" />
+          <MenuItem icon={<Heart size={16} />} label={t("Wishlist", "အကြိုက်ဆုံးများ")} href="/wishlist" />
         </SectionCard>
 
         {role === 'SELLER' && (
           <div style={{ marginTop: 12 }}>
             <SectionCard>
               <div style={{ padding: '12px 18px 6px', fontSize: 11, fontWeight: 700, color: 'var(--muted)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-                Seller
+                {t("Seller", "အရောင်းကိုယ်စားလှယ်")}
               </div>
-              <MenuItem icon={<Shield size={16} />} label="Seller Dashboard" href="/seller/dashboard" />
+              <MenuItem icon={<Shield size={16} />} label={t("Seller Dashboard", "ရောင်းသူផ្ទាំង")} href="/seller/dashboard" />
             </SectionCard>
           </div>
         )}
@@ -329,10 +333,10 @@ export default function ProfilePage() {
         <div style={{ marginTop: 12 }}>
           <SectionCard>
             <div style={{ padding: '12px 18px 6px', fontSize: 11, fontWeight: 700, color: 'var(--muted)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-              Support
+              {t("Support", "အကူအညီ")}
             </div>
-            <MenuItem icon={<HelpCircle size={16} />} label="Help Center" href="https://t.me/panneisan2002" external />
-            <MenuItem icon={<Lock size={16} />} label="Privacy Policy" href="/privacy" />
+            <MenuItem icon={<HelpCircle size={16} />} label={t("Help Center", "အကူအညီစင်တာ")} href="https://t.me/panneisan2002" external />
+            <MenuItem icon={<Lock size={16} />} label={t("Privacy Policy", "ကိုယ်ရေးကိုယ်တာလုံခြုံမှု မူဝါဒ")} href="/privacy" />
           </SectionCard>
         </div>
 
@@ -341,7 +345,7 @@ export default function ProfilePage() {
           <SectionCard>
             <MenuItem
               icon={<LogOut size={16} />}
-              label={signingOut ? 'Signing out…' : 'Sign Out'}
+              label={signingOut ? t('Signing out…', 'အကောင့်ထွက်နေသည်...') : t('Sign Out', 'အကောင့်ထွက်မည်')}
               danger
               onClick={handleSignOut}
             />

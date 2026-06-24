@@ -15,6 +15,7 @@ import {
   Menu,
   Heart,
 } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 type ThemeMode = "light" | "blue-dark";
 
@@ -38,6 +39,7 @@ export const PremiumNavbar: React.FC<PremiumNavbarProps> = ({
   onThemeToggle,
 }) => {
   const pathname = usePathname();
+  const { language, setLanguage, t } = useLanguage();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
 
@@ -70,7 +72,7 @@ export const PremiumNavbar: React.FC<PremiumNavbarProps> = ({
               : "theme-muted hover:text-brand-pink"
               }`}
           >
-            Market
+            {t("Market", "အကောင့်")}
           </Link>
           <Link
             href="/topup"
@@ -79,7 +81,7 @@ export const PremiumNavbar: React.FC<PremiumNavbarProps> = ({
               : "theme-muted hover:text-brand-pink"
               }`}
           >
-            Top Up
+            {t("Top Up", "စိန်ဖြည့်ရန်")}
           </Link>
           <Link
             href="/orders"
@@ -88,16 +90,19 @@ export const PremiumNavbar: React.FC<PremiumNavbarProps> = ({
               : "theme-muted hover:text-brand-pink"
               }`}
           >
-            Orders
+            {t("Orders", "ဝယ်ယူမှုများ")}
           </Link>
         </nav>
 
         {/* RIGHT: Action icons pinned to the far right */}
         <div className="flex items-center justify-end justify-self-end gap-5 xl:gap-6">
           {/* Language */}
-          <button className="flex items-center gap-1.5 text-sm font-semibold theme-muted hover:text-brand-pink transition-colors">
+          <button 
+            onClick={() => setLanguage(language === 'en' ? 'my' : 'en')}
+            className="flex items-center gap-1.5 text-sm font-semibold theme-muted hover:text-brand-pink transition-colors"
+          >
             <Globe2 size={17} />
-            <span>EN</span>
+            <span>{language === 'en' ? 'EN' : 'MM'}</span>
           </button>
 
           {/* Theme toggle */}
@@ -160,8 +165,12 @@ export const PremiumNavbar: React.FC<PremiumNavbarProps> = ({
 
         {/* Right: Icons */}
         <div className="flex items-center gap-5 sm:gap-6">
-          <button className="theme-muted hover:text-brand-pink transition-colors">
+          <button 
+            onClick={() => setLanguage(language === 'en' ? 'my' : 'en')}
+            className="flex items-center gap-1.5 text-[13px] font-semibold theme-muted hover:text-brand-pink transition-colors"
+          >
             <Globe2 size={18} />
+            <span>{language === 'en' ? 'EN' : 'MM'}</span>
           </button>
 
           <button

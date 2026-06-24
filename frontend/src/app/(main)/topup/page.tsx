@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import axios from 'axios';
 import { Gamepad2 } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface Package {
   id: string;
@@ -35,6 +36,7 @@ const PAYMENT_METHODS = [
 export default function DiamondsPage() {
   const { data: session } = useSession();
   const router = useRouter();
+  const { t } = useLanguage();
   const [packages, setPackages] = useState<Package[]>([]);
   const [games, setGames] = useState<Game[]>([]);
   const [loading, setLoading] = useState(true);
@@ -133,16 +135,16 @@ export default function DiamondsPage() {
           <div className="diamond-float d3">💎</div>
         </div>
         <h1 className="diamonds-title">
-          Top Up
+          {t("Top Up", "စိန်ဖြည့်ရန်")}
         </h1>
-        <p className="diamonds-subtitle">Fast, Secure &amp; Trusted Top-Up Service</p>
+        <p className="diamonds-subtitle">{t("Fast, Secure & Trusted Top-Up Service", "မြန်ဆန်၊ လုံခြုံပြီး ယုံကြည်စိတ်ချရသော စိန်ဖြည့်ဝန်ဆောင်မှု")}</p>
       </div>
 
       <div className="diamonds-body">
         {/* Games Section */}
         <div className="diamonds-section">
           <h2 className="section-heading">
-            <span className="step-num"><Gamepad2 size={18} /></span> Select Game
+            <span className="step-num"><Gamepad2 size={18} /></span> {t("Select Game", "ဂိမ်းရွေးချယ်ပါ")}
           </h2>
           
           {gamesLoading ? (
@@ -150,7 +152,7 @@ export default function DiamondsPage() {
               {Array(3).fill(0).map((_, i) => <div key={i} className="skeleton-pkg" />)}
             </div>
           ) : games.length === 0 ? (
-            <p className="theme-muted text-center py-8">No games available at the moment.</p>
+            <p className="theme-muted text-center py-8">{t("No games available at the moment.", "လောလောဆယ် ဂိမ်းများ မရရှိနိုင်သေးပါ။")}</p>
           ) : (
             <div className="packages-grid">
               {games.map((game) => (
@@ -167,7 +169,7 @@ export default function DiamondsPage() {
                       />
                     </div>
                     <div className="pkg-amount">{game.name}</div>
-                    <div className="pkg-price">View Packages →</div>
+                    <div className="pkg-price">{t("View Packages →", "ပက်ကေ့ချ်များ ကြည့်ရန် →")}</div>
                   </div>
                 </Link>
               ))}

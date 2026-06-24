@@ -17,6 +17,7 @@ import { AccountCard, AccountData } from '@/components/ui/AccountCard';
 import { DEMO_POPULAR_ACCOUNTS } from '@/data/demoAccounts';
 import { getLocalListings, localListingToCard } from '@/lib/localListings';
 import { MARKET_FILTER_TIERS } from '@/data/collectorTiers';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 interface Account {
   id: string;
@@ -35,11 +36,11 @@ interface Account {
 
 const RANKS = MARKET_FILTER_TIERS;
 
-const SORT_OPTIONS = [
-  { label: 'Newest', value: 'createdAt-desc' },
-  { label: 'Price: Low–High', value: 'price-asc' },
-  { label: 'Price: High–Low', value: 'price-desc' },
-  { label: 'Most Viewed', value: 'viewCount-desc' },
+const getSortOptions = (t: (en: string, my: string) => string) => [
+  { label: t('Newest', 'အသစ်ဆုံး'), value: 'createdAt-desc' },
+  { label: t('Price: Low–High', 'စျေးနှုန်း: နည်းမှများ'), value: 'price-asc' },
+  { label: t('Price: High–Low', 'စျေးနှုန်း: များမှနည်း'), value: 'price-desc' },
+  { label: t('Most Viewed', 'ကြည့်ရှုမှု အများဆုံး'), value: 'viewCount-desc' },
 ];
 
 function filterDemoAccounts(
@@ -96,7 +97,10 @@ function withLocalListings(
   return [...local, ...accounts.filter((a) => !localIds.has(a.id))];
 }
 
-function formatAvailableCount(count: number): string {
+function formatAvailableCount(count: number, language: string): string {
+  if (language === 'my') {
+    return `ရရှိနိုင်သော အကောင့်ပေါင်း ${count.toLocaleString()} ခု ရှိပါသည်`;
+  }
   const label = count === 1 ? 'account' : 'accounts';
   return `${count.toLocaleString()} ${label} available`;
 }
@@ -142,6 +146,7 @@ function MarketFiltersPanel({
   isOpen = true,
   sheet = false,
 }: MarketFiltersPanelProps) {
+  const { t } = useLanguage();
   return (
     <aside
       className={`mk-sidebar ${isOpen ? 'mk-sidebar--open' : ''} ${sheet ? 'mk-sidebar--sheet' : ''}`}
@@ -149,7 +154,7 @@ function MarketFiltersPanel({
       <div className="mk-sidebar-handle" aria-hidden />
 
       <div className="mk-sidebar-head">
-        <h3>Filters</h3>
+        <h3>{t("Filters", "စစ်ထုတ်ရန်")}</h3>
         <button
           type="button"
           className="mk-sidebar-close"
@@ -162,7 +167,7 @@ function MarketFiltersPanel({
 
       <div className="mk-sidebar-body">
         <div className="mk-filter-group">
-          <span className="mk-filter-label">Collector Tier</span>
+          <span className="mk-filter-label">{t("Collector Tier", "အဆင့်သတ်မှတ်ချက်")}</span>
           <div className={`mk-filter-chips ${sheet ? 'mk-filter-chips--grid' : ''}`}>
             {RANKS.map((rank) => {
               const isActive = filters.rank === rank;
@@ -183,13 +188,13 @@ function MarketFiltersPanel({
         </div>
 
         <div className="mk-filter-group mk-filter-group--price">
-          <span className="mk-filter-label">Price Range (MMK)</span>
+          <span className="mk-filter-label">{t("Price Range (MMK)", "စျေးနှုန်း (ကျပ်)")}</span>
           {sheet ? (
             <div className="mk-price-row mk-price-row--sheet">
               <input
                 type="number"
                 className="mk-price-input"
-                placeholder="Min"
+                placeholder={t("Min", "အနည်းဆုံး")}
                 aria-label="Minimum price"
                 value={filters.minPrice}
                 onChange={(e) => onMinPriceChange(e.target.value)}
@@ -198,7 +203,7 @@ function MarketFiltersPanel({
               <input
                 type="number"
                 className="mk-price-input"
-                placeholder="Max"
+                placeholder={t("Max", "အများဆုံး")}
                 aria-label="Maximum price"
                 value={filters.maxPrice}
                 onChange={(e) => onMaxPriceChange(e.target.value)}
@@ -209,7 +214,7 @@ function MarketFiltersPanel({
               <input
                 type="number"
                 className="mk-price-input"
-                placeholder="Min"
+                placeholder={t("Min", "အနည်းဆုံး")}
                 value={filters.minPrice}
                 onChange={(e) => onMinPriceChange(e.target.value)}
               />
@@ -217,7 +222,7 @@ function MarketFiltersPanel({
               <input
                 type="number"
                 className="mk-price-input"
-                placeholder="Max"
+                placeholder={t("Max", "အများဆုံး")}
                 value={filters.maxPrice}
                 onChange={(e) => onMaxPriceChange(e.target.value)}
               />
@@ -228,10 +233,10 @@ function MarketFiltersPanel({
 
       <div className="mk-sidebar-actions">
         <button type="button" className="hero-cta hero-cta-primary mk-apply-btn" onClick={onApply}>
-          Apply Filters
+          {t("Apply Filters", "စစ်ထုတ်မည်")}
         </button>
         <button type="button" className="mk-reset-btn" onClick={onReset}>
-          Reset All
+          {t("Reset All", "မူလအတိုင်းထားမည်")}
         </button>
       </div>
     </aside>
@@ -239,6 +244,7 @@ function MarketFiltersPanel({
 }
 
 function MarketContent() {
+  const { t, language } = useLanguage();
   const searchParams = useSearchParams();
   const [accounts, setAccounts] = useState<Account[]>([]);
   const [loading, setLoading] = useState(true);
@@ -411,21 +417,21 @@ function MarketContent() {
     <div className="mk-page">
       <section className="mk-hero" id="market-top">
         <div className="mk-hero-inner">
-          <span className="mk-kicker">Browse Accounts</span>
+          <span className="mk-kicker">{t("Browse Accounts", "အကောင့်များရှာရန်")}</span>
           <h1 className="mk-title">
-            ML Account <span className="text-gradient-pink-purple">Marketplace</span>
+            {t("ML Account", "ML အကောင့်")} <span className="text-gradient-pink-purple">{t("Marketplace", "အရောင်းစင်တာ")}</span>
           </h1>
           <p className="mk-subtitle">
             {availableTotal === null
-              ? 'Loading accounts…'
-              : formatAvailableCount(availableTotal)}
+              ? t('Loading accounts…', 'အကောင့်များ ရှာဖွေနေပါသည်...')
+              : formatAvailableCount(availableTotal, language)}
           </p>
 
           <div className="mk-search">
             <Search size={18} strokeWidth={2} className="mk-search-icon" aria-hidden />
             <input
               type="search"
-              placeholder="Search by tier, hero, skin…"
+              placeholder={t("Search by tier, hero, skin…", "ဟီးရိုး၊ စကင် အမည်ဖြင့် ရှာရန်...")}
               value={filters.search}
               onChange={(e) => {
                 setFilters({ ...filters, search: e.target.value });
@@ -466,11 +472,11 @@ function MarketContent() {
               onClick={() => setShowFilters(true)}
             >
               <SlidersHorizontal size={15} strokeWidth={2} />
-              Filters
+              {t("Filters", "စစ်ထုတ်ရန်")}
             </button>
-            <span className="mk-count">{total.toLocaleString()} accounts</span>
+            <span className="mk-count">{total.toLocaleString()} {t("accounts", "အကောင့်များ")}</span>
             <label className="mk-sort">
-              <span className="mk-sort-label">Sort</span>
+              <span className="mk-sort-label">{t("Sort", "စီရန်")}</span>
               <select
                 className="mk-sort-select"
                 value={filters.sort}
@@ -480,7 +486,7 @@ function MarketContent() {
                 }}
                 aria-label="Sort accounts"
               >
-                {SORT_OPTIONS.map((o) => (
+                {getSortOptions(t).map((o) => (
                   <option key={o.value} value={o.value}>
                     {o.label}
                   </option>
@@ -504,10 +510,10 @@ function MarketContent() {
               <div className="mk-empty-icon">
                 <Store size={32} strokeWidth={1.5} />
               </div>
-              <h3>No accounts found</h3>
-              <p>Try adjusting your filters or search terms.</p>
+              <h3>{t("No accounts found", "အကောင့်များ မတွေ့ပါ")}</h3>
+              <p>{t("Try adjusting your filters or search terms.", "စစ်ထုတ်ခြင်း သို့မဟုတ် ရှာဖွေခြင်းကို ပြောင်းလဲကြည့်ပါ။")}</p>
               <button type="button" className="hero-cta hero-cta-secondary mk-empty-btn" onClick={resetFilters}>
-                Clear Filters
+                {t("Clear Filters", "အကုန်ဖျက်မည်")}
               </button>
             </div>
           ) : (
@@ -561,13 +567,14 @@ function MarketContent() {
 }
 
 export default function MarketPage() {
+  const { t } = useLanguage();
   return (
     <Suspense
       fallback={
         <div className="mk-page">
           <div className="mk-loading">
             <Gamepad2 size={24} className="mk-loading-icon" />
-            <span>Loading marketplace…</span>
+            <span>{t("Loading marketplace…", "ပလက်ဖောင်းကို ဖွင့်နေပါသည်...")}</span>
           </div>
         </div>
       }

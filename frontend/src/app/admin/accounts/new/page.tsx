@@ -34,6 +34,7 @@ export default function AdminNewAccountPage() {
         status: 'AVAILABLE',
         isFeatured: values.isFeatured,
         images: imageData,
+        skins: values.skins,
       });
       router.push('/admin/accounts');
       return;
@@ -54,6 +55,7 @@ export default function AdminNewAccountPage() {
     if (values.titleMyanmar) form.append('titleMyanmar', values.titleMyanmar);
     if (values.description) form.append('description', values.description);
     if (values.isFeatured) form.append('isFeatured', 'true');
+    if (values.skins && values.skins.length > 0) form.append('skins', JSON.stringify(values.skins));
     images.forEach((file) => form.append('images', file));
 
     await adminFetch('/admin/accounts', { token, method: 'POST', body: form });

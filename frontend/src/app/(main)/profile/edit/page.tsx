@@ -8,6 +8,7 @@ import {
   ArrowLeft, User, Phone, Globe, Lock, Mail,
   CheckCircle2, AlertCircle, Save, Eye, EyeOff,
 } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 /* ─── Input component ─── */
 function FormField({
@@ -173,6 +174,7 @@ function Card({ title, children }: { title: string; children: React.ReactNode })
 export default function EditProfilePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
+  const { t } = useLanguage();
 
   const token = (session as any)?.accessToken;
 
@@ -223,12 +225,12 @@ export default function EditProfilePage() {
       });
       const d = await r.json();
       if (d.success) {
-        setProfileMsg({ type: 'success', text: 'Profile updated successfully!' });
+        setProfileMsg({ type: 'success', text: t('Profile updated successfully!', 'ကိုယ်ရေးအချက်အလက်များကို အောင်မြင်စွာ ပြင်ဆင်ပြီးပါပြီ။') });
       } else {
-        setProfileMsg({ type: 'error', text: d.message || 'Failed to update profile.' });
+        setProfileMsg({ type: 'error', text: d.message || t('Failed to update profile.', 'ကိုယ်ရေးအချက်အလက်များ ပြင်ဆင်ခြင်း မအောင်မြင်ပါ။') });
       }
     } catch {
-      setProfileMsg({ type: 'error', text: 'Connection error. Please try again.' });
+      setProfileMsg({ type: 'error', text: t('Connection error. Please try again.', 'ကွန်ရက်ချိတ်ဆက်မှု အမှားအယွင်းဖြစ်နေပါသည်။ ကျေးဇူးပြု၍ ထပ်မံကြိုးစားပါ။') });
     } finally {
       setSaving(false);
     }
@@ -236,15 +238,15 @@ export default function EditProfilePage() {
 
   const handleChangePassword = async () => {
     if (!currentPassword || !newPassword || !confirmPassword) {
-      setPwMsg({ type: 'error', text: 'Please fill in all password fields.' });
+      setPwMsg({ type: 'error', text: t('Please fill in all password fields.', 'ကျေးဇူးပြု၍ စကားဝှက် အကွက်များအားလုံးကို ဖြည့်စွက်ပါ။') });
       return;
     }
     if (newPassword !== confirmPassword) {
-      setPwMsg({ type: 'error', text: 'New passwords do not match.' });
+      setPwMsg({ type: 'error', text: t('New passwords do not match.', 'စကားဝှက်အသစ်များ မကိုက်ညီပါ။') });
       return;
     }
     if (newPassword.length < 8) {
-      setPwMsg({ type: 'error', text: 'New password must be at least 8 characters.' });
+      setPwMsg({ type: 'error', text: t('New password must be at least 8 characters.', 'စကားဝှက်အသစ်သည် အနည်းဆုံး စာလုံး ၈ လုံး ရှိရပါမည်။') });
       return;
     }
     setChangingPw(true);
@@ -257,13 +259,13 @@ export default function EditProfilePage() {
       });
       const d = await r.json();
       if (d.success) {
-        setPwMsg({ type: 'success', text: 'Password changed successfully!' });
+        setPwMsg({ type: 'success', text: t('Password changed successfully!', 'စကားဝှက် အောင်မြင်စွာ ပြောင်းလဲပြီးပါပြီ။') });
         setCurrentPassword(''); setNewPassword(''); setConfirmPassword('');
       } else {
-        setPwMsg({ type: 'error', text: d.message || 'Failed to change password.' });
+        setPwMsg({ type: 'error', text: d.message || t('Failed to change password.', 'စကားဝှက် ပြောင်းလဲခြင်း မအောင်မြင်ပါ။') });
       }
     } catch {
-      setPwMsg({ type: 'error', text: 'Connection error. Please try again.' });
+      setPwMsg({ type: 'error', text: t('Connection error. Please try again.', 'ကွန်ရက်ချိတ်ဆက်မှု အမှားအယွင်းဖြစ်နေပါသည်။ ကျေးဇူးပြု၍ ထပ်မံကြိုးစားပါ။') });
     } finally {
       setChangingPw(false);
     }
@@ -286,7 +288,7 @@ export default function EditProfilePage() {
           onMouseEnter={(e) => (e.currentTarget.style.color = '#ff2e93')}
           onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--muted)')}
         >
-          <ArrowLeft size={18} /> Back to Profile
+          <ArrowLeft size={18} /> {t("Back to Profile", "အကောင့်သို့ ပြန်သွားရန်")}
         </button>
       </Link>
 
@@ -294,40 +296,40 @@ export default function EditProfilePage() {
         fontSize: 22, fontWeight: 900, color: 'var(--heading)',
         letterSpacing: '-0.02em', marginBottom: 20,
       }}>
-        Edit Profile
+        {t("Edit Profile", "ကိုယ်ရေးအချက်အလက် ပြင်ဆင်ရန်")}
       </h1>
 
       {/* ── Profile Info ── */}
-      <Card title="Personal Info">
+      <Card title={t("Personal Info", "ကိုယ်ရေးအချက်အလက်များ")}>
         <FormField
-          label="Email Address"
+          label={t("Email Address", "အီးမေးလ်")}
           id="email"
           value={email}
           onChange={() => { }}
           icon={<Mail size={15} />}
           disabled
-          placeholder="Your email"
+          placeholder={t("Your email", "သင့်အီးမေးလ်")}
         />
         <FormField
-          label="Display Name"
+          label={t("Display Name", "အမည်")}
           id="name"
           value={name}
           onChange={setName}
           icon={<User size={15} />}
-          placeholder="Your name"
+          placeholder={t("Your name", "သင့်အမည်")}
         />
         <FormField
-          label="Phone Number"
+          label={t("Phone Number", "ဖုန်းနံပါတ်")}
           id="phone"
           type="tel"
           value={phone}
-          onChange={setPhone}
+          onChange={(val) => setPhone(val.replace(/[^0-9+]/g, ''))}
           icon={<Phone size={15} />}
-          placeholder="e.g. 09xxxxxxxxx"
+          placeholder={t("e.g. 09xxxxxxxxx", "ဥပမာ - 09xxxxxxxxx")}
         />
         <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
           <label htmlFor="language" style={{ fontSize: 13, fontWeight: 700, color: 'var(--heading)' }}>
-            Language
+            {t("Language", "ဘာသာစကား")}
           </label>
           <div style={{ position: 'relative' }}>
             <span style={{
@@ -370,32 +372,32 @@ export default function EditProfilePage() {
             transition: 'all 0.2s',
           }}
         >
-          <Save size={16} /> {saving ? 'Saving…' : 'Save Changes'}
+          <Save size={16} /> {saving ? t('Saving…', 'သိမ်းဆည်းနေပါသည်...') : t('Save Changes', 'ပြောင်းလဲမှုများကို သိမ်းဆည်းမည်')}
         </button>
       </Card>
 
       {/* ── Change Password ── */}
-      <Card title="Change Password">
+      <Card title={t("Change Password", "စကားဝှက် ပြောင်းမည်")}>
         <PasswordField
-          label="Current Password"
+          label={t("Current Password", "လက်ရှိ စကားဝှက်")}
           id="currentPassword"
           value={currentPassword}
           onChange={setCurrentPassword}
-          placeholder="Enter current password"
+          placeholder={t("Enter current password", "လက်ရှိ စကားဝှက်ကို ထည့်သွင်းပါ")}
         />
         <PasswordField
-          label="New Password"
+          label={t("New Password", "စကားဝှက်အသစ်")}
           id="newPassword"
           value={newPassword}
           onChange={setNewPassword}
-          placeholder="At least 8 characters"
+          placeholder={t("At least 8 characters", "အနည်းဆုံး စာလုံး ၈ လုံး ရှိရမည်")}
         />
         <PasswordField
-          label="Confirm New Password"
+          label={t("Confirm New Password", "စကားဝှက်အသစ် အတည်ပြုပါ")}
           id="confirmPassword"
           value={confirmPassword}
           onChange={setConfirmPassword}
-          placeholder="Repeat new password"
+          placeholder={t("Repeat new password", "စကားဝှက်အသစ်ကို ထပ်မံရိုက်ထည့်ပါ")}
         />
 
         {pwMsg && <Alert type={pwMsg.type} message={pwMsg.text} />}
@@ -413,7 +415,7 @@ export default function EditProfilePage() {
             transition: 'all 0.2s',
           }}
         >
-          <Lock size={16} /> {changingPw ? 'Changing…' : 'Change Password'}
+          <Lock size={16} /> {changingPw ? t('Changing…', 'ပြောင်းလဲနေပါသည်...') : t('Change Password', 'စကားဝှက် ပြောင်းမည်')}
         </button>
       </Card>
 

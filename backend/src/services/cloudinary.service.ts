@@ -30,7 +30,8 @@ async function uploadLocal(
   const filePath = path.join(dir, filename);
   await fs.writeFile(filePath, buffer);
   const publicId = `local/${folder}/${filename}`;
-  const url = `http://localhost:${config.port}/uploads/${folder}/${filename}`;
+  const baseUrl = process.env.BACKEND_URL || `http://localhost:${config.port}`;
+  const url = `${baseUrl}/uploads/${folder}/${filename}`;
   return { url, publicId };
 }
 

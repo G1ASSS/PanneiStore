@@ -3,9 +3,11 @@
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export const GlobalFooter: React.FC = () => {
   const pathname = usePathname();
+  const { t } = useLanguage();
 
   // Determine if the footer should be visible on mobile based on the current route
   const isMobileVisible = pathname === "/" || pathname === "/profile" || pathname === "/privacy";
@@ -22,7 +24,7 @@ export const GlobalFooter: React.FC = () => {
             <span className="font-black uppercase tracking-wider theme-heading">
               Pannei<span className="text-brand-pink">Store</span>
             </span>
-            . All rights reserved.
+            . {t("All rights reserved.", "မူပိုင်ခွင့်များအားလုံး သိမ်းဆည်းထားသည်။")}
           </div>
           <div className="theme-muted font-bold text-[14px]">
             Made with ❤️ by{" "}
@@ -39,10 +41,10 @@ export const GlobalFooter: React.FC = () => {
         <div className="flex flex-col items-center md:items-end gap-5 text-center md:text-right order-1 md:order-2">
           <div className="flex flex-wrap justify-center items-center gap-x-8 gap-y-4 font-bold theme-heading text-[15px]">
             <Link href="/terms" className="hover:text-brand-pink transition-colors">
-              Terms of Service
+              {t("Terms of Service", "ဝန်ဆောင်မှုဆိုင်ရာ စည်းမျဉ်းများ")}
             </Link>
             <Link href="/privacy" className="hover:text-brand-pink transition-colors">
-              Privacy Policy
+              {t("Privacy Policy", "ကိုယ်ရေးကိုယ်တာလုံခြုံမှု မူဝါဒ")}
             </Link>
             <a
               href="https://t.me/Panneisan2002"
@@ -50,7 +52,7 @@ export const GlobalFooter: React.FC = () => {
               rel="noreferrer"
               className="hover:text-brand-pink transition-colors"
             >
-              Support Chat
+              {t("Support Chat", "အကူအညီရယူရန်")}
             </a>
           </div>
         </div>
