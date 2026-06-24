@@ -50,10 +50,10 @@ export const AccountCard: React.FC<AccountCardProps> = ({ account, locale = "en"
             {account.server}
           </span>
           <div className="account-card-chips absolute bottom-3 left-3 right-3 flex gap-2">
-            <span className="account-card-chip bg-black/55 backdrop-blur-md text-[10px] font-semibold text-white px-2 py-1 rounded-md flex items-center gap-1 border border-white/5">
+            <span className="account-card-chip bg-black/55 backdrop-blur-md text-[10px] font-semibold !text-white px-2 py-1 rounded-md flex items-center gap-1 border border-white/5">
               <Users size={12} className="text-brand-pink shrink-0" /> {account.heroCount} Heroes
             </span>
-            <span className="account-card-chip bg-black/55 backdrop-blur-md text-[10px] font-semibold text-white px-2 py-1 rounded-md flex items-center gap-1 border border-white/5">
+            <span className="account-card-chip bg-black/55 backdrop-blur-md text-[10px] font-semibold !text-white px-2 py-1 rounded-md flex items-center gap-1 border border-white/5">
               <Sparkles size={12} className="text-brand-purple shrink-0" /> {account.skinCount} Skins
             </span>
           </div>
