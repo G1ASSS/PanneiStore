@@ -1,5 +1,4 @@
-import { Shield, FileText, ChevronRight, MessageSquare, Gamepad2 } from 'lucide-react';
-import Link from 'next/link';
+import { Shield, FileText, MessageSquare, Gamepad2 } from 'lucide-react';
 
 export const metadata = {
   title: "Terms of Service | PanneiStore",

@@ -1,5 +1,4 @@
-import { Shield, Lock, Eye, FileText, ChevronRight, MessageSquare } from 'lucide-react';
-import Link from 'next/link';
+import { Shield, Lock, Eye, FileText, MessageSquare } from 'lucide-react';
 
 export const metadata = {
   title: "Privacy Policy | PanneiStore",
