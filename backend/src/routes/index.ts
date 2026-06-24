@@ -15,6 +15,7 @@ import announcementRoutes from './announcement.routes';
 import eventPhotosRoutes from './eventPhotos.routes';
 import gamesRoutes from './games.routes';
 import topupPackagesRoutes from './topupPackages.routes';
+import notificationsRoutes from './notifications.routes';
 
 const router = Router();
 
@@ -34,5 +35,6 @@ router.use('/announcements', announcementRoutes);
 router.use('/event-photos', eventPhotosRoutes);
 router.use('/games', gamesRoutes);
 router.use('/topup-packages', topupPackagesRoutes);
+router.use('/notifications', notificationsRoutes);
 
 export { router as apiRouter };

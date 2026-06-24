@@ -116,9 +116,20 @@ export const getMe = async (req: AuthRequest, res: Response, next: NextFunction)
 export const updateProfile = async (req: AuthRequest, res: Response, next: NextFunction) => {
   try {
     const { name, nameMyanmar, phone, language, avatar } = req.body;
+    
+    // Check if phone is already taken by another user
+    if (phone && phone.trim() !== '') {
+      const existing = await prisma.user.findFirst({
+        where: { phone, id: { not: req.user!.id } }
+      });
+      if (existing) {
+        throw new ApiError(409, 'This phone number is already registered to another account.');
+      }
+    }
+
     const user = await prisma.user.update({
       where: { id: req.user!.id },
-      data: { name, nameMyanmar, phone, language, avatar },
+      data: { name, nameMyanmar, phone: phone?.trim() || null, language, avatar },
       select: { id: true, email: true, name: true, nameMyanmar: true, avatar: true, phone: true, role: true, language: true },
     });
     return successResponse(res, { user }, 'Profile updated');

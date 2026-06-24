@@ -13,7 +13,6 @@ import {
   Moon,
   Sun,
   Menu,
-  Search,
   Heart,
 } from "lucide-react";
 
@@ -66,31 +65,28 @@ export const PremiumNavbar: React.FC<PremiumNavbarProps> = ({
         <nav className="flex items-center justify-self-center gap-8 xl:gap-10">
           <Link
             href="/market"
-            className={`text-sm font-semibold transition-colors whitespace-nowrap ${
-              pathname.startsWith("/market")
-                ? "text-brand-pink"
-                : "theme-muted hover:text-brand-pink"
-            }`}
+            className={`text-sm font-semibold transition-colors whitespace-nowrap ${pathname.startsWith("/market")
+              ? "text-brand-pink"
+              : "theme-muted hover:text-brand-pink"
+              }`}
           >
             Market
           </Link>
           <Link
             href="/topup"
-            className={`text-sm font-semibold transition-colors whitespace-nowrap ${
-              pathname.startsWith("/topup")
-                ? "text-brand-pink"
-                : "theme-muted hover:text-brand-pink"
-            }`}
+            className={`text-sm font-semibold transition-colors whitespace-nowrap ${pathname.startsWith("/topup")
+              ? "text-brand-pink"
+              : "theme-muted hover:text-brand-pink"
+              }`}
           >
             Top Up
           </Link>
           <Link
             href="/orders"
-            className={`text-sm font-semibold transition-colors whitespace-nowrap ${
-              pathname.startsWith("/orders") || pathname.startsWith("/buyer")
-                ? "text-brand-pink"
-                : "theme-muted hover:text-brand-pink"
-            }`}
+            className={`text-sm font-semibold transition-colors whitespace-nowrap ${pathname.startsWith("/orders") || pathname.startsWith("/buyer")
+              ? "text-brand-pink"
+              : "theme-muted hover:text-brand-pink"
+              }`}
           >
             Orders
           </Link>
@@ -125,88 +121,23 @@ export const PremiumNavbar: React.FC<PremiumNavbarProps> = ({
             )}
           </Link>
 
-          {/* Search */}
-          <button className="theme-muted hover:text-brand-pink transition-colors">
-            <Search size={17} />
-          </button>
-
           {/* Wishlist */}
           <Link
-            href="/buyer/dashboard"
+            href="/wishlist"
             className="relative theme-muted hover:text-brand-pink transition-colors"
             aria-label="Wishlist"
           >
             <Heart size={17} />
           </Link>
 
-          {/* Profile / Auth dropdown */}
-          <div className="relative">
-            <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="theme-muted hover:text-brand-pink transition-colors focus:outline-none"
-            >
-              <User size={17} />
-            </button>
-
-            <AnimatePresence>
-              {dropdownOpen && (
-                <>
-                  <div
-                    className="fixed inset-0 z-40"
-                    onClick={() => setDropdownOpen(false)}
-                  />
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 8 }}
-                    transition={{ duration: 0.15 }}
-                    className="absolute right-0 mt-3 w-48 glass-panel rounded-2xl py-2 z-50 border border-brand-pink/20 shadow-xl"
-                  >
-                    {user ? (
-                      <>
-                        <div className="px-4 py-2 border-b border-white/5 mb-1.5">
-                          <p className="text-xs font-bold theme-heading truncate">
-                            {user.name}
-                          </p>
-                          <p className="text-[10px] font-semibold text-gray-500 uppercase mt-0.5">
-                            {user.role}
-                          </p>
-                        </div>
-                        <Link
-                          href={
-                            user.role === "ADMIN"
-                              ? "/admin"
-                              : user.role === "SELLER"
-                                ? "/seller"
-                                : "/buyer"
-                          }
-                        >
-                          <button className="w-full flex items-center gap-2.5 px-4 py-2 text-xs text-gray-300 hover:text-brand-pink transition-colors text-left">
-                            <LayoutDashboard size={14} /> Dashboard
-                          </button>
-                        </Link>
-                        <button
-                          onClick={() => {
-                            setDropdownOpen(false);
-                            onLogout?.();
-                          }}
-                          className="w-full flex items-center gap-2.5 px-4 py-2 text-xs text-red-400 hover:bg-red-500/10 transition-colors text-left mt-1"
-                        >
-                          <LogOut size={14} /> Log Out
-                        </button>
-                      </>
-                    ) : (
-                      <Link href="/auth/login">
-                        <button className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-bold theme-heading hover:text-brand-pink transition-colors text-left">
-                          Log In / Register
-                        </button>
-                      </Link>
-                    )}
-                  </motion.div>
-                </>
-              )}
-            </AnimatePresence>
-          </div>
+          {/* Profile */}
+          <Link
+            href="/profile"
+            className="relative theme-muted hover:text-brand-pink transition-colors focus:outline-none"
+            aria-label="Profile"
+          >
+            <User size={17} />
+          </Link>
         </div>
       </div>
 
@@ -252,9 +183,6 @@ export const PremiumNavbar: React.FC<PremiumNavbarProps> = ({
             )}
           </Link>
 
-          <button className="theme-muted hover:text-brand-pink transition-colors hidden sm:block">
-            <Search size={18} />
-          </button>
         </div>
       </div>
 

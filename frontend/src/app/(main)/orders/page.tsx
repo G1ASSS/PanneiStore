@@ -372,14 +372,10 @@ export default function OrdersPage() {
             </p>
             {activeTab === 'ALL' && (
               <div style={{ display: 'flex', gap: 10, justifyContent: 'center', flexWrap: 'wrap' }}>
-                <Link href="/topup" style={{
-                  display: 'inline-flex', alignItems: 'center', gap: 7,
-                  padding: '12px 24px', borderRadius: 24, fontSize: 13, fontWeight: 800,
-                  background: 'linear-gradient(135deg, #ff2e93, #a12cff)',
-                  color: '#fff', textDecoration: 'none',
-                  boxShadow: '0 6px 20px rgba(255,46,147,0.35)',
-                }}>
-                  <Gem size={15}/> Top Up Diamonds <ArrowRight size={14}/>
+                <Link href="/topup">
+                  <button className="hero-cta hero-cta-secondary px-5 py-2.5 text-[13px] flex items-center justify-center gap-2 group whitespace-nowrap">
+                    <Gem size={15}/> Top up <ArrowRight size={14}/>
+                  </button>
                 </Link>
                 <Link href="/market" style={{
                   display: 'inline-flex', alignItems: 'center', gap: 7,

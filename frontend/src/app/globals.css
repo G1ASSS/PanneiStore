@@ -92,6 +92,10 @@ body {
   bottom: calc(var(--mobile-nav-offset) + env(safe-area-inset-bottom, 0px));
 }
 
+body.hide-bottom-nav .mobile-bottom-nav {
+  display: none !important;
+}
+
 /* ─── iOS liquid glass bottom tab bar ─── */
 .liquid-tab-bar-wrap {
   position: fixed;

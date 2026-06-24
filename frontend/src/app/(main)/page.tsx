@@ -163,7 +163,7 @@ export default function HomePage() {
               <ArrowRight size={16} strokeWidth={2} />
             </Link>
             <Link href="/topup" className="hero-cta hero-cta-secondary">
-              Top Up Diamonds
+              Top up
             </Link>
           </motion.div>
         </div>

@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import {
   ArrowLeft, Check, Shield, Zap, Star,
-  ShoppingCart, User, Layers, X, Gamepad2,
+  ShoppingCart, User, Layers, X, Gamepad2, Wallet
 } from "lucide-react";
 import { cn } from "@/utils/cn";
 
@@ -96,10 +96,24 @@ export default function GameTopUpPage() {
     })();
   }, [id]);
 
+  useEffect(() => {
+    if (selPkg) {
+      document.body.classList.add('hide-bottom-nav');
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.classList.remove('hide-bottom-nav');
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.classList.remove('hide-bottom-nav');
+      document.body.style.overflow = '';
+    };
+  }, [selPkg]);
+
   const handleOrder = () => {
     if (!selPkg) return;
     const msg = encodeURIComponent(
-      `🎮 Top Up Order\nGame: ${game?.name}\nPackage: ${selPkg.packageName}\nPrice: ${selPkg.price.toLocaleString()} MMK\nUser ID: ${userId} (Zone: ${serverId})\nPayment: ${payment}\n\nPlease send payment screenshot after payment.`
+      `🎮 Top Up Order\nGame: ${game?.name}\nPackage: ${selPkg.packageName}\nPrice: ${selPkg.price.toLocaleString()} MMK\nUser ID: ${userId} (Server: ${serverId})\nPayment: ${payment}\n\nPlease send payment screenshot after payment.`
     );
     window.open(`https://t.me/panneisan2002?text=${msg}`, "_blank");
   };
@@ -141,11 +155,13 @@ export default function GameTopUpPage() {
         <div className="w-full max-w-4xl">
 
           {/* Back */}
-          <motion.div initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} className="mb-6">
-            <Link href="/topup">
-              <button className="group flex items-center gap-2 theme-muted hover:text-brand-pink transition-colors text-sm font-semibold">
-                <ArrowLeft size={16} className="group-hover:-translate-x-1 transition-transform duration-200" />
-                Back to Games
+          <motion.div initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} className="mb-16">
+            <Link href="/topup" className="inline-block">
+              <button className="group flex items-center gap-2.5 px-2 py-2 pr-4 rounded-full transition-all duration-300 bg-[var(--card)] shadow-sm border border-[var(--card-border)] hover:border-brand-pink hover:shadow-[0_4px_16px_rgba(255,46,147,0.15)]">
+                <div className="w-7 h-7 rounded-full bg-[var(--background)] flex items-center justify-center transition-colors group-hover:bg-brand-pink/10">
+                  <ArrowLeft size={14} className="text-[var(--heading)] group-hover:text-brand-pink group-hover:-translate-x-0.5 transition-all" />
+                </div>
+                <span className="text-xs font-bold text-[var(--heading)] group-hover:text-brand-pink transition-colors uppercase tracking-widest">Back to Games</span>
               </button>
             </Link>
           </motion.div>
@@ -238,7 +254,7 @@ export default function GameTopUpPage() {
               transition={{ type: "spring", stiffness: 300, damping: 28 }}
               className="hidden lg:flex fixed inset-0 z-50 items-center justify-center p-6 pointer-events-none"
             >
-              <div className="pointer-events-auto w-full max-w-lg">
+              <div className="pointer-events-auto w-full max-w-[480px]">
                 <CheckoutCard
                   pkg={selPkg}
                   userId={userId} setUserId={setUserId}
@@ -452,153 +468,133 @@ function CheckoutCard({
       sectionOf(pkg) === "pass" ? "#10b981" : "#a12cff";
 
   return (
-    <div
-      className="overflow-hidden"
-      style={{
-        background: "var(--card)",
-        borderRadius: isMobile ? "0" : "28px",
+    <div 
+      className="flex flex-col"
+      style={{ 
+        background: "var(--card)", 
+        borderRadius: isMobile ? "24px 24px 0 0" : "24px",
+        overflow: "hidden",
         border: isMobile ? "none" : "1px solid var(--card-border)",
-        boxShadow: isMobile ? "none" : "0 24px 60px rgba(0,0,0,0.25), 0 8px 20px rgba(0,0,0,0.1)",
+        boxShadow: isMobile ? "none" : "0 24px 60px rgba(0,0,0,0.25)",
       }}
     >
-      {/* Top accent bar */}
-      <div className="h-[3px]" style={{ background: `linear-gradient(90deg, ${sectionAccent}, #a12cff)` }} />
+      <div className="mk-sidebar-head">
+        <h3 className="flex items-center gap-2">
+          <ShoppingCart size={18} className="text-brand-pink" /> 
+          Checkout Details
+        </h3>
+        <button onClick={onClose} className="mk-sidebar-close" aria-label="Close checkout">
+          <X size={18} />
+        </button>
+      </div>
 
-      <div className="p-5 sm:p-6 space-y-4">
-
-        {/* Selected package summary */}
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-3 flex-1 min-w-0">
-            <div className="relative flex-shrink-0">
-              <div className="absolute inset-0 rounded-xl blur-md opacity-50"
-                style={{ background: `linear-gradient(135deg,${sectionAccent},#a12cff)` }} />
-              <img
-                src={getPkgIcon(pkg)}
-                alt={pkg.packageName}
-                className="relative w-12 h-12 object-contain"
-                style={{ filter: "drop-shadow(0 4px 10px rgba(0,180,255,0.35))" }}
-              />
-            </div>
-            <div className="min-w-0">
-              <p className="theme-heading font-black text-sm leading-snug truncate">{pkg.packageName}</p>
-              <div className="flex items-baseline gap-1 mt-0.5">
-                <span className="font-black text-xl leading-none" style={{ color: sectionAccent }}>
-                  {pkg.price.toLocaleString()}
-                </span>
-                <span className="text-xs font-bold theme-muted">MMK</span>
-              </div>
-            </div>
+      <div className="mk-sidebar-body space-y-4" style={{ padding: '16px' }}>
+        
+        {/* Package Summary Premium Card */}
+        <div 
+          className="relative flex items-center gap-4 p-4 rounded-2xl overflow-hidden" 
+          style={{ 
+            border: `1px solid ${sectionAccent}30`, 
+            background: `linear-gradient(145deg, ${sectionAccent}0a 0%, var(--background) 100%)`,
+            boxShadow: `0 8px 24px -8px ${sectionAccent}20`
+          }}
+        >
+          <div className="absolute top-0 right-0 w-32 h-32 blur-3xl opacity-20" style={{ background: sectionAccent }} />
+          <div className="relative w-16 h-16 rounded-xl flex items-center justify-center bg-white shadow-sm flex-shrink-0" style={{ border: '1px solid var(--card-border)' }}>
+            <img src={getPkgIcon(pkg)} alt={pkg.packageName} className="w-12 h-12 object-contain drop-shadow-md" />
           </div>
-          <button onClick={onClose}
-            className="w-8 h-8 rounded-xl glass-panel flex items-center justify-center theme-muted hover:text-brand-pink transition-colors flex-shrink-0">
-            <X size={14} />
-          </button>
-        </div>
-
-        {/* Account inputs */}
-        <div className="rounded-2xl overflow-hidden"
-          style={{ border: "1.5px solid var(--card-border)", background: "var(--card)" }}>
-          <div className="flex items-center gap-2 px-4 py-2.5"
-            style={{ background: `${sectionAccent}0f`, borderBottom: `1px solid ${sectionAccent}22` }}>
-            <User size={12} style={{ color: sectionAccent }} />
-            <span className="text-[10px] font-extrabold uppercase tracking-widest" style={{ color: sectionAccent }}>
-              Game Account
-            </span>
-          </div>
-          <div className="p-3 space-y-2">
-            <div>
-              <label className="block text-[10px] font-bold uppercase tracking-wider theme-muted mb-1.5 px-0.5">User ID</label>
-              <input
-                type="text"
-                value={userId}
-                onChange={e => setUserId(e.target.value)}
-                placeholder="e.g. 123456789"
-                className="w-full px-4 py-2.5 rounded-xl text-sm font-semibold theme-heading outline-none transition-all duration-200"
-                style={{ background: "var(--background)", border: "1.5px solid var(--card-border)", color: "var(--foreground)" }}
-                onFocus={e => { e.currentTarget.style.borderColor = sectionAccent; e.currentTarget.style.boxShadow = `0 0 0 3px ${sectionAccent}18`; }}
-                onBlur={e => { e.currentTarget.style.borderColor = "var(--card-border)"; e.currentTarget.style.boxShadow = "none"; }}
-              />
-            </div>
-            <div>
-              <label className="block text-[10px] font-bold uppercase tracking-wider theme-muted mb-1.5 px-0.5">
-                Zone ID <span className="normal-case font-medium">(Server)</span>
-              </label>
-              <input
-                type="text"
-                value={serverId}
-                onChange={e => setServerId(e.target.value)}
-                placeholder="e.g. 2501"
-                className="w-full px-4 py-2.5 rounded-xl text-sm font-semibold theme-heading outline-none transition-all duration-200"
-                style={{ background: "var(--background)", border: "1.5px solid var(--card-border)", color: "var(--foreground)" }}
-                onFocus={e => { e.currentTarget.style.borderColor = sectionAccent; e.currentTarget.style.boxShadow = `0 0 0 3px ${sectionAccent}18`; }}
-                onBlur={e => { e.currentTarget.style.borderColor = "var(--card-border)"; e.currentTarget.style.boxShadow = "none"; }}
-              />
-            </div>
-            <p className="text-[11px] theme-muted leading-relaxed px-0.5">
-              💡 Open ML → <strong className="theme-heading">Avatar</strong> → <strong className="theme-heading">Basic Info</strong>
+          <div className="relative z-10">
+            <span className="text-[10px] font-extrabold uppercase tracking-widest" style={{ color: sectionAccent }}>Selected Package</span>
+            <p className="font-bold text-sm theme-heading mt-0.5">{pkg.packageName}</p>
+            <p className="font-black text-brand-pink text-xl leading-tight mt-1">
+              {pkg.price.toLocaleString()} <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide">MMK</span>
             </p>
           </div>
         </div>
 
-        {/* Payment method — 2×2 card grid */}
-        <div>
-          <div className="flex items-center gap-2 px-1 mb-3">
-            <ShoppingCart size={12} style={{ color: sectionAccent }} />
-            <span className="text-[10px] font-extrabold uppercase tracking-widest" style={{ color: sectionAccent }}>
-              Payment Method
-            </span>
+        {/* Game Account Inputs */}
+        <div className="mk-filter-group">
+          <span className="mk-filter-label flex items-center gap-1.5"><User size={14} className="text-brand-pink"/> Game Account</span>
+          <div className="space-y-3 mt-3">
+            <div className="relative">
+              <User size={18} className="absolute left-4 top-1/2 -translate-y-1/2 theme-muted opacity-50" />
+              <input
+                type="text"
+                value={userId}
+                onChange={e => setUserId(e.target.value)}
+                placeholder="User ID (e.g. 123456789)"
+                className="w-full h-[42px] rounded-xl text-sm font-semibold transition-colors outline-none"
+                style={{ paddingLeft: '44px', paddingRight: '16px', border: '1px solid var(--card-border)', background: 'var(--background)', color: 'var(--heading)' }}
+                onFocus={e => { e.currentTarget.style.borderColor = '#ff2e93'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(255,46,147,0.1)'; }}
+                onBlur={e => { e.currentTarget.style.borderColor = 'var(--card-border)'; e.currentTarget.style.boxShadow = 'none'; }}
+              />
+            </div>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-lg theme-muted opacity-50 select-none">#</span>
+              <input
+                type="text"
+                value={serverId}
+                onChange={e => setServerId(e.target.value)}
+                placeholder="Server ID (e.g. 2501)"
+                className="w-full h-[42px] rounded-xl text-sm font-semibold transition-colors outline-none"
+                style={{ paddingLeft: '44px', paddingRight: '16px', border: '1px solid var(--card-border)', background: 'var(--background)', color: 'var(--heading)' }}
+                onFocus={e => { e.currentTarget.style.borderColor = '#ff2e93'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(255,46,147,0.1)'; }}
+                onBlur={e => { e.currentTarget.style.borderColor = 'var(--card-border)'; e.currentTarget.style.boxShadow = 'none'; }}
+              />
+            </div>
           </div>
-          <div className="grid grid-cols-2 gap-2.5">
+        </div>
+
+        {/* Payment Method Selector */}
+        <div className="mk-filter-group">
+          <span className="mk-filter-label flex items-center gap-1.5"><Wallet size={14} className="text-brand-pink"/> Payment Method</span>
+          <div className="grid grid-cols-2 gap-3 mt-3">
             {PAYMENTS.map(m => {
               const sel = payment === m.id;
               return (
                 <button
                   key={m.id}
                   onClick={() => setPayment(m.id)}
-                  className="relative flex flex-col items-center gap-2.5 py-4 px-3 rounded-2xl transition-all duration-200 overflow-hidden"
+                  className="relative flex flex-col items-center justify-center gap-1.5 py-3 px-2 rounded-xl border-2 transition-all group"
                   style={{
-                    border: sel ? `2px solid ${sectionAccent}` : "2px solid var(--card-border)",
-                    background: sel ? `${sectionAccent}0c` : "var(--background)",
-                    boxShadow: sel ? `0 4px 16px ${sectionAccent}22` : "none",
+                    borderColor: sel ? '#ff2e93' : 'var(--card-border)',
+                    background: sel ? 'rgba(255,46,147,0.05)' : 'var(--background)'
                   }}
                 >
-                  <div className="w-11 h-11 rounded-xl overflow-hidden flex-shrink-0 shadow-md flex items-center justify-center"
-                    style={{ background: "var(--card)" }}>
-                    <img src={m.logo} alt={m.id} className="w-full h-full object-contain p-1" />
+                  {/* Radio Indicator */}
+                  <div className="absolute top-2 left-2 w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors"
+                    style={{ borderColor: sel ? '#ff2e93' : 'var(--card-border)' }}>
+                    {sel && <div className="w-2 h-2 rounded-full bg-brand-pink" />}
                   </div>
-                  <span className={cn("text-[11px] font-bold text-center leading-tight transition-colors",
-                    sel ? "text-brand-pink" : "theme-heading")}>
-                    {m.id}
-                  </span>
-                  {sel && (
-                    <div className="absolute top-1.5 right-1.5 w-5 h-5 rounded-full flex items-center justify-center"
-                      style={{ background: sectionAccent }}>
-                      <Check size={11} className="text-white" strokeWidth={3} />
-                    </div>
-                  )}
+
+                  <div className="w-8 h-8 rounded-lg bg-white shadow-sm flex items-center justify-center p-1 group-hover:scale-105 transition-transform">
+                    <img src={m.logo} alt={m.id} className="w-full h-full object-contain" />
+                  </div>
+                  <span className={`text-[11px] font-bold ${sel ? 'text-brand-pink' : 'theme-heading'}`}>{m.id}</span>
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* CTA */}
-        <motion.button
-          whileHover={{ scale: canOrder ? 1.015 : 1 }}
-          whileTap={{ scale: canOrder ? 0.985 : 1 }}
-          onClick={onOrder}
-          disabled={!canOrder}
-          className="liquid-glass-btn w-full flex items-center justify-center gap-2.5 py-4 rounded-2xl font-black text-white text-sm disabled:opacity-35 disabled:cursor-not-allowed disabled:transform-none"
-        >
-          <ShoppingCart size={17} />
-          Place Order — {pkg.price.toLocaleString()} MMK
-        </motion.button>
+      </div>
 
+      <div className="mk-sidebar-actions flex flex-col gap-2">
         {!canOrder && (
-          <p className="text-[11px] theme-muted text-center -mt-1">
-            {!userId || !serverId ? "Enter your User ID and Zone ID above" : "Please select a payment method"}
+          <p className="text-[11px] font-bold text-center text-red-500 mb-1 flex items-center justify-center gap-1">
+            <span>*</span>
+            {!userId || !serverId ? "Please enter your User ID and Server ID" : "Please select a payment method"}
           </p>
         )}
+        <button
+          onClick={onOrder}
+          disabled={!canOrder}
+          className="hero-cta hero-cta-primary mk-apply-btn w-full flex justify-center gap-2 h-[44px] text-sm"
+          style={{ opacity: canOrder ? 1 : 0.5, cursor: canOrder ? 'pointer' : 'not-allowed' }}
+        >
+          <ShoppingCart size={18} />
+          Place Order via Telegram
+        </button>
       </div>
     </div>
   );
