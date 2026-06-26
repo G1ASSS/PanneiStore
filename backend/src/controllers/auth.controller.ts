@@ -6,7 +6,7 @@ import { generateAccessToken, generateRefreshToken, verifyRefreshToken } from '.
 import { ApiError, successResponse } from '../utils/response.utils';
 import { authRateLimiter } from '../middleware/rateLimit.middleware';
 import crypto from 'crypto';
-import { sendPasswordResetEmail } from '../services/email.service';
+import { sendPasswordResetEmail, sendWelcomeEmail } from '../services/email.service';
 
 export const register = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -30,6 +30,9 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
 
     const accessToken = generateAccessToken({ id: user.id, email: user.email, role: user.role });
     const refreshToken = generateRefreshToken({ id: user.id });
+
+    // Send welcome email (fire and forget — don't block response)
+    sendWelcomeEmail(user.email, user.name).catch(console.error);
 
     res.cookie('refreshToken', refreshToken, { httpOnly: true, secure: true, sameSite: 'lax', maxAge: 30 * 24 * 60 * 60 * 1000 });
     return successResponse(res, { user, accessToken }, 'Registration successful', 201);
@@ -63,16 +66,50 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
 
 export const googleAuth = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { googleId, email, name, avatar } = req.body;
+    const { idToken, email, name, avatar } = req.body;
 
-    let user = await prisma.user.findFirst({ where: { OR: [{ googleId }, { email }] } });
+    if (!email) throw new ApiError(400, 'Email is required');
+
+    // Extract googleId from the idToken (NextAuth already verified this with Google)
+    let googleId: string | undefined;
+    if (idToken) {
+      try {
+        // The idToken is a JWT — decode the payload to get the 'sub' (Google user ID)
+        const payload = JSON.parse(Buffer.from(idToken.split('.')[1], 'base64').toString());
+        googleId = payload.sub;
+      } catch {
+        // If we can't decode it, continue without googleId
+      }
+    }
+
+    let user = await prisma.user.findFirst({
+      where: {
+        OR: [
+          ...(googleId ? [{ googleId }] : []),
+          { email },
+        ],
+      },
+    });
 
     if (!user) {
+      // New user — create account (no phone required for Google sign-in)
       user = await prisma.user.create({
-        data: { googleId, email, name, avatar, isVerified: true },
+        data: {
+          googleId,
+          email,
+          name: name || email.split('@')[0],
+          avatar,
+          isVerified: true,
+        },
       });
-    } else if (!user.googleId) {
-      user = await prisma.user.update({ where: { id: user.id }, data: { googleId, avatar: avatar || user.avatar } });
+    } else {
+      // Existing user — link Google ID if not already linked
+      if (!user.googleId) {
+        user = await prisma.user.update({
+          where: { id: user.id },
+          data: { googleId, avatar: avatar || user.avatar },
+        });
+      }
     }
 
     if (!user.isActive) throw new ApiError(403, 'Account has been deactivated');
@@ -86,6 +123,7 @@ export const googleAuth = async (req: Request, res: Response, next: NextFunction
     return successResponse(res, { user: safeUser, accessToken }, 'Google login successful');
   } catch (err) { next(err); }
 };
+
 
 export const refreshToken = async (req: Request, res: Response, next: NextFunction) => {
   try {
