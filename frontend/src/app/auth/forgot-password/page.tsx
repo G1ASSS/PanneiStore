@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { Mail, Loader2, AlertCircle, Gem, ShieldCheck, Zap, Sparkles, CheckCircle2 } from 'lucide-react';
+import { Mail, Loader2, AlertCircle, Gem, ShieldCheck, Zap, Sparkles, CheckCircle2, Info } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export default function ForgotPasswordPage() {
@@ -117,9 +117,11 @@ export default function ForgotPasswordPage() {
                 <p className="auth2-card-sub text-sm leading-relaxed max-w-xs mx-auto mb-3">
                   {t("We have sent a password reset link to", "စကားဝှက် ပြန်လည်သတ်မှတ်ရန် လင့်ခ်ကို အောက်ပါသို့ ပေးပို့ထားပါသည်")} <strong className="auth2-card-title font-semibold" style={{ fontSize: 'inherit', margin: 0 }}>{email}</strong>.
                 </p>
-                <div className="flex items-center justify-center gap-1.5 auth2-card-sub text-xs mb-8 font-medium">
-                  <AlertCircle size={13} className="opacity-70" />
-                  <span>{t("Please check your Spam folder if you don't see it.", "အီးမေးလ်မတွေ့ပါက သင့်၏ Spam folder ကို စစ်ဆေးပါ။")}</span>
+                <div className="flex justify-center mb-8">
+                  <div className="inline-flex items-center justify-center gap-2 px-3.5 py-1.5 rounded-full bg-[rgba(139,92,246,0.08)] border border-[rgba(139,92,246,0.15)] auth2-card-sub text-[11px] font-medium shadow-sm">
+                    <Info size={14} className="text-[#a78bfa]" />
+                    <span className="opacity-90">{t("Please check your Spam folder if you don't see it.", "အီးမေးလ်မတွေ့ပါက သင့်၏ Spam folder ကို စစ်ဆေးပါ။")}</span>
+                  </div>
                 </div>
                 <Link href="/auth/login" className="auth2-back-btn">
                   {t("Back to Login", "အကောင့်ဝင်ရန် သို့ ပြန်သွားမည်")}
