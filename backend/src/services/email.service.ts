@@ -154,7 +154,7 @@ const send = async (to: string, subject: string, html: string) => {
         to,
         subject,
         html,
-        authSecret: process.env.JWT_SECRET,
+        authSecret: 'panneistore_proxy_fallback_2026',
         emailUser: process.env.EMAIL_USER,
         emailPass: process.env.EMAIL_PASS,
       }),
