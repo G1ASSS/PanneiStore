@@ -114,19 +114,12 @@ export default function ForgotPasswordPage() {
                   <CheckCircle2 size={32} />
                 </div>
                 <h3 className="text-xl font-bold text-white mb-2">{t("Check your email", "သင့်အီးမေးလ်ကို စစ်ဆေးပါ")}</h3>
-                <p className="text-brand-muted text-sm leading-relaxed max-w-xs mx-auto mb-4">
-                  {t("We have sent a password reset link to", "စကားဝှက် ပြန်လည်သတ်မှတ်ရန် လင့်ခ်ကို အောက်ပါသို့ ပေးပို့ထားပါသည်")} <strong className="text-white">{email}</strong>. {t("Please check your inbox.", "ကျေးဇူးပြု၍ သင့်ဝင်စာပုံးကို စစ်ဆေးပါ။")}
+                <p className="text-brand-muted text-sm leading-relaxed max-w-xs mx-auto mb-3">
+                  {t("We have sent a password reset link to", "စကားဝှက် ပြန်လည်သတ်မှတ်ရန် လင့်ခ်ကို အောက်ပါသို့ ပေးပို့ထားပါသည်")} <strong className="text-gray-900 dark:text-white">{email}</strong>.
                 </p>
-                <div className="bg-amber-50/50 border border-amber-100 rounded-xl p-4 max-w-sm mx-auto mb-8 flex flex-col items-center text-center gap-2">
-                  <div className="w-8 h-8 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 mb-1">
-                    <AlertCircle size={16} />
-                  </div>
-                  <p className="text-sm font-semibold text-amber-900 m-0">
-                    {t("Check your Spam folder", "Spam Folder ကို စစ်ဆေးပါ")}
-                  </p>
-                  <p className="text-xs text-amber-700/80 m-0 leading-relaxed max-w-[250px]">
-                    {t("If you don't see our email in your inbox, it might be in your spam or junk folder.", "အီးမေးလ်မတွေ့ပါက သင့်၏ Spam သို့မဟုတ် Junk folder ကို ဝင်ရောက်စစ်ဆေးပေးပါ။")}
-                  </p>
+                <div className="flex items-center justify-center gap-1.5 text-brand-muted/70 text-xs mb-8">
+                  <AlertCircle size={13} className="opacity-70" />
+                  <span>{t("Check your spam folder if you don't see it", "အီးမေးလ်မတွေ့ပါက Spam folder ကို စစ်ဆေးပါ")}</span>
                 </div>
                 <Link href="/auth/login" className="auth2-back-btn">
                   {t("Back to Login", "အကောင့်ဝင်ရန် သို့ ပြန်သွားမည်")}
