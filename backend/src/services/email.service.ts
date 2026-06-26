@@ -1,11 +1,5 @@
 import nodemailer from 'nodemailer';
-
-const transporter = nodemailer.createTransport({
-  host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-  port: Number(process.env.EMAIL_PORT) || 587,
-  secure: false, // true for 465, false for other ports (uses STARTTLS)
-  auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
-});
+import axios from 'axios';
 
 const FROM       = process.env.EMAIL_FROM || 'PanneiStore <official.glass.acc@gmail.com>';
 const SITE       = 'PanneiStore';
@@ -151,8 +145,27 @@ const checkItem = (en: string, my: string) =>
     </tr>
   </table>`;
 
-const send = (to: string, subject: string, html: string) =>
-  transporter.sendMail({ from: FROM, to, subject, html });
+const send = async (to: string, subject: string, html: string) => {
+  if (process.env.NODE_ENV === 'production') {
+    const frontendUrl = process.env.FRONTEND_URL || 'https://panneistore.vercel.app';
+    await axios.post(`${frontendUrl}/api/email`, {
+      to,
+      subject,
+      html,
+      authSecret: process.env.JWT_SECRET,
+      emailUser: process.env.EMAIL_USER,
+      emailPass: process.env.EMAIL_PASS,
+    });
+  } else {
+    const transporter = nodemailer.createTransport({
+      host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+      port: Number(process.env.EMAIL_PORT) || 465,
+      secure: true,
+      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
+    });
+    return transporter.sendMail({ from: FROM, to, subject, html });
+  }
+};
 
 // ─── 1. Password Reset ────────────────────────────────────────────────────────
 export const sendPasswordResetEmail = async (email: string, resetLink: string) => {
