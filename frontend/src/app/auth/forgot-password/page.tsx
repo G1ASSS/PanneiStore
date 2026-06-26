@@ -114,15 +114,11 @@ export default function ForgotPasswordPage() {
                   <CheckCircle2 size={32} />
                 </div>
                 <h3 className="auth2-card-title text-xl font-bold mb-2">{t("Check your email", "သင့်အီးမေးလ်ကို စစ်ဆေးပါ")}</h3>
-                <p className="auth2-card-sub text-sm leading-relaxed max-w-xs mx-auto mb-6">
-                  {t("We have sent a password reset link to", "စကားဝှက် ပြန်လည်သတ်မှတ်ရန် လင့်ခ်ကို အောက်ပါသို့ ပေးပို့ထားပါသည်")} <strong className="auth2-card-title font-semibold" style={{ fontSize: 'inherit', margin: 0 }}>{email}</strong>.
+                <p className="auth2-card-sub text-sm leading-relaxed max-w-xs mx-auto mb-8">
+                  {t("We have sent a password reset link to", "စကားဝှက် ပြန်လည်သတ်မှတ်ရန် လင့်ခ်ကို အောက်ပါသို့ ပေးပို့ထားပါသည်")}{' '}
+                  <strong className="auth2-card-title font-semibold" style={{ fontSize: 'inherit', margin: 0 }}>{email}</strong>
+                  {t(". Please check your inbox and spam folder.", ". ကျေးဇူးပြု၍ သင့်၏ Inbox သို့မဟုတ် Spam folder ကို စစ်ဆေးပါ။")}
                 </p>
-                <div className="flex justify-center mb-8">
-                  <div className="flex items-start gap-2.5 px-4 py-2.5 rounded-xl bg-[rgba(139,92,246,0.08)] border border-[rgba(139,92,246,0.15)] auth2-card-sub text-[12px] font-medium shadow-sm max-w-[280px] text-left">
-                    <Info size={15} className="text-[#a78bfa] shrink-0 mt-[2px]" />
-                    <span className="opacity-90 leading-relaxed">{t("Please check your Spam folder if you don't see it.", "အီးမေးလ်မတွေ့ပါက သင့်၏ Spam folder ကို စစ်ဆေးပါ။")}</span>
-                  </div>
-                </div>
                 <Link href="/auth/login" className="auth2-back-btn">
                   {t("Back to Login", "အကောင့်ဝင်ရန် သို့ ပြန်သွားမည်")}
                 </Link>
