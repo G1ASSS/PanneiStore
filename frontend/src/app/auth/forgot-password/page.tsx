@@ -110,8 +110,12 @@ export default function ForgotPasswordPage() {
 
             {success ? (
               <div className="flex flex-col items-center justify-center text-center py-6">
-                <div className="w-16 h-16 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center mb-6 text-green-500 shadow-[0_0_24px_rgba(34,197,94,0.2)]">
-                  <CheckCircle2 size={32} />
+                <div className="w-20 h-20 flex items-center justify-center mb-4 mx-auto">
+                  <img
+                    src="https://img.icons8.com/fluency/128/paper-plane.png"
+                    alt="Email Sent"
+                    className="w-full h-full object-contain drop-shadow-[0_4px_12px_rgba(167,139,250,0.4)] animate-fly"
+                  />
                 </div>
                 <h3 className="auth2-card-title text-xl font-bold mb-2">{t("Check your email", "သင့်အီးမေးလ်ကို စစ်ဆေးပါ")}</h3>
                 <p className="auth2-card-sub text-sm leading-relaxed max-w-xs mx-auto mb-8">
@@ -140,8 +144,8 @@ export default function ForgotPasswordPage() {
                   </div>
                 </div>
 
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   disabled={loading || !email}
                   className="auth2-submit-btn mt-4"
                 >
