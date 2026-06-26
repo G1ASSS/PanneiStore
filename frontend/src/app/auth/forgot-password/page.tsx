@@ -115,7 +115,7 @@ export default function ForgotPasswordPage() {
                 </div>
                 <h3 className="auth2-card-title text-xl font-bold mb-2">{t("Check your email", "သင့်အီးမေးလ်ကို စစ်ဆေးပါ")}</h3>
                 <p className="auth2-card-sub text-sm leading-relaxed max-w-xs mx-auto mb-3">
-                  {t("We have sent a password reset link to", "စကားဝှက် ပြန်လည်သတ်မှတ်ရန် လင့်ခ်ကို အောက်ပါသို့ ပေးပို့ထားပါသည်")} <strong className="auth2-card-title font-semibold">{email}</strong>.
+                  {t("We have sent a password reset link to", "စကားဝှက် ပြန်လည်သတ်မှတ်ရန် လင့်ခ်ကို အောက်ပါသို့ ပေးပို့ထားပါသည်")} <strong className="auth2-card-title font-semibold" style={{ fontSize: 'inherit', margin: 0 }}>{email}</strong>.
                 </p>
                 <div className="flex items-center justify-center gap-1.5 auth2-card-sub text-xs mb-8 font-medium">
                   <AlertCircle size={13} className="opacity-70" />
