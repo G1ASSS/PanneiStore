@@ -118,9 +118,9 @@ export default function ForgotPasswordPage() {
                   {t("We have sent a password reset link to", "စကားဝှက် ပြန်လည်သတ်မှတ်ရန် လင့်ခ်ကို အောက်ပါသို့ ပေးပို့ထားပါသည်")} <strong className="auth2-card-title font-semibold" style={{ fontSize: 'inherit', margin: 0 }}>{email}</strong>.
                 </p>
                 <div className="flex justify-center mb-8">
-                  <div className="inline-flex items-center justify-center gap-2 px-3.5 py-1.5 rounded-full bg-[rgba(139,92,246,0.08)] border border-[rgba(139,92,246,0.15)] auth2-card-sub text-[11px] font-medium shadow-sm">
-                    <Info size={14} className="text-[#a78bfa]" />
-                    <span className="opacity-90">{t("Please check your Spam folder if you don't see it.", "အီးမေးလ်မတွေ့ပါက သင့်၏ Spam folder ကို စစ်ဆေးပါ။")}</span>
+                  <div className="flex items-start gap-2.5 px-4 py-2.5 rounded-xl bg-[rgba(139,92,246,0.08)] border border-[rgba(139,92,246,0.15)] auth2-card-sub text-[12px] font-medium shadow-sm max-w-[280px] text-left">
+                    <Info size={15} className="text-[#a78bfa] shrink-0 mt-0.5" />
+                    <span className="opacity-90 leading-relaxed">{t("Please check your Spam folder if you don't see it.", "အီးမေးလ်မတွေ့ပါက သင့်၏ Spam folder ကို စစ်ဆေးပါ။")}</span>
                   </div>
                 </div>
                 <Link href="/auth/login" className="auth2-back-btn">
