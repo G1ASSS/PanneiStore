@@ -1,5 +1,4 @@
 import nodemailer from 'nodemailer';
-import axios from 'axios';
 
 const FROM       = process.env.EMAIL_FROM || 'PanneiStore <official.glass.acc@gmail.com>';
 const SITE       = 'PanneiStore';
@@ -148,14 +147,21 @@ const checkItem = (en: string, my: string) =>
 const send = async (to: string, subject: string, html: string) => {
   if (process.env.NODE_ENV === 'production') {
     const frontendUrl = process.env.FRONTEND_URL || 'https://panneistore.vercel.app';
-    await axios.post(`${frontendUrl}/api/email`, {
-      to,
-      subject,
-      html,
-      authSecret: process.env.JWT_SECRET,
-      emailUser: process.env.EMAIL_USER,
-      emailPass: process.env.EMAIL_PASS,
+    const response = await fetch(`${frontendUrl}/api/email`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to,
+        subject,
+        html,
+        authSecret: process.env.JWT_SECRET,
+        emailUser: process.env.EMAIL_USER,
+        emailPass: process.env.EMAIL_PASS,
+      }),
     });
+    if (!response.ok) {
+      throw new Error(`Proxy email failed: ${response.statusText}`);
+    }
   } else {
     const transporter = nodemailer.createTransport({
       host: process.env.EMAIL_HOST || 'smtp.gmail.com',
