@@ -117,9 +117,9 @@ export default function ForgotPasswordPage() {
                 <p className="text-brand-muted text-sm leading-relaxed max-w-xs mx-auto mb-4">
                   {t("We have sent a password reset link to", "စကားဝှက် ပြန်လည်သတ်မှတ်ရန် လင့်ခ်ကို အောက်ပါသို့ ပေးပို့ထားပါသည်")} <strong className="text-white">{email}</strong>. {t("Please check your inbox.", "ကျေးဇူးပြု၍ သင့်ဝင်စာပုံးကို စစ်ဆေးပါ။")}
                 </p>
-                <div className="bg-yellow-500/10 border border-yellow-500/20 rounded-lg p-3 max-w-xs mx-auto mb-8 flex items-start gap-2 text-left">
-                  <AlertCircle size={16} className="text-yellow-500 shrink-0 mt-0.5" />
-                  <p className="text-xs text-yellow-500/90 m-0">
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 max-w-xs mx-auto mb-8 flex items-start gap-2 text-left shadow-sm">
+                  <AlertCircle size={18} className="text-amber-600 shrink-0 mt-0.5" />
+                  <p className="text-sm font-medium text-amber-900 m-0 leading-relaxed">
                     {t("Don't see it? Please check your Spam or Junk folder.", "မတွေ့ရပါက သင့်၏ Spam သို့မဟုတ် Junk folder ကို ဝင်ရောက်စစ်ဆေးပေးပါ။")}
                   </p>
                 </div>
