@@ -113,11 +113,11 @@ export default function ForgotPasswordPage() {
                 <div className="w-16 h-16 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center mb-6 text-green-500 shadow-[0_0_24px_rgba(34,197,94,0.2)]">
                   <CheckCircle2 size={32} />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{t("Check your email", "သင့်အီးမေးလ်ကို စစ်ဆေးပါ")}</h3>
-                <p className="text-gray-600 dark:text-brand-muted text-sm leading-relaxed max-w-xs mx-auto mb-3">
-                  {t("We have sent a password reset link to", "စကားဝှက် ပြန်လည်သတ်မှတ်ရန် လင့်ခ်ကို အောက်ပါသို့ ပေးပို့ထားပါသည်")} <strong className="text-gray-900 dark:text-white">{email}</strong>.
+                <h3 className="auth2-card-title text-xl font-bold mb-2">{t("Check your email", "သင့်အီးမေးလ်ကို စစ်ဆေးပါ")}</h3>
+                <p className="auth2-card-sub text-sm leading-relaxed max-w-xs mx-auto mb-3">
+                  {t("We have sent a password reset link to", "စကားဝှက် ပြန်လည်သတ်မှတ်ရန် လင့်ခ်ကို အောက်ပါသို့ ပေးပို့ထားပါသည်")} <strong className="auth2-card-title font-semibold">{email}</strong>.
                 </p>
-                <div className="flex items-center justify-center gap-1.5 text-gray-500 dark:text-brand-muted/70 text-xs mb-8 font-medium">
+                <div className="flex items-center justify-center gap-1.5 auth2-card-sub text-xs mb-8 font-medium">
                   <AlertCircle size={13} className="opacity-70" />
                   <span>{t("Please check your Spam folder if you don't see it.", "အီးမေးလ်မတွေ့ပါက သင့်၏ Spam folder ကို စစ်ဆေးပါ။")}</span>
                 </div>
