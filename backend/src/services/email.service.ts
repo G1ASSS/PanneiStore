@@ -1,10 +1,21 @@
-import { Resend } from 'resend';
+import nodemailer from 'nodemailer';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM = process.env.EMAIL_FROM || 'onboarding@resend.dev';
+// ─── Transporter ─────────────────────────────────────────────────────────────
+const transporter = nodemailer.createTransport({
+  host: process.env.EMAIL_HOST || 'smtp.gmail.com',
+  port: Number(process.env.EMAIL_PORT) || 465,
+  secure: true, // SSL
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
+
+const FROM = process.env.EMAIL_FROM || 'PanneiStore <official.glass.acc@gmail.com>';
 const SITE_NAME = 'PanneiStore';
+const FRONTEND_URL = process.env.FRONTEND_URL || 'https://panneistore.vercel.app';
 
-// ─── Shared HTML layout ──────────────────────────────────────────────────────
+// ─── Shared HTML layout ───────────────────────────────────────────────────────
 const layout = (content: string) => `
 <!DOCTYPE html>
 <html>
@@ -36,12 +47,8 @@ const layout = (content: string) => `
           <!-- Footer -->
           <tr>
             <td style="background:#111;border-radius:0 0 16px 16px;padding:20px 36px;text-align:center;">
-              <p style="margin:0;color:#555;font-size:12px;">
-                © ${new Date().getFullYear()} ${SITE_NAME} · All rights reserved
-              </p>
-              <p style="margin:6px 0 0;color:#444;font-size:11px;">
-                If you did not request this email, you can safely ignore it.
-              </p>
+              <p style="margin:0;color:#555;font-size:12px;">© ${new Date().getFullYear()} ${SITE_NAME} · All rights reserved</p>
+              <p style="margin:6px 0 0;color:#444;font-size:11px;">If you did not request this email, you can safely ignore it.</p>
             </td>
           </tr>
         </table>
@@ -51,18 +58,20 @@ const layout = (content: string) => `
 </body>
 </html>`;
 
-// ─── Button helper ───────────────────────────────────────────────────────────
 const btn = (text: string, url: string) =>
   `<a href="${url}" style="display:inline-block;margin-top:24px;padding:14px 32px;background:linear-gradient(135deg,#6c3fe8,#9b5cf0);color:#fff;text-decoration:none;border-radius:10px;font-weight:700;font-size:15px;">${text}</a>`;
 
-// ─── Heading helper ──────────────────────────────────────────────────────────
 const heading = (text: string) =>
   `<h2 style="margin:0 0 16px;color:#fff;font-size:22px;font-weight:700;">${text}</h2>`;
 
 const para = (text: string) =>
   `<p style="margin:0 0 14px;color:#aaa;font-size:15px;line-height:1.6;">${text}</p>`;
 
-// ─── 1. Password Reset ───────────────────────────────────────────────────────
+// ─── Send helper ──────────────────────────────────────────────────────────────
+const send = (to: string, subject: string, html: string) =>
+  transporter.sendMail({ from: FROM, to, subject, html });
+
+// ─── 1. Password Reset ────────────────────────────────────────────────────────
 export const sendPasswordResetEmail = async (email: string, resetLink: string) => {
   const html = layout(`
     ${heading('Reset Your Password 🔑')}
@@ -74,16 +83,10 @@ export const sendPasswordResetEmail = async (email: string, resetLink: string) =
       <p style="margin:6px 0 0;color:#7c4dff;font-size:12px;word-break:break-all;">${resetLink}</p>
     </div>
   `);
-
-  return resend.emails.send({
-    from: FROM,
-    to: email,
-    subject: `Reset Your Password — ${SITE_NAME}`,
-    html,
-  });
+  return send(email, `Reset Your Password — ${SITE_NAME}`, html);
 };
 
-// ─── 2. Welcome Email ────────────────────────────────────────────────────────
+// ─── 2. Welcome Email ─────────────────────────────────────────────────────────
 export const sendWelcomeEmail = async (email: string, name: string) => {
   const html = layout(`
     ${heading(`Welcome to ${SITE_NAME}, ${name}! 🎮`)}
@@ -94,18 +97,12 @@ export const sendWelcomeEmail = async (email: string, name: string) => {
       <p style="margin:4px 0;color:#aaa;font-size:14px;">• Buy accounts securely with local Myanmar payment methods</p>
       <p style="margin:4px 0;color:#aaa;font-size:14px;">• Track your orders from your dashboard</p>
     </div>
-    <div style="text-align:center;">${btn('Browse Accounts', `${process.env.FRONTEND_URL || 'https://panneistore.vercel.app'}/market`)}</div>
+    <div style="text-align:center;">${btn('Browse Accounts', `${FRONTEND_URL}/market`)}</div>
   `);
-
-  return resend.emails.send({
-    from: FROM,
-    to: email,
-    subject: `Welcome to ${SITE_NAME}! 🎮`,
-    html,
-  });
+  return send(email, `Welcome to ${SITE_NAME}! 🎮`, html);
 };
 
-// ─── 3. Order Confirmation ───────────────────────────────────────────────────
+// ─── 3. Order Confirmation ────────────────────────────────────────────────────
 export const sendOrderConfirmationEmail = async (
   email: string,
   name: string,
@@ -113,7 +110,6 @@ export const sendOrderConfirmationEmail = async (
   orderType: string,
   amount: number,
 ) => {
-  const frontendUrl = process.env.FRONTEND_URL || 'https://panneistore.vercel.app';
   const html = layout(`
     ${heading('Order Confirmed! 🛒')}
     ${para(`Hi <strong style="color:#fff;">${name}</strong>, your order has been placed successfully and is now being reviewed.`)}
@@ -134,35 +130,22 @@ export const sendOrderConfirmationEmail = async (
       </table>
     </div>
     ${para('Our team will review your payment and confirm your order shortly.')}
-    <div style="text-align:center;">${btn('View My Order', `${frontendUrl}/buyer/orders/${orderId}`)}</div>
+    <div style="text-align:center;">${btn('View My Order', `${FRONTEND_URL}/buyer/orders/${orderId}`)}</div>
   `);
-
-  return resend.emails.send({
-    from: FROM,
-    to: email,
-    subject: `Order Confirmed — ${SITE_NAME}`,
-    html,
-  });
+  return send(email, `Order Confirmed — ${SITE_NAME}`, html);
 };
 
-// ─── 4. Order Approved ───────────────────────────────────────────────────────
+// ─── 4. Order Approved ────────────────────────────────────────────────────────
 export const sendOrderApprovedEmail = async (
   email: string,
   name: string,
   orderId: string,
 ) => {
-  const frontendUrl = process.env.FRONTEND_URL || 'https://panneistore.vercel.app';
   const html = layout(`
     ${heading('Your Order is Approved! ✅')}
     ${para(`Great news, <strong style="color:#fff;">${name}</strong>! Your payment has been verified and your order <strong style="color:#9b5cf0;">#${orderId.slice(-8).toUpperCase()}</strong> has been approved.`)}
     ${para('Check your order details for the account credentials or diamond delivery information.')}
-    <div style="text-align:center;">${btn('View Order Details', `${frontendUrl}/buyer/orders/${orderId}`)}</div>
+    <div style="text-align:center;">${btn('View Order Details', `${FRONTEND_URL}/buyer/orders/${orderId}`)}</div>
   `);
-
-  return resend.emails.send({
-    from: FROM,
-    to: email,
-    subject: `Order Approved — ${SITE_NAME}`,
-    html,
-  });
+  return send(email, `Order Approved — ${SITE_NAME}`, html);
 };
