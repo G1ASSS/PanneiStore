@@ -4,7 +4,7 @@ import nodemailer from 'nodemailer';
 const transporter = nodemailer.createTransport({
   host: process.env.EMAIL_HOST || 'smtp.gmail.com',
   port: Number(process.env.EMAIL_PORT) || 465,
-  secure: true, // SSL
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -14,58 +14,138 @@ const transporter = nodemailer.createTransport({
 const FROM = process.env.EMAIL_FROM || 'PanneiStore <official.glass.acc@gmail.com>';
 const SITE_NAME = 'PanneiStore';
 const FRONTEND_URL = process.env.FRONTEND_URL || 'https://panneistore.vercel.app';
+const YEAR = new Date().getFullYear();
 
-// ─── Shared HTML layout ───────────────────────────────────────────────────────
-const layout = (content: string) => `
+// ─── Real icon URLs (icons8 CDN) ─────────────────────────────────────────────
+const ICONS = {
+  key:      'https://img.icons8.com/fluency/96/key.png',
+  welcome:  'https://img.icons8.com/fluency/96/controller.png',
+  order:    'https://img.icons8.com/fluency/96/shopping-cart.png',
+  approved: 'https://img.icons8.com/fluency/96/ok.png',
+  logo:     'https://img.icons8.com/fluency/64/sword.png',
+};
+
+// ─── Shared premium layout ────────────────────────────────────────────────────
+const layout = (icon: string, accentColor: string, content: string) => `
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>${SITE_NAME}</title>
 </head>
-<body style="margin:0;padding:0;background:#0f0f0f;font-family:'Segoe UI',Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#0f0f0f;padding:40px 0;">
+<body style="margin:0;padding:0;background:#0a0a0f;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#0a0a0f;padding:48px 16px;">
     <tr>
       <td align="center">
-        <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
-          <!-- Header -->
+        <table width="560" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;width:100%;">
+
+          <!-- ── Top logo bar ── -->
           <tr>
-            <td style="background:linear-gradient(135deg,#6c3fe8 0%,#9b5cf0 100%);border-radius:16px 16px 0 0;padding:32px;text-align:center;">
-              <h1 style="margin:0;color:#fff;font-size:28px;font-weight:800;letter-spacing:-0.5px;">
-                ⚔️ ${SITE_NAME}
-              </h1>
-              <p style="margin:6px 0 0;color:rgba(255,255,255,0.75);font-size:13px;">Mobile Legends Account Marketplace</p>
+            <td align="center" style="padding-bottom:28px;">
+              <table cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="vertical-align:middle;padding-right:10px;">
+                    <img src="${ICONS.logo}" width="30" height="30" alt="" style="display:block;"/>
+                  </td>
+                  <td style="vertical-align:middle;">
+                    <span style="font-size:18px;font-weight:800;color:#fff;letter-spacing:-0.3px;">${SITE_NAME}</span>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
-          <!-- Body -->
+
+          <!-- ── Card ── -->
           <tr>
-            <td style="background:#1a1a2e;padding:40px 36px;">
-              ${content}
+            <td style="background:#13131f;border-radius:20px;border:1px solid #1e1e35;overflow:hidden;">
+
+              <!-- Gradient accent bar -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td height="4" style="background:linear-gradient(90deg,${accentColor} 0%,#c084fc 100%);font-size:0;line-height:0;">&nbsp;</td>
+                </tr>
+              </table>
+
+              <!-- Icon hero -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td align="center" style="padding:40px 40px 0;">
+                    <div style="width:80px;height:80px;background:linear-gradient(135deg,${accentColor}22,${accentColor}44);border-radius:50%;display:inline-block;text-align:center;line-height:80px;border:1px solid ${accentColor}55;">
+                      <img src="${icon}" width="44" height="44" alt="" style="display:inline-block;vertical-align:middle;margin-top:18px;"/>
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Content -->
+              <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td style="padding:28px 40px 40px;">
+                    ${content}
+                  </td>
+                </tr>
+              </table>
+
             </td>
           </tr>
-          <!-- Footer -->
+
+          <!-- ── Footer ── -->
           <tr>
-            <td style="background:#111;border-radius:0 0 16px 16px;padding:20px 36px;text-align:center;">
-              <p style="margin:0;color:#555;font-size:12px;">© ${new Date().getFullYear()} ${SITE_NAME} · All rights reserved</p>
-              <p style="margin:6px 0 0;color:#444;font-size:11px;">If you did not request this email, you can safely ignore it.</p>
+            <td align="center" style="padding-top:28px;">
+              <p style="margin:0;color:#3d3d5c;font-size:12px;line-height:1.6;">
+                © ${YEAR} ${SITE_NAME} &nbsp;·&nbsp; Mobile Legends Account Marketplace
+              </p>
+              <p style="margin:8px 0 0;color:#2d2d45;font-size:11px;">
+                If you did not request this email, no action is required.
+              </p>
             </td>
           </tr>
+
         </table>
       </td>
     </tr>
   </table>
+
 </body>
 </html>`;
 
-const btn = (text: string, url: string) =>
-  `<a href="${url}" style="display:inline-block;margin-top:24px;padding:14px 32px;background:linear-gradient(135deg,#6c3fe8,#9b5cf0);color:#fff;text-decoration:none;border-radius:10px;font-weight:700;font-size:15px;">${text}</a>`;
+// ─── Content helpers ──────────────────────────────────────────────────────────
+const h1 = (text: string) =>
+  `<h1 style="margin:0 0 12px;color:#f1f1ff;font-size:24px;font-weight:700;letter-spacing:-0.5px;text-align:center;">${text}</h1>`;
 
-const heading = (text: string) =>
-  `<h2 style="margin:0 0 16px;color:#fff;font-size:22px;font-weight:700;">${text}</h2>`;
+const sub = (text: string) =>
+  `<p style="margin:0 0 24px;color:#7070a0;font-size:14px;line-height:1.6;text-align:center;">${text}</p>`;
 
 const para = (text: string) =>
-  `<p style="margin:0 0 14px;color:#aaa;font-size:15px;line-height:1.6;">${text}</p>`;
+  `<p style="margin:0 0 16px;color:#9090b8;font-size:14px;line-height:1.7;">${text}</p>`;
+
+const divider = () =>
+  `<div style="height:1px;background:#1e1e35;margin:24px 0;"></div>`;
+
+const btn = (text: string, url: string, color: string) =>
+  `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:24px 0;">
+    <tr>
+      <td align="center">
+        <a href="${url}" style="display:inline-block;padding:14px 36px;background:linear-gradient(135deg,${color},#c084fc);color:#fff;text-decoration:none;border-radius:10px;font-weight:700;font-size:14px;letter-spacing:0.2px;">${text}</a>
+      </td>
+    </tr>
+  </table>`;
+
+const infoRow = (label: string, value: string, valueColor = '#f1f1ff') =>
+  `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:8px;">
+    <tr>
+      <td style="color:#5050780;font-size:13px;color:#50507a;">${label}</td>
+      <td align="right" style="color:${valueColor};font-size:13px;font-weight:600;">${value}</td>
+    </tr>
+  </table>`;
+
+const linkBox = (url: string) =>
+  `<div style="margin-top:20px;padding:14px 16px;background:#0d0d1a;border-radius:8px;border:1px solid #1e1e35;">
+    <p style="margin:0 0 4px;color:#40407a;font-size:11px;text-transform:uppercase;letter-spacing:0.5px;">Or copy this link</p>
+    <p style="margin:0;color:#6c6cf0;font-size:12px;word-break:break-all;">${url}</p>
+  </div>`;
 
 // ─── Send helper ──────────────────────────────────────────────────────────────
 const send = (to: string, subject: string, html: string) =>
@@ -73,33 +153,66 @@ const send = (to: string, subject: string, html: string) =>
 
 // ─── 1. Password Reset ────────────────────────────────────────────────────────
 export const sendPasswordResetEmail = async (email: string, resetLink: string) => {
-  const html = layout(`
-    ${heading('Reset Your Password 🔑')}
-    ${para('We received a request to reset your PanneiStore password. Click the button below to set a new password.')}
-    ${para('This link will expire in <strong style="color:#9b5cf0;">1 hour</strong>.')}
-    <div style="text-align:center;">${btn('Reset My Password', resetLink)}</div>
-    <div style="margin-top:28px;padding:16px;background:#111;border-radius:8px;border-left:3px solid #6c3fe8;">
-      <p style="margin:0;color:#555;font-size:12px;">Or copy and paste this link into your browser:</p>
-      <p style="margin:6px 0 0;color:#7c4dff;font-size:12px;word-break:break-all;">${resetLink}</p>
-    </div>
-  `);
-  return send(email, `Reset Your Password — ${SITE_NAME}`, html);
+  const content = `
+    ${h1('Reset Your Password')}
+    ${sub('We received a request to reset the password for your PanneiStore account.')}
+    ${divider()}
+    ${para('Click the button below to choose a new password. This link is valid for <strong style="color:#f1f1ff;">1 hour</strong> and can only be used once.')}
+    ${btn('Reset My Password', resetLink, '#6c3fe8')}
+    ${linkBox(resetLink)}
+    ${divider()}
+    ${para('If you did not request a password reset, you can safely ignore this email. Your password will not change.')}
+  `;
+  return send(email, `Reset your ${SITE_NAME} password`, layout(ICONS.key, '#6c3fe8', content));
 };
 
 // ─── 2. Welcome Email ─────────────────────────────────────────────────────────
 export const sendWelcomeEmail = async (email: string, name: string) => {
-  const html = layout(`
-    ${heading(`Welcome to ${SITE_NAME}, ${name}! 🎮`)}
-    ${para('Your account has been created successfully. You can now browse and purchase Mobile Legends accounts safely.')}
-    <div style="margin:20px 0;padding:20px;background:#111;border-radius:12px;">
-      <p style="margin:0 0 8px;color:#9b5cf0;font-weight:700;font-size:14px;">✅ What you can do now:</p>
-      <p style="margin:4px 0;color:#aaa;font-size:14px;">• Browse hundreds of MLBB accounts in our marketplace</p>
-      <p style="margin:4px 0;color:#aaa;font-size:14px;">• Buy accounts securely with local Myanmar payment methods</p>
-      <p style="margin:4px 0;color:#aaa;font-size:14px;">• Track your orders from your dashboard</p>
-    </div>
-    <div style="text-align:center;">${btn('Browse Accounts', `${FRONTEND_URL}/market`)}</div>
-  `);
-  return send(email, `Welcome to ${SITE_NAME}! 🎮`, html);
+  const content = `
+    ${h1(`Welcome, ${name}`)}
+    ${sub('Your PanneiStore account is ready.')}
+    ${divider()}
+    <table width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td style="padding:4px 0;">
+          <table cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td width="28" style="vertical-align:top;padding-top:2px;">
+                <img src="https://img.icons8.com/fluency/24/checkmark.png" width="16" height="16" alt=""/>
+              </td>
+              <td style="color:#9090b8;font-size:14px;line-height:1.6;">Browse hundreds of Mobile Legends accounts</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:4px 0;">
+          <table cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td width="28" style="vertical-align:top;padding-top:2px;">
+                <img src="https://img.icons8.com/fluency/24/checkmark.png" width="16" height="16" alt=""/>
+              </td>
+              <td style="color:#9090b8;font-size:14px;line-height:1.6;">Pay securely with KBZ Pay, Wave Money &amp; more</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:4px 0;">
+          <table cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td width="28" style="vertical-align:top;padding-top:2px;">
+                <img src="https://img.icons8.com/fluency/24/checkmark.png" width="16" height="16" alt=""/>
+              </td>
+              <td style="color:#9090b8;font-size:14px;line-height:1.6;">Track every order from your personal dashboard</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+    ${btn('Browse the Marketplace', `${FRONTEND_URL}/market`, '#6c3fe8')}
+  `;
+  return send(email, `Welcome to ${SITE_NAME}!`, layout(ICONS.welcome, '#6c3fe8', content));
 };
 
 // ─── 3. Order Confirmation ────────────────────────────────────────────────────
@@ -110,29 +223,20 @@ export const sendOrderConfirmationEmail = async (
   orderType: string,
   amount: number,
 ) => {
-  const html = layout(`
-    ${heading('Order Confirmed! 🛒')}
-    ${para(`Hi <strong style="color:#fff;">${name}</strong>, your order has been placed successfully and is now being reviewed.`)}
-    <div style="margin:20px 0;padding:20px;background:#111;border-radius:12px;">
-      <table width="100%" cellpadding="0" cellspacing="0">
-        <tr>
-          <td style="color:#666;font-size:13px;padding:6px 0;">Order ID</td>
-          <td style="color:#fff;font-size:13px;text-align:right;font-weight:600;">#${orderId.slice(-8).toUpperCase()}</td>
-        </tr>
-        <tr>
-          <td style="color:#666;font-size:13px;padding:6px 0;">Type</td>
-          <td style="color:#fff;font-size:13px;text-align:right;">${orderType}</td>
-        </tr>
-        <tr>
-          <td style="color:#666;font-size:13px;padding:6px 0;border-top:1px solid #222;">Amount</td>
-          <td style="color:#9b5cf0;font-size:16px;text-align:right;font-weight:800;border-top:1px solid #222;">MMK ${amount.toLocaleString()}</td>
-        </tr>
-      </table>
+  const content = `
+    ${h1('Order Received')}
+    ${sub(`Hi ${name}, we have received your order and are reviewing your payment.`)}
+    ${divider()}
+    <div style="background:#0d0d1a;border-radius:12px;padding:20px;border:1px solid #1e1e35;">
+      ${infoRow('Order ID', `#${orderId.slice(-8).toUpperCase()}`)}
+      ${infoRow('Type', orderType)}
+      ${infoRow('Amount', `MMK ${amount.toLocaleString()}`, '#a78bfa')}
     </div>
-    ${para('Our team will review your payment and confirm your order shortly.')}
-    <div style="text-align:center;">${btn('View My Order', `${FRONTEND_URL}/buyer/orders/${orderId}`)}</div>
-  `);
-  return send(email, `Order Confirmed — ${SITE_NAME}`, html);
+    ${btn('View Order Status', `${FRONTEND_URL}/buyer/orders/${orderId}`, '#6c3fe8')}
+    ${divider()}
+    ${para('Our team will verify your payment and update your order status shortly. You will receive another email once your order is approved.')}
+  `;
+  return send(email, `Order confirmed — ${SITE_NAME}`, layout(ICONS.order, '#7c3aed', content));
 };
 
 // ─── 4. Order Approved ────────────────────────────────────────────────────────
@@ -141,11 +245,14 @@ export const sendOrderApprovedEmail = async (
   name: string,
   orderId: string,
 ) => {
-  const html = layout(`
-    ${heading('Your Order is Approved! ✅')}
-    ${para(`Great news, <strong style="color:#fff;">${name}</strong>! Your payment has been verified and your order <strong style="color:#9b5cf0;">#${orderId.slice(-8).toUpperCase()}</strong> has been approved.`)}
-    ${para('Check your order details for the account credentials or diamond delivery information.')}
-    <div style="text-align:center;">${btn('View Order Details', `${FRONTEND_URL}/buyer/orders/${orderId}`)}</div>
-  `);
-  return send(email, `Order Approved — ${SITE_NAME}`, html);
+  const content = `
+    ${h1('Order Approved')}
+    ${sub(`Great news, ${name}. Your payment has been verified.`)}
+    ${divider()}
+    ${para(`Your order <strong style="color:#f1f1ff;">#${orderId.slice(-8).toUpperCase()}</strong> has been approved. Check your order details page for the account credentials or diamond delivery information.`)}
+    ${btn('View Order Details', `${FRONTEND_URL}/buyer/orders/${orderId}`, '#059669')}
+    ${divider()}
+    ${para('Thank you for shopping with PanneiStore. If you have any questions, please reach out to us on Telegram.')}
+  `;
+  return send(email, `Order approved — ${SITE_NAME}`, layout(ICONS.approved, '#059669', content));
 };
