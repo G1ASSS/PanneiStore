@@ -102,6 +102,8 @@ export const googleAuth = async (req: Request, res: Response, next: NextFunction
           isVerified: true,
         },
       });
+      // Send welcome email (fire and forget)
+      sendWelcomeEmail(user.email, user.name).catch(console.error);
     } else {
       // Existing user — link Google ID if not already linked
       if (!user.googleId) {
