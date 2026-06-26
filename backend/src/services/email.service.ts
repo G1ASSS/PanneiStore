@@ -62,12 +62,7 @@ const layout = (
   <tr>
     <td style="background:${heroGradient};border-radius:20px 20px 0 0;padding:48px 40px 36px;text-align:center;">
 
-      <!-- glowing icon circle -->
-      <div style="display:inline-block;width:96px;height:96px;border-radius:50%;background:rgba(255,255,255,0.12);border:1.5px solid rgba(255,255,255,0.2);margin-bottom:24px;">
-        <img src="${icon}" width="56" height="56" alt="" style="display:block;margin:20px auto 0;filter:drop-shadow(0 0 16px rgba(255,255,255,0.5));"/>
-      </div>
-
-      <!-- Title -->
+    <!-- Title -->
       <h1 style="margin:0 0 8px;color:#ffffff;font-size:26px;font-weight:800;letter-spacing:-0.5px;line-height:1.2;">${titleEN}</h1>
       <p  style="margin:0;color:rgba(196,181,253,0.85);font-size:15px;font-weight:400;">${titleMY}</p>
 
