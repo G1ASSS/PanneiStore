@@ -172,7 +172,7 @@ function Card({ title, children }: { title: string; children: React.ReactNode })
 
 /* ──────────────────────────────── Main Page ──────────────────────────────── */
 export default function EditProfilePage() {
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
   const router = useRouter();
   const { t } = useLanguage();
 
@@ -225,6 +225,7 @@ export default function EditProfilePage() {
       });
       const d = await r.json();
       if (d.success) {
+        await update({ name });
         setProfileMsg({ type: 'success', text: t('Profile updated successfully!', 'ကိုယ်ရေးအချက်အလက်များကို အောင်မြင်စွာ ပြင်ဆင်ပြီးပါပြီ။') });
       } else {
         setProfileMsg({ type: 'error', text: d.message || t('Failed to update profile.', 'ကိုယ်ရေးအချက်အလက်များ ပြင်ဆင်ခြင်း မအောင်မြင်ပါ။') });

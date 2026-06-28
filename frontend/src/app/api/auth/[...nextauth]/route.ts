@@ -73,7 +73,10 @@ const { handlers, auth, signIn, signOut } = NextAuth({
       }
       return true;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
+      if (trigger === "update" && session) {
+        if (session.name) token.name = session.name;
+      }
       if (user) {
         token.id = user.id;
         token.role = (user as any).role;
@@ -86,6 +89,9 @@ const { handlers, auth, signIn, signOut } = NextAuth({
         (session as any).userId = token.id;
         (session as any).role = token.role;
         (session as any).accessToken = token.accessToken;
+        if (token.name && session.user) {
+          session.user.name = token.name as string;
+        }
       }
       return session;
     },
