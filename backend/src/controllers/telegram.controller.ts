@@ -82,8 +82,45 @@ const handleAdminCommand = async (text: string, senderId: string) => {
       await sendMessageToChannel(`📢 <b>ANNOUNCEMENT</b>\n${bannerText}`, senderId);
 
     } else if (command === '/stock') {
-      const count = await prisma.account.count({ where: { status: 'AVAILABLE' } });
-      await sendMessageToChannel(`📦 Current stock: <b>${count}</b> accounts available.`, senderId);
+      const accounts = await prisma.account.findMany({
+        where: { status: 'AVAILABLE' },
+        orderBy: { createdAt: 'desc' },
+        select: {
+          listingCode: true,
+          title: true,
+          description: true,
+          skinCount: true,
+          price: true,
+        },
+      });
+
+      if (accounts.length === 0) {
+        await sendMessageToChannel('📦 Current stock: <b>0</b> accounts available.', senderId);
+        return;
+      }
+
+      const lines = accounts.map((a, i) =>
+        `<b>${i + 1}.</b>\n` +
+        `🆔 Listing Code: <code>${a.listingCode}</code>\n` +
+        `🎮 Title: ${a.title}\n` +
+        `👗 Skin Amount: ${a.skinCount ?? 0}\n` +
+        `📝 Description: ${a.description ? a.description.slice(0, 80) + (a.description.length > 80 ? '…' : '') : '-'}\n` +
+        `💰 Price: <b>${a.price.toLocaleString()} MMK</b>`
+      );
+
+      const header = `📦 <b>Current Stock: ${accounts.length} account(s) available</b>\n${'─'.repeat(30)}`;
+      const body = lines.join(`\n${'─'.repeat(30)}\n`);
+
+      // Telegram has a 4096 char limit per message — split if needed
+      const fullText = `${header}\n${body}`;
+      if (fullText.length <= 4096) {
+        await sendMessageToChannel(fullText, senderId);
+      } else {
+        await sendMessageToChannel(header, senderId);
+        for (const chunk of lines) {
+          await sendMessageToChannel(chunk, senderId);
+        }
+      }
 
     } else if (command === '/sold') {
       const listingCode = parts[1];
