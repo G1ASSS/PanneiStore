@@ -32,8 +32,8 @@ export const handleWebhook = async (req: Request, res: Response) => {
     // Only process if sender is admin
     if (!config.telegram.adminIds.includes(senderId)) return;
 
-    // ─── 1. Admin Commands (/banner, /stock, /sold, /addphoto) ───
-    if (text.startsWith('/banner') || text.startsWith('/stock') || text.startsWith('/sold')) {
+    // ─── 1. Admin Commands (/banner, /stock, /sold, /delete, /addphoto) ───
+    if (text.startsWith('/banner') || text.startsWith('/stock') || text.startsWith('/sold') || text.startsWith('/delete')) {
       await handleAdminCommand(text, senderId);
       return;
     }
@@ -98,9 +98,26 @@ const handleAdminCommand = async (text: string, senderId: string) => {
       }
       await prisma.account.update({ where: { listingCode }, data: { status: 'SOLD' } });
       await sendMessageToChannel(`✅ Account ${listingCode} marked as SOLD.`, senderId);
+
+    } else if (command === '/delete') {
+      const listingCode = parts[1];
+      if (!listingCode) {
+        await sendMessageToChannel('❌ Usage: /delete <listingCode>', senderId);
+        return;
+      }
+      const account = await prisma.account.findUnique({ where: { listingCode } });
+      if (!account) {
+        await sendMessageToChannel(`❌ Listing <b>${listingCode}</b> not found.`, senderId);
+        return;
+      }
+      // Delete related images first to avoid foreign key constraint errors
+      await prisma.accountImage.deleteMany({ where: { accountId: account.id } });
+      await prisma.account.delete({ where: { id: account.id } });
+      await sendMessageToChannel(`🗑️ Account <b>${listingCode}</b> has been permanently deleted.`, senderId);
     }
   } catch (err: any) {
-    await sendMessageToChannel(`❌ Command failed: ${err.message}`, senderId);
+    const safeMsg = (err.message || 'Unknown error').replace(/<[^>]*>?/gm, '');
+    await sendMessageToChannel(`❌ Command failed:\n<pre>${safeMsg.substring(0, 500)}</pre>`, senderId);
   }
 };
 
