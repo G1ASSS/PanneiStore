@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
-import { prisma } from '../prisma';
+import { prisma } from '../server';
 import { config } from '../config';
-import cloudinary from '../services/cloudinary.service';
+import { cloudinary } from '../services/cloudinary.service';
 import { getTelegramFileUrl, sendMessageToChannel } from '../services/telegram.service';
 
 /**
