@@ -184,7 +184,7 @@
   color: var(--text-muted);
 }
 
-.admin-form-group input,
+.admin-form-group input:not([type="checkbox"]),
 .admin-form-group select,
 .admin-form-group textarea {
   width: 100%;
@@ -194,6 +194,13 @@
   background: rgba(255, 255, 255, 0.04);
   color: var(--text);
   font-size: 0.9rem;
+}
+
+.admin-form-group input[type="checkbox"] {
+  width: 1.125rem;
+  height: 1.125rem;
+  cursor: pointer;
+  accent-color: var(--primary);
 }
 
 .admin-form-group textarea {
