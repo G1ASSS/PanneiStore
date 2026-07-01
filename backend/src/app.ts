@@ -12,6 +12,9 @@ import { rateLimiter } from './middleware/rateLimit.middleware';
 
 const app = express();
 
+// Trust proxy headers from tunnels (ngrok, pinggy) and deployed infra
+app.set('trust proxy', 1);
+
 // ─── Security Middleware ───────────────────────────────────────────────────
 app.use(helmet({
   crossOriginResourcePolicy: { policy: 'cross-origin' },
