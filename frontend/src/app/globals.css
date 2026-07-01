@@ -2433,9 +2433,9 @@ html[data-theme="blue-dark"] .ad-crumb--current {
 
 .ad-lightbox-close {
   position: fixed;
-  /* Bottom-right: above the bottom nav bar on mobile, always visible */
-  bottom: calc(var(--mobile-nav-bar-height, 4.5rem) + env(safe-area-inset-bottom, 0px) + 1rem);
-  right: 1.5rem;
+  /* Below the top navbar (≈60px) on all devices */
+  top: 5rem;
+  right: 1.25rem;
   z-index: 9999;
   width: 3.25rem;
   height: 3.25rem;
@@ -2456,15 +2456,6 @@ html[data-theme="blue-dark"] .ad-crumb--current {
   background: rgba(220, 40, 80, 0.9);
   border-color: rgba(255, 255, 255, 0.9);
   transform: scale(1.1);
-}
-
-/* On desktop: move to top-right since there's no bottom nav */
-@media (min-width: 768px) {
-  .ad-lightbox-close {
-    bottom: unset;
-    top: 1.5rem;
-    right: 1.5rem;
-  }
 }
 
 .ad-lightbox-nav {
