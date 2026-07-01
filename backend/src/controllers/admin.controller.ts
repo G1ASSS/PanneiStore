@@ -5,6 +5,7 @@ import { ApiError, successResponse } from '../utils/response.utils';
 import { str, int, flt } from '../utils/helpers.utils';
 import { notifyUser } from '../services/notification.service';
 import { uploadImage } from '../services/cloudinary.service';
+import { sendMessageToChannel } from '../services/telegram.service';
 import { OrderStatus, Prisma } from '@prisma/client';
 
 export const getAdminAnalytics = async (req: AuthRequest, res: Response, next: NextFunction) => {
@@ -266,6 +267,10 @@ export const verifyPaymentProof = async (req: AuthRequest, res: Response, next: 
       data: { orderId, isApproved },
     }).catch(console.error);
 
+    if (isApproved && updatedOrder.status === 'COMPLETED' && order.type === 'ACCOUNT') {
+      sendMessageToChannel(`🔥 <b>Account Sold!</b>\nSomeone just purchased an account for <b>${order.finalPrice} MMK</b>!`).catch(console.error);
+    }
+
     return successResponse(res, updatedOrder, isApproved ? 'Payment approved' : 'Payment rejected and order cancelled');
   } catch (err) {
     next(err);
@@ -292,6 +297,8 @@ export const completeDiamondOrder = async (req: AuthRequest, res: Response, next
       message: `Your diamond top-up order ${order.orderNumber} has been delivered.`,
       data: { orderId },
     }).catch(console.error);
+
+    sendMessageToChannel(`💎 <b>Diamonds Delivered!</b>\nA user just received their diamond top-up order!`).catch(console.error);
 
     return successResponse(res, updatedOrder, 'Diamond order completed');
   } catch (err) {

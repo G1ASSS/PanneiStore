@@ -16,6 +16,7 @@ import eventPhotosRoutes from './eventPhotos.routes';
 import gamesRoutes from './games.routes';
 import topupPackagesRoutes from './topupPackages.routes';
 import notificationsRoutes from './notifications.routes';
+import telegramRoutes from './telegram.routes';
 
 const router = Router();
 
@@ -36,5 +37,6 @@ router.use('/event-photos', eventPhotosRoutes);
 router.use('/games', gamesRoutes);
 router.use('/topup-packages', topupPackagesRoutes);
 router.use('/notifications', notificationsRoutes);
+router.use('/telegram', telegramRoutes);
 
 export { router as apiRouter };

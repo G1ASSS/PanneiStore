@@ -56,4 +56,10 @@ export const config = {
     maxFileSizeMB: parseInt(process.env.MAX_FILE_SIZE_MB || '10', 10),
     maxFiles: parseInt(process.env.MAX_FILES_PER_UPLOAD || '10', 10),
   },
+
+  telegram: {
+    botToken: process.env.TELEGRAM_BOT_TOKEN || '',
+    channelId: process.env.TELEGRAM_CHANNEL_ID || '',
+    adminIds: (process.env.TELEGRAM_ADMIN_IDS || '').split(',').map(id => id.trim()).filter(Boolean),
+  },
 };
