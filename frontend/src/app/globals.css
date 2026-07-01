@@ -2433,27 +2433,38 @@ html[data-theme="blue-dark"] .ad-crumb--current {
 
 .ad-lightbox-close {
   position: fixed;
-  top: max(1.25rem, env(safe-area-inset-top, 1.25rem));
-  right: max(1.25rem, env(safe-area-inset-right, 1.25rem));
+  /* Bottom-right: above the bottom nav bar on mobile, always visible */
+  bottom: calc(var(--mobile-nav-bar-height, 4.5rem) + env(safe-area-inset-bottom, 0px) + 1rem);
+  right: 1.5rem;
   z-index: 9999;
-  width: 3rem;
-  height: 3rem;
+  width: 3.25rem;
+  height: 3.25rem;
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 999px;
   color: #fff;
-  background: rgba(0, 0, 0, 0.75);
-  border: 2px solid rgba(255, 255, 255, 0.7);
+  background: rgba(0, 0, 0, 0.8);
+  border: 2px solid rgba(255, 255, 255, 0.8);
   cursor: pointer;
   transition: background 0.2s ease, transform 0.15s ease;
-  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.7);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
 }
 
 .ad-lightbox-close:hover,
 .ad-lightbox-close:active {
-  background: rgba(0, 0, 0, 0.9);
+  background: rgba(220, 40, 80, 0.9);
+  border-color: rgba(255, 255, 255, 0.9);
   transform: scale(1.1);
+}
+
+/* On desktop: move to top-right since there's no bottom nav */
+@media (min-width: 768px) {
+  .ad-lightbox-close {
+    bottom: unset;
+    top: 1.5rem;
+    right: 1.5rem;
+  }
 }
 
 .ad-lightbox-nav {
