@@ -163,10 +163,17 @@ export default function AccountDetailPage() {
 
       <div className="ad-hero">
         <div className="ad-gallery">
-          <button
-            type="button"
+          <div
             className="ad-main-image ad-main-image-btn"
+            role="button"
+            tabIndex={0}
             onClick={() => setLightboxOpen(true)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setLightboxOpen(true);
+              }
+            }}
             aria-label="View full screen photo"
           >
             {account.isFeatured && (
@@ -188,7 +195,7 @@ export default function AccountDetailPage() {
               </span>
             )}
             {!isAvailable && <div className="ad-sold-overlay">{t("SOLD", "ရောင်းထွက်သွားပြီ")}</div>}
-          </button>
+          </div>
 
           {imageCount > 1 && (
             <div className="ad-thumbnails">
