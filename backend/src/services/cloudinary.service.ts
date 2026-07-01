@@ -78,3 +78,5 @@ export const uploadMultipleImages = async (
 ): Promise<{ url: string; publicId: string }[]> => {
   return Promise.all(buffers.map((buf) => uploadImage(buf, folder)));
 };
+
+export { cloudinary };
