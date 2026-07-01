@@ -101,15 +101,15 @@ const handleAdminCommand = async (text: string, senderId: string) => {
 
       const lines = accounts.map((a, i) =>
         `<b>${i + 1}.</b>\n` +
-        `🆔 Listing Code: <code>${a.listingCode}</code>\n` +
-        `🎮 Title: ${a.title}\n` +
-        `👗 Skin Amount: ${a.skinCount ?? 0}\n` +
-        `📝 Description: ${a.description ? a.description.slice(0, 80) + (a.description.length > 80 ? '…' : '') : '-'}\n` +
-        `💰 Price: <b>${a.price.toLocaleString()} MMK</b>`
+        `🏷 <b>Listing Code:</b> <code>${a.listingCode}</code>\n` +
+        `📌 <b>Title:</b> ${a.title}\n` +
+        `🎨 <b>Skin Amount:</b> ${a.skinCount ?? 0}\n` +
+        `💬 <b>Description:</b> ${a.description ? a.description.slice(0, 80) + (a.description.length > 80 ? '…' : '') : '-'}\n` +
+        `💵 <b>Price:</b> ${a.price.toLocaleString()} MMK`
       );
 
-      const header = `📦 <b>Current Stock: ${accounts.length} account(s) available</b>\n${'─'.repeat(30)}`;
-      const body = lines.join(`\n${'─'.repeat(30)}\n`);
+      const header = `📦 <b>Current Stock: ${accounts.length} account(s) available</b>\n` + `${'━'.repeat(20)}`;
+      const body = lines.join(`\n${'━'.repeat(20)}\n`);
 
       // Telegram has a 4096 char limit per message — split if needed
       const fullText = `${header}\n${body}`;
