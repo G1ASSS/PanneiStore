@@ -32,8 +32,8 @@ export const handleWebhook = async (req: Request, res: Response) => {
     // Only process if sender is admin
     if (!config.telegram.adminIds.includes(senderId)) return;
 
-    // ─── 1. Admin Commands (/banner, /stock, /addphoto) ───
-    if (text.startsWith('/banner') || text.startsWith('/stock')) {
+    // ─── 1. Admin Commands (/banner, /stock, /sold, /addphoto) ───
+    if (text.startsWith('/banner') || text.startsWith('/stock') || text.startsWith('/sold')) {
       await handleAdminCommand(text, senderId);
       return;
     }
