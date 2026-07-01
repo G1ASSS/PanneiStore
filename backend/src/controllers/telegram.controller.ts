@@ -292,7 +292,7 @@ const createAccountFromText = async (text: string, senderId: string, photoGroups
       data: {
         listingCode,
         sellerId: seller.id,
-        title: `[Auto] ${title || rank}`,
+        title: title || rank,
         titleMyanmar: titleMyanmar || undefined,
         description: description || undefined,
         rank,
