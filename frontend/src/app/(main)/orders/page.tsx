@@ -212,7 +212,7 @@ export default function OrdersPage() {
           @keyframes floatDiamond { 0%,100%{transform:translateY(0) rotate(0deg)} 50%{transform:translateY(-12px) rotate(8deg)} }
           @keyframes shimmerGlow { 0%,100%{opacity:0.5} 50%{opacity:1} }
         `}</style>
-        <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+        <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', paddingBottom: 'calc(var(--mobile-bottom-space, 6rem) + 1.5rem)' }}>
           <div style={{ maxWidth: 440, width: '100%', textAlign: 'center' }}>
             {/* Floating icon */}
             <div style={{
