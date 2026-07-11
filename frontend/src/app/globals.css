@@ -1440,6 +1440,18 @@ html[data-theme="blue-dark"] .home-stat-icon {
   border: none;
 }
 
+.ad-topbar .ad-back-btn:active {
+  transform: scale(0.97);
+}
+
+.ad-page-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--foreground);
+  margin: 0.5rem 0.5rem 1rem;
+  letter-spacing: -0.02em;
+}
+
 html[data-theme="blue-dark"] .ad-topbar .ad-back-btn:hover {
   color: #ff6eb3;
 }

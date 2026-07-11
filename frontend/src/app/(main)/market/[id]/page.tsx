@@ -161,6 +161,8 @@ export default function AccountDetailPage() {
         </Link>
       </div>
 
+      <h1 className="ad-page-title">{t("Account Profile", "အကောင့်ပရိုဖိုင်")}</h1>
+
       <div className="ad-hero">
         <div className="ad-gallery">
           <div
