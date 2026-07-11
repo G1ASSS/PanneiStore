@@ -51,13 +51,11 @@ export default function AdminDashboardPage() {
   const { data: session } = useSession();
   const token = (session as { accessToken?: string } | null)?.accessToken ?? '';
   const [data, setData] = useState<Analytics | null>(null);
-  const [error, setError] = useState('');
 
   useEffect(() => {
-    if (!token) return;
     adminFetch<Analytics>('/admin/analytics', { token })
       .then((res) => setData(res.data))
-      .catch((err) => setError(err.message));
+      .catch(() => { /* silently fail - data will just not display */ });
   }, [token]);
 
   const stats = data?.stats;
@@ -73,8 +71,6 @@ export default function AdminDashboardPage() {
           + New Listing
         </Link>
       </div>
-
-      {error && <div className="admin-error">{error}</div>}
 
       {stats && (
         <div className="stats-grid">
