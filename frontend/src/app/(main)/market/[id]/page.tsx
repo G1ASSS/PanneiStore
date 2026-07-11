@@ -199,7 +199,7 @@ export default function AccountDetailPage() {
 
           {imageCount > 1 && (
             <div className="ad-image-gallery-section">
-              <h2 className="ad-gallery-heading">IMAGE GALLERY</h2>
+              <h2 className="ad-gallery-heading">{t("Account info", "အကောင့်အချက်အလက်များ")}</h2>
               <div className="ad-thumbnails-grid">
                 {account.images.map((img, i) => (
                   <button

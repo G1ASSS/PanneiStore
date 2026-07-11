@@ -1719,7 +1719,7 @@ html[data-theme="blue-dark"] .ad-crumb--current {
   font-weight: 800;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--foreground);
   margin: 1rem 1.25rem 1rem;
 }
 
