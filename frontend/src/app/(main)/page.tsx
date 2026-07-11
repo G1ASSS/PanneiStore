@@ -177,7 +177,7 @@ export default function HomePage() {
             <Link href="/topup" className="hero-cta hero-cta-secondary">
               {t("Top up", "စိန်ဖြည့်ရန်")}
             </Link>
-            <Link href="/sell" className="hero-cta hero-cta-tertiary" style={{ background: 'var(--card-hover)', color: 'var(--foreground)', border: '1px solid var(--border)' }}>
+            <Link href="/sell" className="hero-cta hero-cta-secondary">
               {t("Want to Sell Your Account?", "သင့်အကောင့်ကို ရောင်းချချင်ပါသလား?")}
             </Link>
           </motion.div>
