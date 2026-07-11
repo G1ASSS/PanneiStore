@@ -27,9 +27,9 @@ export default function AccountDetailPage() {
   const accountId = String(params.id);
   const [account, setAccount] = useState<AccountDetail | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeImage, setActiveImage] = useState(0);
   const [activeTab, setActiveTab] = useState<'overview' | 'skins'>('overview');
   const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
 
   useLayoutEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
@@ -41,10 +41,10 @@ export default function AccountDetailPage() {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') setLightboxOpen(false);
       if (event.key === 'ArrowLeft') {
-        setActiveImage((index) => Math.max(0, index - 1));
+        setLightboxIndex((index) => Math.max(0, index - 1));
       }
       if (event.key === 'ArrowRight') {
-        setActiveImage((index) => Math.min(account?.images.length ?? 1, index + 1) - 1);
+        setLightboxIndex((index) => Math.min((account?.images.length ?? 1) - 1, index + 1));
       }
     };
 
@@ -58,7 +58,7 @@ export default function AccountDetailPage() {
   }, [lightboxOpen, account?.images.length]);
 
   useEffect(() => {
-    setActiveImage(0);
+    setLightboxIndex(0);
     setActiveTab('overview');
 
     let cancelled = false;
@@ -124,7 +124,10 @@ export default function AccountDetailPage() {
     );
   }
 
-  const mainImage = account.images[activeImage]?.url || '/placeholder.jpg';
+  // Profile image is ALWAYS Image #1 — never changes
+  const profileImage = account.images[0]?.url || '/placeholder.jpg';
+  // Gallery images start from Image #2
+  const galleryImages = account.images.slice(1);
   const isAvailable = account.status === 'AVAILABLE';
   const imageCount = account.images.length;
   const telegramBuyUrl = buildOwnerTelegramUrl(buildAccountInquiryMessage(account));
@@ -169,10 +172,11 @@ export default function AccountDetailPage() {
             className="ad-main-image ad-main-image-btn"
             role="button"
             tabIndex={0}
-            onClick={() => setLightboxOpen(true)}
+            onClick={() => { setLightboxIndex(0); setLightboxOpen(true); }}
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
+                setLightboxIndex(0);
                 setLightboxOpen(true);
               }
             }}
@@ -185,7 +189,7 @@ export default function AccountDetailPage() {
               </span>
             )}
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={mainImage} alt={account.title} className="ad-main-image-img" />
+            <img src={profileImage} alt={account.title} className="ad-main-image-img" />
             <div className="ad-image-gradient" aria-hidden />
             <span className="ad-zoom-hint">
               <ZoomIn size={14} strokeWidth={2.25} />
@@ -193,32 +197,34 @@ export default function AccountDetailPage() {
             </span>
             {imageCount > 1 && (
               <span className="ad-image-counter">
-                {activeImage + 1} / {imageCount}
+                1 / {imageCount}
               </span>
             )}
             {!isAvailable && <div className="ad-sold-overlay">{t("SOLD", "ရောင်းထွက်သွားပြီ")}</div>}
           </div>
 
-          {imageCount > 1 && (
+          {galleryImages.length > 0 && (
             <div className="ad-image-gallery-section">
               <h2 className="ad-gallery-heading">{t("Account info", "အကောင့်အချက်အလက်များ")}</h2>
               <div className="ad-thumbnails-grid">
-                {account.images.map((img, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    className={`ad-gallery-thumb ${activeImage === i ? 'ad-gallery-thumb--active' : ''}`}
-                    onClick={() => {
-                      setActiveImage(i);
-                      setLightboxOpen(true);
-                    }}
-                    aria-label={`Select screenshot ${i + 1}`}
-                    aria-current={activeImage === i}
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={img.url} alt="" className="ad-gallery-thumb-img" />
-                  </button>
-                ))}
+                {galleryImages.map((img, i) => {
+                  const realIndex = i + 1; // offset by 1 since gallery skips image #1
+                  return (
+                    <button
+                      key={realIndex}
+                      type="button"
+                      className="ad-gallery-thumb"
+                      onClick={() => {
+                        setLightboxIndex(realIndex);
+                        setLightboxOpen(true);
+                      }}
+                      aria-label={`View screenshot ${realIndex + 1}`}
+                    >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={img.url} alt="" className="ad-gallery-thumb-img" />
+                    </button>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -374,10 +380,10 @@ export default function AccountDetailPage() {
               <button
                 type="button"
                 className="ad-lightbox-nav ad-lightbox-nav--prev"
-                disabled={activeImage === 0}
+                disabled={lightboxIndex === 0}
                 onClick={(event) => {
                   event.stopPropagation();
-                  setActiveImage((index) => Math.max(0, index - 1));
+                  setLightboxIndex((index) => Math.max(0, index - 1));
                 }}
                 aria-label="Previous photo"
               >
@@ -386,24 +392,24 @@ export default function AccountDetailPage() {
               <button
                 type="button"
                 className="ad-lightbox-nav ad-lightbox-nav--next"
-                disabled={activeImage === imageCount - 1}
+                disabled={lightboxIndex === imageCount - 1}
                 onClick={(event) => {
                   event.stopPropagation();
-                  setActiveImage((index) => Math.min(imageCount - 1, index + 1));
+                  setLightboxIndex((index) => Math.min(imageCount - 1, index + 1));
                 }}
                 aria-label="Next photo"
               >
                 <ChevronRight size={24} strokeWidth={2} />
               </button>
               <span className="ad-lightbox-counter">
-                {activeImage + 1} / {imageCount}
+                {lightboxIndex + 1} / {imageCount}
               </span>
             </>
           )}
 
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={mainImage}
+            src={account.images[lightboxIndex]?.url || profileImage}
             alt={account.title}
             className="ad-lightbox-img"
             onClick={(event) => event.stopPropagation()}
