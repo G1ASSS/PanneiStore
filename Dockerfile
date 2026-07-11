@@ -5,7 +5,7 @@ WORKDIR /app
 
 # Copy backend package files and install deps
 COPY backend/package*.json ./
-RUN npm ci
+RUN npm ci --include=dev
 
 # Copy backend source and prisma schema
 COPY backend/prisma ./prisma
@@ -25,7 +25,7 @@ WORKDIR /app
 
 # Install only production deps
 COPY backend/package*.json ./
-RUN npm ci --omit=dev
+RUN npm ci --include=dev --omit=dev
 
 # Copy built output and prisma from builder
 COPY --from=builder /app/dist ./dist
