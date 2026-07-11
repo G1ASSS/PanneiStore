@@ -137,14 +137,14 @@ export default function AccountDetailPage() {
   ];
 
   const overviewStats = [
-    { label: t('Rank', 'အဆင့်သတ်မှတ်ချက်'), value: account.rank },
-    { label: t('Server', 'ဆာဗာ'), value: account.server },
-    { label: t('Level', 'အဆင့်'), value: account.level },
-    { label: t('Win Rate', 'နိုင်နှုန်း'), value: `${account.winRate}%` },
-    { label: t('Total Matches', 'ပွဲအရေအတွက်'), value: account.totalMatches.toLocaleString() },
-    { label: t('Hero Count', 'ဟီးရိုးအရေအတွက်'), value: account.heroCount },
-    { label: t('Skin Count', 'စကင်အရေအတွက်'), value: account.skinCount },
-    { label: t('Collection Level', 'စုဆောင်းမှုအဆင့်'), value: account.emblemCount },
+    { id: 'rank', label: t('Collection Level', 'စုဆောင်းမှုအဆင့်'), value: account.rank },
+    { id: 'server', label: t('Server', 'ဆာဗာ'), value: account.server },
+    { id: 'level', label: t('Level', 'အဆင့်'), value: account.level },
+    { id: 'winRate', label: t('Win Rate', 'နိုင်နှုန်း'), value: `${account.winRate}%` },
+    { id: 'matches', label: t('Total Matches', 'ပွဲအရေအတွက်'), value: account.totalMatches.toLocaleString() },
+    { id: 'heroes', label: t('Hero Count', 'ဟီးရိုးအရေအတွက်'), value: account.heroCount },
+    { id: 'skins', label: t('Skin Count', 'စကင်အရေအတွက်'), value: account.skinCount },
+    { id: 'emblems', label: t('Emblem Count', 'အမှတ်တံဆိပ်အရေအတွက်'), value: account.emblemCount },
   ];
 
   const tabs = [
@@ -312,8 +312,8 @@ export default function AccountDetailPage() {
           {activeTab === 'overview' && (
             <div className="ad-overview">
               <div className="ad-overview-grid">
-                {overviewStats.map(({ label, value }) => (
-                  <div key={label} className="ad-overview-cell">
+                {overviewStats.map(({ id, label, value }) => (
+                  <div key={id} className="ad-overview-cell">
                     <span className="ad-overview-label">{label}</span>
                     <span className="ad-overview-value">{value}</span>
                   </div>
