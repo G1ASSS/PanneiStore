@@ -2571,19 +2571,27 @@ html[data-theme="blue-dark"] .ad-mobile-bar {
   }
 
   .ad-main-image {
-    aspect-ratio: 16 / 9;
-    height: 0;
-    padding-bottom: 56.25%;
+    aspect-ratio: auto;
+    height: auto;
+    padding-bottom: 0;
     min-height: 0;
-    max-height: none;
+    max-height: 280px;
     border-radius: 0;
     border: none;
     border-right: none;
     border-top: none;
     box-shadow: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #000;
   }
 
   .ad-main-image-img {
+    position: relative;
+    width: 100%;
+    height: auto;
+    max-height: 280px;
     object-fit: contain;
   }
 
