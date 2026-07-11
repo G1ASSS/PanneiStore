@@ -325,7 +325,7 @@ const createAccountFromText = async (text: string, senderId: string, photoGroups
   if (rawCode) listingCode = rawCode.replace(/\s+/g, '-');
 
   title        = str('title') || 'Unknown';
-  rank         = str('title') || str('rank') || 'Unknown Rank';
+  rank         = str('collector tier') || str('rank') || str('title') || 'Unknown Rank';
   titleMyanmar = str('title (myanmar)');
   price        = num('price (mmk)') || num('price');
   heroCount    = num('hero count');
@@ -335,7 +335,7 @@ const createAccountFromText = async (text: string, senderId: string, photoGroups
   totalMatches = num('total matches');
   level        = num('level');
   server       = str('server') || 'Global';
-  description  = descLines.join('\n') || str('collector tier') || '';
+  description  = descLines.join('\n') || '';
 
   // Ensure unique listing code
   const existing = await prisma.account.findUnique({ where: { listingCode } });
