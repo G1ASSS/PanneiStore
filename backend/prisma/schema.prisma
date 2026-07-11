@@ -167,6 +167,7 @@ model AccountSkin {
   skinName  String  @map("skin_name")
   heroName  String? @map("hero_name")
   rarity    String?
+  isLegend  Boolean @default(false) @map("is_legend")
 
   account   Account @relation(fields: [accountId], references: [id], onDelete: Cascade)
 
@@ -263,7 +264,7 @@ model OrderItem {
   createdAt        DateTime        @default(now()) @map("created_at")
 
   order            Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  account          Account?        @relation(fields: [accountId], references: [id])
+  account          Account?        @relation(fields: [accountId], references: [id], onDelete: SetNull)
   diamondPackage   DiamondPackage? @relation(fields: [diamondPackageId], references: [id])
 
   @@map("order_items")
@@ -333,7 +334,7 @@ model Review {
   order           Order    @relation(fields: [orderId], references: [id])
   buyer           User     @relation(fields: [buyerId], references: [id])
   seller          Seller   @relation("SellerReviews", fields: [sellerId], references: [id])
-  account         Account? @relation(fields: [accountId], references: [id])
+  account         Account? @relation(fields: [accountId], references: [id], onDelete: SetNull)
 
   @@map("reviews")
   @@index([sellerId])

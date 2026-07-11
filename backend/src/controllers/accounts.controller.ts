@@ -290,11 +290,23 @@ export const deleteAccount = async (req: AuthRequest, res: Response, next: NextF
     const isOwner = account.seller.userId === req.user!.id;
     if (!isAdmin && !isOwner) throw new ApiError(403, 'You do not have permission to delete this listing');
 
+    // Clean up Cloudinary images
     for (const image of account.images) {
       await deleteImage(image.publicId).catch(console.error);
     }
 
-    await prisma.account.delete({ where: { id } });
+    // Use a transaction to nullify references and then delete
+    await prisma.$transaction(async (tx) => {
+      // Nullify account references in order items and reviews (they are optional FKs)
+      await tx.orderItem.updateMany({ where: { accountId: id }, data: { accountId: null } });
+      await tx.review.updateMany({ where: { accountId: id }, data: { accountId: null } });
+      // Delete wishlist and cart items referencing this account
+      await tx.wishlistItem.deleteMany({ where: { accountId: id } });
+      await tx.cartItem.deleteMany({ where: { accountId: id } });
+      // Delete the account (cascades to images, heroes, skins)
+      await tx.account.delete({ where: { id } });
+    });
+
     return successResponse(res, null, 'Account deleted successfully');
   } catch (err) {
     next(err);
