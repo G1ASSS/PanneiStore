@@ -3897,3 +3897,205 @@ html[data-theme="blue-dark"] .mk-grid .account-card-rank {
     display: none;
   }
 }
+
+/* ─── Sell Page ─────────────────────────────────────────────────────────────── */
+.sell-page-wrapper {
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: calc(var(--mobile-bottom-space) + var(--mobile-action-bar-height) + 2rem);
+  overflow-x: hidden;
+}
+
+.sell-bg-glow {
+  position: fixed;
+  top: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 700px;
+  height: 500px;
+  background: radial-gradient(ellipse at center, rgba(255, 46, 147, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.sell-topbar {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin: 0 auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+.sell-content {
+  position: relative;
+  z-index: 1;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 0 1.25rem 2rem;
+}
+
+/* Hero */
+.sell-hero {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.sell-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.9rem;
+  border-radius: 9999px;
+  background: rgba(255, 46, 147, 0.1);
+  border: 1px solid rgba(255, 46, 147, 0.25);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #ff6eb3;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 1.1rem;
+}
+
+.sell-title {
+  font-size: 2.5rem;
+  font-weight: 900;
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  color: var(--foreground);
+  margin-bottom: 0.9rem;
+}
+
+.sell-subtitle {
+  font-size: 0.95rem;
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 380px;
+  margin: 0 auto;
+}
+
+/* Requirements */
+.sell-requirements {
+  margin-bottom: 2rem;
+}
+
+.sell-req-heading {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1rem;
+  padding-left: 0.25rem;
+}
+
+.sell-req-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.sell-req-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.1rem;
+  border-radius: 1rem;
+  border: 1px solid transparent;
+  background: var(--card);
+  transition: transform 0.2s ease;
+}
+
+.sell-req-card:hover {
+  transform: translateY(-2px);
+}
+
+.sell-req-icon-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 0.75rem;
+  flex-shrink: 0;
+}
+
+.sell-req-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.sell-req-label {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.5;
+  color: var(--foreground);
+  word-break: break-words;
+  margin: 0;
+}
+
+.sell-req-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  width: fit-content;
+}
+
+.sell-badge-ok {
+  background: rgba(52, 211, 153, 0.15);
+  color: #34d399;
+}
+
+.sell-badge-no {
+  background: rgba(248, 113, 113, 0.15);
+  color: #f87171;
+}
+
+/* CTA */
+.sell-cta-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.sell-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 1rem 1.75rem;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, #2AABEE 0%, #1a8fcf 100%);
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 4px 24px rgba(42, 171, 238, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.sell-cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(42, 171, 238, 0.45);
+  background: linear-gradient(135deg, #1a9fe0 0%, #0f7fc0 100%);
+}
+
+.sell-cta-btn:active {
+  transform: scale(0.98);
+}
+
+.sell-cta-hint {
+  font-size: 0.8rem;
+  color: var(--muted);
+  text-align: center;
+  margin: 0;
+}

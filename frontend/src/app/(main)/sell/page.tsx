@@ -2,73 +2,151 @@
 
 import React from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, ClipboardList, CheckCircle2, XCircle } from "lucide-react";
+import { motion } from "framer-motion";
+import { ArrowLeft, CheckCircle2, XCircle, ShieldCheck, Banknote, Clock } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { buildOwnerTelegramUrl } from "@/utils/telegram";
+
+const TelegramIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6">
+    <circle cx="12" cy="12" r="12" fill="#2AABEE" />
+    <path
+      d="M5.2 11.4l12.6-4.86c.58-.21 1.09.14.9.98l-2.14 10.1c-.16.7-.58.87-1.18.54l-3.26-2.4-1.57 1.52c-.17.17-.32.32-.65.32l.23-3.32 6.04-5.45c.26-.23-.06-.36-.4-.13l-7.46 4.7-3.21-1c-.7-.22-.71-.7.15-1.04z"
+      fill="white"
+    />
+  </svg>
+);
+
+const requirements = [
+  {
+    icon: ShieldCheck,
+    iconColor: "text-emerald-400",
+    bgColor: "bg-emerald-400/10",
+    borderColor: "border-emerald-400/20",
+    type: "required" as const,
+    en: "NRC, Location, Household registration, and Mail Changeable required",
+    my: "Nrc, location, အိမ်ထောင်စုစာရင်း, mail chg ရမှ ယူတာပါ",
+  },
+  {
+    icon: Banknote,
+    iconColor: "text-sky-400",
+    bgColor: "bg-sky-400/10",
+    borderColor: "border-sky-400/20",
+    type: "required" as const,
+    en: "Only accepting accounts valued between 100,000 – 800,000 MMK",
+    my: "100k - 800k အတွင်းအကောင့်တေပဲယူတာပါ",
+  },
+  {
+    icon: Clock,
+    iconColor: "text-rose-400",
+    bgColor: "bg-rose-400/10",
+    borderColor: "border-rose-400/20",
+    type: "rejected" as const,
+    en: "Accounts not personally played for 6+ months will NOT be accepted",
+    my: "6လအထက် ကိုယ်တိုင်ဆော့ထားတာမဟုတ်တဲ့ အကောင့်တေဆိုမယူပါဘူး",
+  },
+];
 
 export default function SellPage() {
   const { t } = useLanguage();
 
   return (
-    <div className="ad-page">
-      <div className="ad-topbar max-w-[1180px] mx-auto px-4 w-full">
+    <div className="sell-page-wrapper">
+      {/* Hero background gradient */}
+      <div className="sell-bg-glow" aria-hidden />
+
+      {/* Top Bar */}
+      <div className="ad-topbar sell-topbar">
         <Link href="/" className="ad-back-btn" aria-label="Back to home">
           <ArrowLeft size={20} strokeWidth={2} aria-hidden />
           {t("Back", "နောက်သို့")}
         </Link>
       </div>
 
-      <div className="max-w-2xl mx-auto px-5 py-8 w-full overflow-hidden">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold mb-3 text-gradient-pink-purple">
-            {t("Sell Your Account", "သင့်အကောင့်ကို ရောင်းချပါ")}
+      <div className="sell-content">
+        {/* Hero Section */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="sell-hero"
+        >
+          <div className="sell-badge">
+            <span>🎮</span>
+            <span>{t("ML Account Trading", "ML အကောင့် ရောင်းဝယ်ရေး")}</span>
+          </div>
+          <h1 className="sell-title">
+            {t("Sell Your", "သင့်အကောင့်ကို")}
+            <br />
+            <span className="text-gradient-pink-purple">{t("Account", "ရောင်းချပါ")}</span>
           </h1>
-          <p className="text-[var(--muted)]">
+          <p className="sell-subtitle">
             {t(
-              "Please read our strict requirements below before contacting us to sell your account.",
-              "သင့်အကောင့်ကို ရောင်းချရန် မဆက်သွယ်မီ အောက်ပါ သတ်မှတ်ချက်များကို ဖတ်ရှုပါ။"
+              "Read the requirements below carefully before reaching out to us.",
+              "ဆက်သွယ်မတိုင်မီ အောက်ပါ သတ်မှတ်ချက်များကို သေချာဖတ်ပါ။"
             )}
           </p>
-        </div>
+        </motion.div>
 
-        <div className="p-6 md:p-8 rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-sm mb-8 relative overflow-hidden">
-          {/* Subtle background glow */}
-          <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-brand-pink opacity-5 rounded-full blur-3xl pointer-events-none"></div>
-          
-          <h2 className="text-lg font-bold mb-5 flex items-center gap-2 border-b border-[var(--border)] pb-4">
-            <ClipboardList className="text-brand-pink" size={24} />
+        {/* Requirements Cards */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.15 }}
+          className="sell-requirements"
+        >
+          <h2 className="sell-req-heading">
             {t("Requirements", "သတ်မှတ်ချက်များ")}
           </h2>
-          
-          <ul className="space-y-4 list-none pl-0">
-            <li className="flex items-start gap-3">
-              <CheckCircle2 className="text-green-500 mt-0.5 shrink-0" size={20} /> 
-              <span className="text-[15px] font-medium leading-relaxed break-words flex-1">Nrc, location, အိမ်ထောင်စုစာရင်း, mail chg ရမှ ယူတာပါ</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <CheckCircle2 className="text-green-500 mt-0.5 shrink-0" size={20} /> 
-              <span className="text-[15px] font-medium leading-relaxed break-words flex-1">100k - 800k အတွင်းအကောင့်တေပဲယူတာပါ</span>
-            </li>
-            <li className="flex items-start gap-3">
-              <XCircle className="text-red-400 mt-0.5 shrink-0" size={20} /> 
-              <span className="text-[15px] font-medium leading-relaxed text-[var(--muted)] break-words flex-1">6လအထက်ကိုယ်တိုင်ဆော့ထားတာမဟုတ်တဲ့အကောင့်တေဆိုမယူပါဘူး</span>
-            </li>
-          </ul>
-        </div>
 
-        <div className="flex justify-center">
-          <a 
-            href={buildOwnerTelegramUrl("Hi, I want to sell my MLBB account. Here are the details:")} 
-            target="_blank" 
-            rel="noreferrer" 
-            className="hero-cta hero-cta-secondary w-full md:w-auto justify-center py-3.5 px-8 text-[15px] shadow-lg shadow-black/5 hover:shadow-black/10 flex items-center gap-2"
+          <div className="sell-req-list">
+            {requirements.map((req, i) => {
+              const Icon = req.icon;
+              return (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: -16 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.4, delay: 0.2 + i * 0.1 }}
+                  className={`sell-req-card ${req.bgColor} ${req.borderColor}`}
+                >
+                  <div className={`sell-req-icon-wrap ${req.bgColor}`}>
+                    <Icon className={req.iconColor} size={22} strokeWidth={2} />
+                  </div>
+                  <div className="sell-req-text">
+                    <p className="sell-req-label">{t(req.en, req.my)}</p>
+                    <span className={`sell-req-badge ${req.type === "required" ? "sell-badge-ok" : "sell-badge-no"}`}>
+                      {req.type === "required"
+                        ? t("Required", "လိုအပ်သည်")
+                        : t("Not Accepted", "မလက်ခံပါ")}
+                    </span>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </motion.div>
+
+        {/* CTA Button */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+          className="sell-cta-wrap"
+        >
+          <a
+            href={buildOwnerTelegramUrl("Hi, I want to sell my MLBB account. Here are the details:")}
+            target="_blank"
+            rel="noreferrer"
+            className="sell-cta-btn"
           >
-            <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.14.18-.357.295-.6.295-.002 0-.003 0-.005 0l.213-3.054 5.56-5.022c.24-.213-.054-.334-.373-.121l-6.869 4.326-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.458c.538-.196 1.006.128.832.94z" fill="#2AABEE" />
-            </svg>
-            <span className="font-semibold text-[var(--foreground)]">{t("Contact on Telegram", "Telegram တွင် ဆက်သွယ်ပါ")}</span> <ArrowRight size={18} className="text-[var(--muted)]" />
+            <TelegramIcon />
+            <span>{t("Contact on Telegram to Sell", "Telegram တွင် ဆက်သွယ်ပါ")}</span>
           </a>
-        </div>
+          <p className="sell-cta-hint">
+            {t("We'll respond as quickly as possible.", "တတ်နိုင်သမျှ မြန်မြန် ပြန်ကြားပါမည်။")}
+          </p>
+        </motion.div>
       </div>
     </div>
   );
