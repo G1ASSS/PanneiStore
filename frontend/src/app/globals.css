@@ -1707,6 +1707,58 @@ html[data-theme="blue-dark"] .ad-crumb--current {
   object-fit: contain;
 }
 
+.ad-image-gallery-section {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 0;
+  background: transparent;
+}
+
+.ad-gallery-heading {
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #fff;
+  margin: 1rem 1.25rem 1rem;
+}
+
+.ad-thumbnails-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.75rem;
+  padding: 0 1.25rem;
+}
+
+.ad-gallery-thumb {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 2px solid transparent;
+  background: #000;
+  cursor: pointer;
+  padding: 0;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.ad-gallery-thumb:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 46, 147, 0.35);
+}
+
+.ad-gallery-thumb--active {
+  border-color: #ff2e93;
+}
+
+.ad-gallery-thumb-img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .ad-panel-badges {
   display: flex;
   flex-wrap: wrap;
