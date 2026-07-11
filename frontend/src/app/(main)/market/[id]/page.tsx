@@ -196,6 +196,30 @@ export default function AccountDetailPage() {
             )}
             {!isAvailable && <div className="ad-sold-overlay">{t("SOLD", "ရောင်းထွက်သွားပြီ")}</div>}
           </div>
+
+          {imageCount > 1 && (
+            <div className="ad-image-gallery-section">
+              <h2 className="ad-gallery-heading">IMAGE GALLERY</h2>
+              <div className="ad-thumbnails-grid">
+                {account.images.map((img, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    className={`ad-gallery-thumb ${activeImage === i ? 'ad-gallery-thumb--active' : ''}`}
+                    onClick={() => {
+                      setActiveImage(i);
+                      setLightboxOpen(true);
+                    }}
+                    aria-label={`Select screenshot ${i + 1}`}
+                    aria-current={activeImage === i}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={img.url} alt="" className="ad-gallery-thumb-img" />
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="ad-info">
@@ -258,30 +282,6 @@ export default function AccountDetailPage() {
           </div>
         </div>
       </div>
-
-      {imageCount > 1 && (
-        <div className="ad-image-gallery-section">
-          <h2 className="ad-gallery-heading">IMAGE GALLERY</h2>
-          <div className="ad-thumbnails-grid">
-            {account.images.map((img, i) => (
-              <button
-                key={i}
-                type="button"
-                className={`ad-gallery-thumb ${activeImage === i ? 'ad-gallery-thumb--active' : ''}`}
-                onClick={() => {
-                  setActiveImage(i);
-                  setLightboxOpen(true);
-                }}
-                aria-label={`Select screenshot ${i + 1}`}
-                aria-current={activeImage === i}
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={img.url} alt="" className="ad-gallery-thumb-img" />
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
 
       {isAvailable && (
         <div className="ad-mobile-bar">
