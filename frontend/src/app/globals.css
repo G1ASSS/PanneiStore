@@ -2572,7 +2572,8 @@ html[data-theme="blue-dark"] .ad-mobile-bar {
 
   .ad-main-image {
     aspect-ratio: 16 / 9;
-    height: auto;
+    height: 0;
+    padding-bottom: 56.25%;
     min-height: 0;
     max-height: none;
     border-radius: 0;
@@ -2580,6 +2581,10 @@ html[data-theme="blue-dark"] .ad-mobile-bar {
     border-right: none;
     border-top: none;
     box-shadow: none;
+  }
+
+  .ad-main-image-img {
+    object-fit: contain;
   }
 
   .ad-zoom-hint {
