@@ -23,6 +23,7 @@ import { LiquidCard } from "@/components/ui/LiquidCard";
 import { EventPhotoSlider } from "@/components/ui/EventPhotoSlider";
 import { HeroBannerSlider } from "@/components/ui/HeroBannerSlider";
 import { AnnouncementPopup } from "@/components/ui/AnnouncementPopup";
+import { buildOwnerTelegramUrl } from "@/utils/telegram";
 
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -176,6 +177,41 @@ export default function HomePage() {
             <Link href="/topup" className="hero-cta hero-cta-secondary">
               {t("Top up", "စိန်ဖြည့်ရန်")}
             </Link>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            className="mt-6 p-4 md:p-5 rounded-2xl border border-[var(--border)] bg-gradient-to-br from-[var(--card)] to-[var(--background)] shadow-sm max-w-[90%]"
+          >
+            <h3 className="text-sm font-bold mb-3 flex items-center gap-2">
+              <span className="text-xl">🎮</span>
+              {t("Want to Sell Your Account?", "သင့်အကောင့်ကို ရောင်းချချင်ပါသလား?")}
+            </h3>
+            <ul className="text-xs md:text-[13px] text-[var(--muted)] space-y-2 mb-4 list-none pl-0">
+              <li className="flex items-start gap-2">
+                <span className="text-green-500 mt-0.5">✅</span> 
+                <span>Nrc, location, အိမ်ထောင်စုစာရင်း, mail chg ရမှ ယူတာပါ</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-green-500 mt-0.5">✅</span> 
+                <span>100k - 800k အတွင်းအကောင့်တေပဲယူတာပါ</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <span className="text-red-400 mt-0.5">❌</span> 
+                <span>6လအထက်ကိုယ်တိုင်ဆော့ထားတာမဟုတ်တဲ့အကောင့်တေဆိုမယူပါဘူး</span>
+              </li>
+            </ul>
+            <a 
+              href={buildOwnerTelegramUrl("Hi, I want to sell my MLBB account. Here are the details:")} 
+              target="_blank" 
+              rel="noreferrer" 
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-[var(--card-hover)] rounded-lg text-[13px] font-semibold hover:bg-[var(--border)] transition-colors border border-[var(--border)]"
+            >
+              <img src="/icons/telegram.svg" alt="Telegram" className="w-4 h-4 opacity-80" />
+              {t("Contact to Sell", "ရောင်းချရန် ဆက်သွယ်ပါ")} <ArrowRight size={14} className="ml-1" />
+            </a>
           </motion.div>
         </div>
 
