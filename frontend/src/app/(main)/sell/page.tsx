@@ -18,7 +18,7 @@ export default function SellPage() {
         </Link>
       </div>
 
-      <div className="max-w-2xl mx-auto px-4 py-8">
+      <div className="max-w-2xl mx-auto px-5 py-8 w-full overflow-hidden">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold mb-3 text-gradient-pink-purple">
             {t("Sell Your Account", "သင့်အကောင့်ကို ရောင်းချပါ")}
@@ -43,15 +43,15 @@ export default function SellPage() {
           <ul className="space-y-4 list-none pl-0">
             <li className="flex items-start gap-3">
               <CheckCircle2 className="text-green-500 mt-0.5 shrink-0" size={20} /> 
-              <span className="text-[15px] font-medium leading-relaxed">Nrc, location, အိမ်ထောင်စုစာရင်း, mail chg ရမှ ယူတာပါ</span>
+              <span className="text-[15px] font-medium leading-relaxed break-words flex-1">Nrc, location, အိမ်ထောင်စုစာရင်း, mail chg ရမှ ယူတာပါ</span>
             </li>
             <li className="flex items-start gap-3">
               <CheckCircle2 className="text-green-500 mt-0.5 shrink-0" size={20} /> 
-              <span className="text-[15px] font-medium leading-relaxed">100k - 800k အတွင်းအကောင့်တေပဲယူတာပါ</span>
+              <span className="text-[15px] font-medium leading-relaxed break-words flex-1">100k - 800k အတွင်းအကောင့်တေပဲယူတာပါ</span>
             </li>
             <li className="flex items-start gap-3">
               <XCircle className="text-red-400 mt-0.5 shrink-0" size={20} /> 
-              <span className="text-[15px] font-medium leading-relaxed text-[var(--muted)]">6လအထက်ကိုယ်တိုင်ဆော့ထားတာမဟုတ်တဲ့အကောင့်တေဆိုမယူပါဘူး</span>
+              <span className="text-[15px] font-medium leading-relaxed text-[var(--muted)] break-words flex-1">6လအထက်ကိုယ်တိုင်ဆော့ထားတာမဟုတ်တဲ့အကောင့်တေဆိုမယူပါဘူး</span>
             </li>
           </ul>
         </div>
