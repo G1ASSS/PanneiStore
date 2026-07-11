@@ -195,6 +195,7 @@ export default function AccountDetailPage() {
               </span>
             )}
             {!isAvailable && <div className="ad-sold-overlay">{t("SOLD", "ရောင်းထွက်သွားပြီ")}</div>}
+          </div>
         </div>
 
         <div className="ad-info">
