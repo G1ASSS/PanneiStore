@@ -71,10 +71,6 @@ export default function SellPage() {
           transition={{ duration: 0.5 }}
           className="sell-hero"
         >
-          <div className="sell-badge">
-            <span>🎮</span>
-            <span>{t("ML Account Trading", "ML အကောင့် ရောင်းဝယ်ရေး")}</span>
-          </div>
           <h1 className="sell-title">
             {t("Sell Your", "သင့်အကောင့်ကို")}
             <br />

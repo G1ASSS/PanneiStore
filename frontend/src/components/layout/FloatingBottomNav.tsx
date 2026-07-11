@@ -16,7 +16,7 @@ export const FloatingBottomNav: React.FC = () => {
     { name: t("Home", "ပင်မ"), href: "/", icon: Home },
     { name: t("Market", "အကောင့်"), href: "/market", icon: ShoppingBag },
     { name: t("Top Up", "စိန်ဖြည့်ရန်"), href: "/topup", icon: Wallet },
-    { name: t("Orders", "ဝယ်ယူမှုများ"), href: "/orders", icon: Receipt },
+    { name: t("Orders", "အော်ဒါများ"), href: "/orders", icon: Receipt },
     { name: t("Profile", "အကောင့်"), href: "/profile", icon: User },
   ];
 
