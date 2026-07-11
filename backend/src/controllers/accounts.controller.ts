@@ -28,7 +28,22 @@ export const listAccounts = async (req: Request, res: Response, next: NextFuncti
     const where: Prisma.AccountWhereInput = {};
     if (statusQ && statusQ !== 'ALL') where.status = statusQ as AccountStatus;
     if (sellerId) where.sellerId = sellerId;
-    if (rank) where.rank = rank;
+    if (rank) {
+      // Extract the key tier keyword from the filter value for a fuzzy match.
+      // e.g. "Universe/Galaxy Collector" → search for "Universe" OR "Galaxy"
+      // e.g. "Mega Collector" → search for "Mega"
+      const tierKeywords = rank
+        .replace(' Collector', '')
+        .split('/')
+        .map((k: string) => k.trim())
+        .filter(Boolean);
+
+      where.OR = [
+        ...tierKeywords.map((kw: string) => ({ rank: { contains: kw, mode: 'insensitive' as const } })),
+        ...tierKeywords.map((kw: string) => ({ title: { contains: kw, mode: 'insensitive' as const } })),
+        ...tierKeywords.map((kw: string) => ({ description: { contains: kw, mode: 'insensitive' as const } })),
+      ];
+    }
     if (server) where.server = server;
     if (isFeaturedQ !== undefined) where.isFeatured = isFeaturedQ === 'true';
     if (minPrice !== undefined || maxPrice !== undefined) {
@@ -39,13 +54,20 @@ export const listAccounts = async (req: Request, res: Response, next: NextFuncti
     if (minHeroCount !== undefined) where.heroCount = { gte: minHeroCount };
     if (minSkinCount !== undefined) where.skinCount = { gte: minSkinCount };
     if (search) {
-      where.OR = [
+      const searchOR = [
         { listingCode: { contains: search } },
         { title: { contains: search } },
         { titleMyanmar: { contains: search } },
         { description: { contains: search } },
         { descMyanmar: { contains: search } },
       ];
+      if (where.OR) {
+        // Both rank filter and search are active — combine with AND
+        where.AND = [{ OR: where.OR }, { OR: searchOR }];
+        delete where.OR;
+      } else {
+        where.OR = searchOR;
+      }
     }
 
     const [accounts, total] = await Promise.all([
