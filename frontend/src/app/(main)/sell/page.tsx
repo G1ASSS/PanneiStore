@@ -25,7 +25,7 @@ const requirements = [
     borderColor: "border-emerald-400/20",
     type: "required" as const,
     en: "NRC, Location, Household registration, and Mail Changeable required",
-    my: "Nrc, location, အိမ်ထောင်စုစာရင်း, mail chg ရမှ ယူတာပါ",
+    my: "Nrc, location, အိမ်ထောင်စုစာရင်း, mail chg ရမှ ယူပါတယ်",
   },
   {
     icon: Banknote,
@@ -34,7 +34,7 @@ const requirements = [
     borderColor: "border-sky-400/20",
     type: "required" as const,
     en: "Only accepting accounts valued between 100,000 – 800,000 MMK",
-    my: "100k - 800k အတွင်းအကောင့်တေပဲယူတာပါ",
+    my: "100k - 800k အတွင်းအကောင့်တွေပဲ ယူပါတယ်",
   },
   {
     icon: Clock,
@@ -43,7 +43,7 @@ const requirements = [
     borderColor: "border-rose-400/20",
     type: "rejected" as const,
     en: "Accounts not personally played for 6+ months will NOT be accepted",
-    my: "6လအထက် ကိုယ်တိုင်ဆော့ထားတာမဟုတ်တဲ့ အကောင့်တေဆိုမယူပါဘူး",
+    my: "6လအထက် ကိုယ်တိုင်ဆော့ထားတာမဟုတ်တဲ့ အကောင့်တွေဆိုမယူပါဘူး",
   },
 ];
 
