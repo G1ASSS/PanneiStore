@@ -201,7 +201,7 @@ const processAddPhotoBatch = async (listingCode: string, senderId: string, photo
 
   console.log(`➕ Adding ${photoGroups.length} photos to ${listingCode}...`);
   const currentCount = await prisma.accountImage.count({ where: { accountId: account.id } });
-  await Promise.all(photoGroups.map((photos, i) => uploadAndAttachPhoto(photos, account.id, currentCount === 0 && i === 0)));
+  await Promise.all(photoGroups.map((photos, i) => uploadAndAttachPhoto(photos, account.id, currentCount === 0 && i === 0, currentCount + i)));
 
   await sendMessageToChannel(
     `✅ Added <b>${photoGroups.length}</b> photo(s) to listing <b>${listingCode}</b>!`,
@@ -364,7 +364,7 @@ const createAccountFromText = async (text: string, senderId: string, photoGroups
 
     // Upload ALL photos in parallel
     console.log(`📷 Uploading ${photoGroups.length} photos for account ${account.id}...`);
-    await Promise.all(photoGroups.map((photos, i) => uploadAndAttachPhoto(photos, account.id, i === 0)));
+    await Promise.all(photoGroups.map((photos, i) => uploadAndAttachPhoto(photos, account.id, i === 0, i)));
 
     console.log(`✅ Account created: ${listingCode} (${rank}) with ${photoGroups.length} photos`);
     await sendMessageToChannel(
@@ -377,7 +377,7 @@ const createAccountFromText = async (text: string, senderId: string, photoGroups
   }
 };
 
-const uploadAndAttachPhoto = async (photos: any[], accountId: string, isPrimary: boolean) => {
+const uploadAndAttachPhoto = async (photos: any[], accountId: string, isPrimary: boolean, orderIndex: number = 0) => {
   const photo = photos[photos.length - 1]; // highest resolution
   const fileUrl = await getTelegramFileUrl(photo.file_id);
   if (!fileUrl) return;
@@ -393,6 +393,7 @@ const uploadAndAttachPhoto = async (photos: any[], accountId: string, isPrimary:
         url: uploadRes.url,
         publicId: uploadRes.publicId,
         isPrimary,
+        order: orderIndex,
       }
     });
     console.log(`📷 Image attached to account ${accountId}`);
