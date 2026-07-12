@@ -158,21 +158,13 @@ export default function AccountDetailPage() {
   const telegramBuyUrl = buildOwnerTelegramUrl(buildAccountInquiryMessage(account));
 
   const quickStats = [
-    { icon: Users, label: t('Heroes', 'ဟီးရိုးများ'), value: account.heroCount, accent: 'ad-stat-pill--pink' },
     { icon: Sparkles, label: t('Skins', 'စကင်များ'), value: account.skinCount, accent: 'ad-stat-pill--purple' },
-    { icon: Swords, label: t('Win Rate', 'နိုင်နှုန်း'), value: `${account.winRate}%`, accent: 'ad-stat-pill--cyan' },
-    { icon: Trophy, label: t('Level', 'အဆင့်'), value: account.level, accent: 'ad-stat-pill--gold' },
   ];
 
   const overviewStats = [
     { id: 'rank', label: t('Collection Level', 'စုဆောင်းမှုအဆင့်'), value: account.rank },
     { id: 'server', label: t('Server', 'ဆာဗာ'), value: account.server },
-    { id: 'level', label: t('Level', 'အဆင့်'), value: account.level },
-    { id: 'winRate', label: t('Win Rate', 'နိုင်နှုန်း'), value: `${account.winRate}%` },
-    { id: 'matches', label: t('Total Matches', 'ပွဲအရေအတွက်'), value: account.totalMatches.toLocaleString() },
-    { id: 'heroes', label: t('Hero Count', 'ဟီးရိုးအရေအတွက်'), value: account.heroCount },
     { id: 'skins', label: t('Skin Count', 'စကင်အရေအတွက်'), value: account.skinCount },
-    { id: 'emblems', label: t('Emblem Count', 'အမှတ်တံဆိပ်အရေအတွက်'), value: account.emblemCount },
   ];
 
   const tabs = [

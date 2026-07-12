@@ -11,12 +11,7 @@ export interface AccountFormValues {
   price: string;
   rank: string;
   server: string;
-  heroCount: string;
   skinCount: string;
-  emblemCount: string;
-  winRate: string;
-  totalMatches: string;
-  level: string;
   status: string;
   isFeatured: boolean;
   skins: Array<{ heroName: string; skinName: string; isLegend: boolean }>;
@@ -30,12 +25,7 @@ const DEFAULT_VALUES: AccountFormValues = {
   price: '',
   rank: COLLECTOR_TIERS[4],
   server: 'Myanmar (8872)',
-  heroCount: '0',
   skinCount: '0',
-  emblemCount: '0',
-  winRate: '0',
-  totalMatches: '0',
-  level: '0',
   status: 'AVAILABLE',
   isFeatured: false,
   skins: [],
@@ -164,16 +154,7 @@ export function AccountListingForm({
           />
         </div>
 
-        <div className="admin-form-group">
-          <label htmlFor="heroCount">Hero Count</label>
-          <input
-            id="heroCount"
-            type="number"
-            min="0"
-            value={values.heroCount}
-            onChange={(e) => set('heroCount', e.target.value)}
-          />
-        </div>
+
 
         <div className="admin-form-group">
           <label htmlFor="skinCount">Skin Count</label>
@@ -186,51 +167,7 @@ export function AccountListingForm({
           />
         </div>
 
-        <div className="admin-form-group">
-          <label htmlFor="emblemCount">Emblem Count</label>
-          <input
-            id="emblemCount"
-            type="number"
-            min="0"
-            value={values.emblemCount}
-            onChange={(e) => set('emblemCount', e.target.value)}
-          />
-        </div>
 
-        <div className="admin-form-group">
-          <label htmlFor="winRate">Win Rate (%)</label>
-          <input
-            id="winRate"
-            type="number"
-            min="0"
-            max="100"
-            step="0.1"
-            value={values.winRate}
-            onChange={(e) => set('winRate', e.target.value)}
-          />
-        </div>
-
-        <div className="admin-form-group">
-          <label htmlFor="totalMatches">Total Matches</label>
-          <input
-            id="totalMatches"
-            type="number"
-            min="0"
-            value={values.totalMatches}
-            onChange={(e) => set('totalMatches', e.target.value)}
-          />
-        </div>
-
-        <div className="admin-form-group">
-          <label htmlFor="level">Level</label>
-          <input
-            id="level"
-            type="number"
-            min="0"
-            value={values.level}
-            onChange={(e) => set('level', e.target.value)}
-          />
-        </div>
 
         {mode === 'edit' && (
           <>

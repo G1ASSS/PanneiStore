@@ -18,12 +18,7 @@ export default function AdminNewAccountPage() {
     form.append('price', values.price);
     form.append('rank', values.rank);
     form.append('server', values.server.trim());
-    form.append('heroCount', values.heroCount);
     form.append('skinCount', values.skinCount);
-    form.append('emblemCount', values.emblemCount);
-    form.append('winRate', values.winRate);
-    form.append('totalMatches', values.totalMatches);
-    form.append('level', values.level);
     if (values.titleMyanmar) form.append('titleMyanmar', values.titleMyanmar);
     if (values.description) form.append('description', values.description);
     if (values.isFeatured) form.append('isFeatured', 'true');

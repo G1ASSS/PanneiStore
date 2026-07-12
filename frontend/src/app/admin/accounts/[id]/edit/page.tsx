@@ -36,12 +36,7 @@ export default function AdminEditAccountPage() {
     form.append('price', values.price);
     form.append('rank', values.rank);
     form.append('server', values.server.trim());
-    form.append('heroCount', values.heroCount);
     form.append('skinCount', values.skinCount);
-    form.append('emblemCount', values.emblemCount);
-    form.append('winRate', values.winRate);
-    form.append('totalMatches', values.totalMatches);
-    form.append('level', values.level);
     form.append('status', values.status);
     form.append('isFeatured', values.isFeatured ? 'true' : 'false');
     if (values.titleMyanmar) form.append('titleMyanmar', values.titleMyanmar);
@@ -69,12 +64,7 @@ export default function AdminEditAccountPage() {
     price: String(account.price),
     rank: account.rank,
     server: account.server,
-    heroCount: String(account.heroCount),
     skinCount: String(account.skinCount),
-    emblemCount: String(account.emblemCount),
-    winRate: String(account.winRate),
-    totalMatches: String(account.totalMatches),
-    level: String(account.level),
     status: account.status,
     isFeatured: account.isFeatured,
     skins: account.skins?.map(s => ({

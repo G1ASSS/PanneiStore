@@ -54,9 +54,6 @@ export const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
           </span>
           <div className="account-card-chips absolute bottom-3 left-3 right-3 flex gap-2">
             <span className="account-card-chip bg-black/55 backdrop-blur-md text-[10px] font-semibold !text-white px-2 py-1 rounded-md flex items-center gap-1 border border-white/5">
-              <Users size={12} className="text-brand-pink shrink-0" /> {account.heroCount} Heroes
-            </span>
-            <span className="account-card-chip bg-black/55 backdrop-blur-md text-[10px] font-semibold !text-white px-2 py-1 rounded-md flex items-center gap-1 border border-white/5">
               <Sparkles size={12} className="text-brand-purple shrink-0" /> {account.skinCount} Skins
             </span>
           </div>
@@ -71,11 +68,6 @@ export const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
             <h3 className="account-card-title text-sm font-bold theme-heading line-clamp-1 group-hover:text-brand-pink transition-colors">
               {title}
             </h3>
-
-            <div className="account-card-meta mt-3 text-xs theme-muted border-b theme-soft-border pb-3">
-              <span className="account-card-meta-label block text-[10px] uppercase opacity-70">Win Rate</span>
-              <span className="account-card-meta-value font-bold theme-heading">{account.winRate}%</span>
-            </div>
           </div>
 
           <div className="account-card-price-row flex items-center justify-between mt-3.5 pt-1">

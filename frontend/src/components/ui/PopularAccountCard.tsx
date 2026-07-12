@@ -43,15 +43,8 @@ export const PopularAccountCard: React.FC<PopularAccountCardProps> = ({
 
         <div className="popular-account-card-meta">
           <span className="popular-account-card-chip">
-            <Users size={11} />
-            {account.heroCount}
-          </span>
-          <span className="popular-account-card-chip">
             <Sparkles size={11} />
             {account.skinCount}
-          </span>
-          <span className="popular-account-card-chip popular-account-card-chip--muted">
-            {account.winRate}% WR
           </span>
         </div>
 
