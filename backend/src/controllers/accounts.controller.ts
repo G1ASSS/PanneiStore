@@ -357,9 +357,9 @@ export const buyRequest = async (req: Request, res: Response, next: NextFunction
       throw new ApiError(500, 'Telegram Admin Chat ID is not configured on the server');
     }
 
-    // 1. Send the album (Media Group)
+    // 1. Send the album (Media Group) - Telegram allows max 10 photos per group
     if (account.images.length > 0) {
-      const media = account.images.map((img) => ({
+      const media = account.images.slice(0, 10).map((img) => ({
         type: 'photo',
         media: img.url,
       }));
