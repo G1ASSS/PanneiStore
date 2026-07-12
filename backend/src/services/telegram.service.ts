@@ -7,8 +7,9 @@ const TELEGRAM_API_URL = `https://api.telegram.org/bot${config.telegram.botToken
  * Sends a text message to a specific Telegram chat/channel.
  * @param text The message text (MarkdownV2 or HTML supported if specified)
  * @param chatId The target chat ID, defaults to the configured channel ID
+ * @param replyMarkup Optional reply markup (e.g., inline keyboards)
  */
-export const sendMessageToChannel = async (text: string, chatId: string = config.telegram.channelId) => {
+export const sendMessageToChannel = async (text: string, chatId: string = config.telegram.channelId, replyMarkup?: any) => {
   if (!config.telegram.botToken || !chatId) {
     console.warn('Telegram bot token or channel ID is missing.');
     return;
@@ -19,6 +20,7 @@ export const sendMessageToChannel = async (text: string, chatId: string = config
       chat_id: chatId,
       text,
       parse_mode: 'HTML',
+      ...(replyMarkup ? { reply_markup: replyMarkup } : {}),
     });
   } catch (error: any) {
     console.error('Failed to send Telegram message:', error?.response?.data || error.message);

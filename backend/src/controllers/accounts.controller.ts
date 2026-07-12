@@ -371,18 +371,45 @@ export const buyRequest = async (req: Request, res: Response, next: NextFunction
     const listingIdStr = account.listingCode ? account.listingCode : account.id;
     const accountUrl = `${process.env.FRONTEND_URL || 'https://panneistore.vercel.app'}/market/${account.id}`;
 
+    const timestamp = new Date().toISOString().replace('T', ' ').substring(0, 16) + ' UTC';
+    const buyerIp = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'Unknown';
+    const userAgent = req.headers['user-agent'] || 'Unknown';
+
     const text = `🛒 <b>New Purchase Request</b>
 
-Title: ${account.title}
-Listing ID: ${listingIdStr}
-Price: ${formattedPrice} MMK
+<b>Title:</b>
+${account.title}
 
-Customer clicked Buy Now.
+<b>Listing ID:</b>
+${listingIdStr}
 
-Account URL:
+<b>Price:</b>
+${formattedPrice} MMK
+
+<b>Time:</b>
+${timestamp}
+
+<b>Buyer IP:</b>
+${buyerIp}
+
+<b>Browser:</b>
+${userAgent}
+
+<b>Account URL:</b>
 ${accountUrl}`;
 
-    await sendMessageToChannel(text, adminChatId);
+    const replyMarkup = {
+      inline_keyboard: [
+        [
+          {
+            text: '🌐 View Listing',
+            url: accountUrl,
+          },
+        ],
+      ],
+    };
+
+    await sendMessageToChannel(text, adminChatId, replyMarkup);
 
     return successResponse(res, null, 'Purchase request sent successfully');
   } catch (err) {
