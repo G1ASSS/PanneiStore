@@ -352,21 +352,23 @@ export const buyRequest = async (req: Request, res: Response, next: NextFunction
 
     if (!account) throw new ApiError(404, 'Account not found');
 
-    const adminChatId = config.telegram.adminIds[0];
-    if (!adminChatId) {
+    const adminIds = config.telegram.adminIds;
+    if (!adminIds || adminIds.length === 0) {
       throw new ApiError(500, 'Telegram Admin Chat ID is not configured on the server');
     }
 
-    // 1. Send the album (Media Group) - Telegram allows max 10 photos per group
+    // 1. Send the album (Media Group) to ALL admins - Telegram allows max 10 photos per group
     // Also, Media Group MUST have at least 2 photos.
-    if (account.images.length === 1) {
-      await sendPhotoToChat(account.images[0].url, adminChatId);
-    } else if (account.images.length > 1) {
-      const media = account.images.slice(0, 10).map((img) => ({
-        type: 'photo',
-        media: img.url,
-      }));
-      await sendMediaGroupToChat(media, adminChatId);
+    for (const adminChatId of adminIds) {
+      if (account.images.length === 1) {
+        await sendPhotoToChat(account.images[0].url, adminChatId);
+      } else if (account.images.length > 1) {
+        const media = account.images.slice(0, 10).map((img) => ({
+          type: 'photo',
+          media: img.url,
+        }));
+        await sendMediaGroupToChat(media, adminChatId);
+      }
     }
 
     // 2. Send the text message
@@ -412,7 +414,9 @@ ${accountUrl}`;
       ],
     };
 
-    await sendMessageToChannel(text, adminChatId, replyMarkup);
+    for (const adminChatId of adminIds) {
+      await sendMessageToChannel(text, adminChatId, replyMarkup);
+    }
 
     return successResponse(res, null, 'Purchase request sent successfully');
   } catch (err) {
