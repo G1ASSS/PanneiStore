@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import { LiquidCard } from "./LiquidCard";
 import { Sparkles, Trophy, Users } from "lucide-react";
+import { formatPrice } from "@/utils/formatPrice";
 
 export interface AccountData {
   id: string;
@@ -34,7 +35,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({ account, locale = "en"
     "/placeholder-ml.jpg";
   const title =
     locale === "my" && account.titleMyanmar ? account.titleMyanmar : account.title;
-  const formattedPrice = new Intl.NumberFormat("en-US").format(Number(account.price));
+  const formattedPrice = formatPrice(Number(account.price), locale);
 
   return (
     <Link href={`/market/${account.id}`} className="block h-full">
@@ -79,7 +80,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({ account, locale = "en"
             <div className="account-card-price-label text-xs theme-muted uppercase">Price</div>
             <div className="account-card-price text-base font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-brand-pink to-brand-cyan">
               {formattedPrice}{" "}
-              <span className="text-xs font-semibold text-brand-pink">MMK</span>
+              {locale !== "my" && <span className="text-xs font-semibold text-brand-pink">MMK</span>}
             </div>
           </div>
         </div>

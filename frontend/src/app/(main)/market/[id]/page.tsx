@@ -20,9 +20,10 @@ import { AccountDetail } from '@/types/account';
 
 import { buildAccountInquiryMessage, buildOwnerTelegramUrl } from '@/utils/telegram';
 import { useLanguage } from '@/contexts/LanguageContext';
+import { formatPrice } from '@/utils/formatPrice';
 
 export default function AccountDetailPage() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const params = useParams();
   const accountId = String(params.id);
   const [account, setAccount] = useState<AccountDetail | null>(null);
@@ -247,8 +248,8 @@ export default function AccountDetailPage() {
             <div className="ad-price-block ad-price-block--mobile">
               <span className="ad-price-label">{t("Price", "စျေးနှုန်း")}</span>
               <div className="ad-price-row">
-                <span className="ad-price-amount">{Number(account.price).toLocaleString()}</span>
-                <span className="ad-price-currency">MMK</span>
+                <span className="ad-price-amount">{formatPrice(Number(account.price), language)}</span>
+                {language !== 'my' && <span className="ad-price-currency">MMK</span>}
               </div>
             </div>
           </div>
@@ -267,8 +268,8 @@ export default function AccountDetailPage() {
             <div className="ad-price-block ad-price-block--full">
               <span className="ad-price-label">{t("Price", "စျေးနှုန်း")}</span>
               <div className="ad-price-row">
-                <span className="ad-price-amount">{Number(account.price).toLocaleString()}</span>
-                <span className="ad-price-currency">MMK</span>
+                <span className="ad-price-amount">{formatPrice(Number(account.price), language)}</span>
+                {language !== 'my' && <span className="ad-price-currency">MMK</span>}
               </div>
             </div>
 
