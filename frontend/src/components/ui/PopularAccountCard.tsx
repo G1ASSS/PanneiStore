@@ -4,23 +4,24 @@ import React from "react";
 import Link from "next/link";
 import { ArrowUpRight, Sparkles, Star, Trophy, Users } from "lucide-react";
 import { AccountData } from "./AccountCard";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { formatPrice } from "@/utils/formatPrice";
 
 interface PopularAccountCardProps {
   account: AccountData;
-  locale?: "en" | "my";
 }
 
 export const PopularAccountCard: React.FC<PopularAccountCardProps> = ({
   account,
-  locale = "en",
 }) => {
+  const { language } = useLanguage();
   const primaryImage =
     account.images?.find((img) => img.isPrimary)?.url ||
     account.images?.[0]?.url ||
     "/placeholder-ml.jpg";
   const title =
-    locale === "my" && account.titleMyanmar ? account.titleMyanmar : account.title;
-  const formattedPrice = new Intl.NumberFormat("en-US").format(Number(account.price));
+    language === "my" && account.titleMyanmar ? account.titleMyanmar : account.title;
+  const formattedPrice = formatPrice(Number(account.price), language);
 
   return (
     <Link href={`/market/${account.id}`} className="popular-account-card group">
@@ -57,7 +58,11 @@ export const PopularAccountCard: React.FC<PopularAccountCardProps> = ({
         <div className="popular-account-card-footer">
           <div className="popular-account-card-price-block">
             <span className="popular-account-card-price">{formattedPrice}</span>
-            <span className="popular-account-card-currency">MMK</span>
+            {language !== "my" ? (
+              <span className="popular-account-card-currency">MMK</span>
+            ) : (
+              <span className="popular-account-card-currency ml-0.5">ကျပ်</span>
+            )}
           </div>
           <div className="popular-account-card-seller">
             <Star size={11} className="popular-account-card-star" fill="currentColor" />
