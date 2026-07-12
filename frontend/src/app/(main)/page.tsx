@@ -148,8 +148,8 @@ export default function HomePage() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-4xl sm:text-[2.95rem] lg:text-[3.45rem] xl:text-[4rem] font-black theme-heading leading-tight uppercase"
           >
-            {t("YOUR GAMING", "သင့်ရဲ့ ဂိမ်းကစားခြင်းကို")} <br />
-            <span className="text-gradient-pink-purple">{t("HUB", "အဆင့်မြှင့်တင်လိုက်ပါ")}</span>
+            {t("YOUR GAMING", "YOUR GAMING")} <br />
+            <span className="text-gradient-pink-purple">{t("HUB", "HUB")}</span>
           </motion.h1>
 
           <motion.p
