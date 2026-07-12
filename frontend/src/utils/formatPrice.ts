@@ -26,10 +26,16 @@ export function formatMyanmarPrice(amount: number): string {
     if (remainder === 0) return text;
     if (remainder === 50000) return text + 'ခွဲ';
     
-    // For clean 10k remainders (e.g., 20k = နှစ်သောင်း)
-    if (remainder % 10000 === 0) {
-       const thaung = remainder / 10000;
-       return text + myanmarNumbers[thaung] + 'သောင်း';
+    // For remainders that are multiples of 1,000 (e.g., 20k = နှစ်သောင်း, 55k = ငါးသောင်းငါးထောင်)
+    if (remainder % 1000 === 0) {
+       let remText = text;
+       const thaung = Math.floor(remainder / 10000);
+       const htaung = (remainder % 10000) / 1000;
+       
+       if (thaung > 0) remText += myanmarNumbers[thaung] + 'သောင်း';
+       if (htaung > 0) remText += myanmarNumbers[htaung] + 'ထောင်';
+       
+       return remText;
     }
     
     // If it's a weird exact amount like 123,450 just show in Burmese digits
