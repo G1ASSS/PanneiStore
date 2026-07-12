@@ -5,6 +5,7 @@ import Link from "next/link";
 import { LiquidCard } from "./LiquidCard";
 import { Sparkles, Trophy, Users } from "lucide-react";
 import { formatPrice } from "@/utils/formatPrice";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export interface AccountData {
   id: string;
@@ -25,17 +26,18 @@ export interface AccountData {
 
 interface AccountCardProps {
   account: AccountData;
-  locale?: "en" | "my";
 }
 
-export const AccountCard: React.FC<AccountCardProps> = ({ account, locale = "en" }) => {
+export const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
+  const { language } = useLanguage();
+
   const primaryImage =
     account.images?.find((img) => img.isPrimary)?.url ||
     account.images?.[0]?.url ||
     "/placeholder-ml.jpg";
   const title =
-    locale === "my" && account.titleMyanmar ? account.titleMyanmar : account.title;
-  const formattedPrice = formatPrice(Number(account.price), locale);
+    language === "my" && account.titleMyanmar ? account.titleMyanmar : account.title;
+  const formattedPrice = formatPrice(Number(account.price), language);
 
   return (
     <Link href={`/market/${account.id}`} className="block h-full">
@@ -80,7 +82,7 @@ export const AccountCard: React.FC<AccountCardProps> = ({ account, locale = "en"
             <div className="account-card-price-label text-xs theme-muted uppercase">Price</div>
             <div className="account-card-price text-base font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-brand-pink to-brand-cyan">
               {formattedPrice}{" "}
-              {locale !== "my" && <span className="text-xs font-semibold text-brand-pink">MMK</span>}
+              {language !== "my" && <span className="text-xs font-semibold text-brand-pink">MMK</span>}
             </div>
           </div>
         </div>
