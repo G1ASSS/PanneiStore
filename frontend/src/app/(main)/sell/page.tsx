@@ -1,9 +1,9 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { ArrowLeft, CheckCircle2, XCircle, ShieldCheck, Banknote, Clock } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ArrowLeft, CheckCircle2, XCircle, ShieldCheck, Banknote, Clock, X, ZoomIn } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { buildOwnerTelegramUrl } from "@/utils/telegram";
 
@@ -17,42 +17,69 @@ const TelegramIcon = () => (
   </svg>
 );
 
-const requirements = [
+interface Requirement {
+  icon: React.ElementType;
+  iconColor: string;
+  bgColor: string;
+  borderColor: string;
+  type: "required" | "rejected";
+  en: string;
+  my: string;
+  examples: { src: string; caption: string; captionMy: string }[];
+}
+
+const requirements: Requirement[] = [
   {
     icon: ShieldCheck,
     iconColor: "text-emerald-400",
     bgColor: "bg-emerald-400/10",
     borderColor: "border-emerald-400/20",
-    type: "required" as const,
+    type: "required",
     en: "NRC, Location, Household registration, and Mail Changeable required",
     my: "Nrc, location, အိမ်ထောင်စုစာရင်း, mail chg ရမှ ယူပါတယ်",
+    examples: [
+      { src: "/sell-examples/nrc.jpeg", caption: "NRC Example", captionMy: "NRC နမူနာ" },
+      { src: "/sell-examples/household.jpeg", caption: "Household Registration Example", captionMy: "အိမ်ထောင်စုစာရင်း နမူနာ" },
+      { src: "/sell-examples/location.png", caption: "Location Screenshot Example", captionMy: "တည်နေရာ Screenshot နမူနာ" },
+      { src: "/sell-examples/mail-change.png", caption: "Mail Changeable Example", captionMy: "Mail chg ရသည့် နမူနာ" },
+    ],
   },
   {
     icon: Banknote,
     iconColor: "text-sky-400",
     bgColor: "bg-sky-400/10",
     borderColor: "border-sky-400/20",
-    type: "required" as const,
+    type: "required",
     en: "Only accepting accounts valued between 100,000 – 800,000 MMK",
     my: "100k - 800k အတွင်းအကောင့်တွေပဲ ယူပါတယ်",
+    examples: [],
   },
   {
     icon: Clock,
     iconColor: "text-rose-400",
     bgColor: "bg-rose-400/10",
     borderColor: "border-rose-400/20",
-    type: "rejected" as const,
+    type: "rejected",
     en: "Accounts not personally played for 6+ months will NOT be accepted",
     my: "6လအထက် ကိုယ်တိုင်ဆော့ထားတာမဟုတ်တဲ့ အကောင့်တွေဆိုမယူပါဘူး",
+    examples: [],
   },
 ];
 
 export default function SellPage() {
   const { t } = useLanguage();
+  const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
+  const [lightboxCaption, setLightboxCaption] = useState<string>("");
+
+  const openLightbox = (src: string, caption: string) => {
+    setLightboxSrc(src);
+    setLightboxCaption(caption);
+  };
+
+  const closeLightbox = () => setLightboxSrc(null);
 
   return (
     <div className="sell-page-wrapper">
-      {/* Hero background gradient */}
       <div className="sell-bg-glow" aria-hidden />
 
       {/* Top Bar */}
@@ -64,7 +91,7 @@ export default function SellPage() {
       </div>
 
       <div className="sell-content">
-        {/* Hero Section */}
+        {/* Hero */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -84,16 +111,14 @@ export default function SellPage() {
           </p>
         </motion.div>
 
-        {/* Requirements Cards */}
+        {/* Requirements */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.15 }}
           className="sell-requirements"
         >
-          <h2 className="sell-req-heading">
-            {t("Requirements", "သတ်မှတ်ချက်များ")}
-          </h2>
+          <h2 className="sell-req-heading">{t("Requirements", "သတ်မှတ်ချက်များ")}</h2>
 
           <div className="sell-req-list">
             {requirements.map((req, i) => {
@@ -112,10 +137,37 @@ export default function SellPage() {
                   <div className="sell-req-text">
                     <p className="sell-req-label">{t(req.en, req.my)}</p>
                     <span className={`sell-req-badge ${req.type === "required" ? "sell-badge-ok" : "sell-badge-no"}`}>
-                      {req.type === "required"
-                        ? t("Required", "လိုအပ်သည်")
-                        : t("Not Accepted", "မလက်ခံပါ")}
+                      {req.type === "required" ? t("Required", "လိုအပ်သည်") : t("Not Accepted", "မလက်ခံပါ")}
                     </span>
+
+                    {/* Example Photos */}
+                    {req.examples.length > 0 && (
+                      <div className="sell-examples-wrap">
+                        <span className="sell-examples-label">{t("Example photos:", "နမူနာ ဓာတ်ပုံများ:")}</span>
+                        <div className="sell-examples-grid">
+                          {req.examples.map((ex, j) => (
+                            <button
+                              key={j}
+                              type="button"
+                              className="sell-example-thumb"
+                              onClick={() => openLightbox(ex.src, t(ex.caption, ex.captionMy))}
+                              aria-label={`View example: ${t(ex.caption, ex.captionMy)}`}
+                            >
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
+                                src={ex.src}
+                                alt={t(ex.caption, ex.captionMy)}
+                                className="sell-example-img"
+                              />
+                              <div className="sell-example-overlay">
+                                <ZoomIn size={16} className="text-white" />
+                              </div>
+                              <span className="sell-example-caption">{t(ex.caption, ex.captionMy)}</span>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </motion.div>
               );
@@ -123,7 +175,7 @@ export default function SellPage() {
           </div>
         </motion.div>
 
-        {/* CTA Button */}
+        {/* CTA */}
         <motion.div
           initial={{ opacity: 0, y: 16 }}
           animate={{ opacity: 1, y: 0 }}
@@ -144,6 +196,45 @@ export default function SellPage() {
           </p>
         </motion.div>
       </div>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {lightboxSrc && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="sell-lightbox"
+            onClick={closeLightbox}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Example photo fullscreen"
+          >
+            <button
+              type="button"
+              className="sell-lightbox-close"
+              onClick={closeLightbox}
+              aria-label="Close"
+            >
+              <X size={22} strokeWidth={2} />
+            </button>
+            <motion.img
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              src={lightboxSrc}
+              alt={lightboxCaption}
+              className="sell-lightbox-img"
+              onClick={(e) => e.stopPropagation()}
+            />
+            {lightboxCaption && (
+              <p className="sell-lightbox-caption">{lightboxCaption}</p>
+            )}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

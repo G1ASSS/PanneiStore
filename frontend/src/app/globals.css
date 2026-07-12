@@ -4099,3 +4099,141 @@ html[data-theme="blue-dark"] .mk-grid .account-card-rank {
   text-align: center;
   margin: 0;
 }
+
+/* Example Photos */
+.sell-examples-wrap {
+  margin-top: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sell-examples-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.sell-examples-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+}
+
+@media (max-width: 400px) {
+  .sell-examples-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.sell-example-thumb {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  border-radius: 0.6rem;
+  overflow: visible;
+}
+
+.sell-example-img {
+  width: 100%;
+  aspect-ratio: 3/4;
+  object-fit: cover;
+  border-radius: 0.6rem;
+  border: 1px solid var(--border);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sell-example-thumb:hover .sell-example-img {
+  transform: scale(1.03);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+}
+
+.sell-example-overlay {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(0,0,0,0.55);
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.sell-example-thumb:hover .sell-example-overlay {
+  opacity: 1;
+}
+
+.sell-example-caption {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-align: center;
+  line-height: 1.3;
+  word-break: break-words;
+  max-width: 80px;
+}
+
+/* Sell Lightbox */
+.sell-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.92);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  cursor: pointer;
+}
+
+.sell-lightbox-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s;
+  z-index: 10001;
+}
+
+.sell-lightbox-close:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+.sell-lightbox-img {
+  max-width: 92vw;
+  max-height: 80vh;
+  object-fit: contain;
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 48px rgba(0,0,0,0.5);
+  cursor: default;
+}
+
+.sell-lightbox-caption {
+  margin-top: 0.85rem;
+  color: rgba(255,255,255,0.75);
+  font-size: 0.85rem;
+  text-align: center;
+}
