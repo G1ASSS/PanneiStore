@@ -82,7 +82,11 @@ export const AccountCard: React.FC<AccountCardProps> = ({ account }) => {
             <div className="account-card-price-label text-xs theme-muted uppercase">Price</div>
             <div className="account-card-price text-base font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-brand-pink to-brand-cyan">
               {formattedPrice}{" "}
-              {language !== "my" && <span className="text-xs font-semibold text-brand-pink">MMK</span>}
+              {language !== "my" ? (
+                <span className="text-xs font-semibold text-brand-pink">MMK</span>
+              ) : (
+                <span className="text-xs font-semibold text-brand-pink ml-0.5">ကျပ်</span>
+              )}
             </div>
           </div>
         </div>

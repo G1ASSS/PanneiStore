@@ -249,7 +249,7 @@ export default function AccountDetailPage() {
               <span className="ad-price-label">{t("Price", "စျေးနှုန်း")}</span>
               <div className="ad-price-row">
                 <span className="ad-price-amount">{formatPrice(Number(account.price), language)}</span>
-                {language !== 'my' && <span className="ad-price-currency">MMK</span>}
+                {language !== 'my' ? <span className="ad-price-currency">MMK</span> : <span className="ad-price-currency ml-1">ကျပ်</span>}
               </div>
             </div>
           </div>
@@ -269,7 +269,7 @@ export default function AccountDetailPage() {
               <span className="ad-price-label">{t("Price", "စျေးနှုန်း")}</span>
               <div className="ad-price-row">
                 <span className="ad-price-amount">{formatPrice(Number(account.price), language)}</span>
-                {language !== 'my' && <span className="ad-price-currency">MMK</span>}
+                {language !== 'my' ? <span className="ad-price-currency">MMK</span> : <span className="ad-price-currency ml-1">ကျပ်</span>}
               </div>
             </div>
 
