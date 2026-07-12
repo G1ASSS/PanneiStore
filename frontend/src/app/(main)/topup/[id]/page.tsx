@@ -189,17 +189,6 @@ export default function GameTopUpPage() {
                 <div className="flex-1 min-w-0 flex flex-col items-center">
                   <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black theme-heading truncate w-full text-center">{game?.name}</h1>
                   <p className="theme-muted text-sm sm:text-base mt-2 mb-5">{t("Choose a package below to get started", "စတင်ရန် အောက်ပါ ပက်ကေ့ချ်တစ်ခုကို ရွေးချယ်ပါ")}</p>
-                  <div className="flex flex-wrap justify-center gap-2.5">
-                    {[
-                      { icon: <Zap size={12} fill="currentColor" />, label: t("Instant", "ချက်ချင်းရရှိ"), cls: "text-brand-pink   bg-brand-pink/10   border-brand-pink/25" },
-                      { icon: <Shield size={12} />, label: t("Secure", "လုံခြုံစိတ်ချရသော"), cls: "text-brand-purple bg-brand-purple/10 border-brand-purple/25" },
-                      { icon: <Star size={12} fill="currentColor" />, label: t("Best Price", "အကောင်းဆုံးစျေးနှုန်း"), cls: "text-brand-cyan   bg-brand-cyan/10   border-brand-cyan/25" },
-                    ].map(b => (
-                      <span key={b.label} className={cn("flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold border", b.cls)}>
-                        {b.icon}{b.label}
-                      </span>
-                    ))}
-                  </div>
                 </div>
               </div>
             </div>
