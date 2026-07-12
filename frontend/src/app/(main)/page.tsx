@@ -148,8 +148,8 @@ export default function HomePage() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-4xl sm:text-[2.95rem] lg:text-[3.45rem] xl:text-[4rem] font-black theme-heading leading-tight uppercase"
           >
-            {t("Level Up Your", "သင့်ရဲ့ ဂိမ်းကစားခြင်းကို")} <br />
-            <span className="text-gradient-pink-purple">{t("Gaming Legends", "အဆင့်မြှင့်တင်လိုက်ပါ")}</span>
+            {t("YOUR GAMING", "သင့်ရဲ့ ဂိမ်းကစားခြင်းကို")} <br />
+            <span className="text-gradient-pink-purple">{t("HUB", "အဆင့်မြှင့်တင်လိုက်ပါ")}</span>
           </motion.h1>
 
           <motion.p
@@ -159,8 +159,8 @@ export default function HomePage() {
             className="theme-copy text-sm sm:text-base max-w-lg leading-relaxed"
           >
             {t(
-              "Safely buy and sell premium Mobile Legends accounts or top up diamonds instantly. Myanmar's most trusted gaming escrow platform supporting KBZ Pay, Wave Money, and more.",
-              "ပရီမီယံ Mobile Legends အကောင့်များကို လုံခြုံစိတ်ချစွာ ရောင်းဝယ်နိုင်ပြီး စိန်များကို ချက်ချင်း ထည့်သွင်းနိုင်ပါသည်။ KBZ Pay, Wave Money နှင့် အခြား ငွေပေးချေမှုများကို ထောက်ပံ့ပေးထားသော မြန်မာနိုင်ငံ၏ ယုံကြည်ရဆုံး ဂိမ်းပလက်ဖောင်းဖြစ်ပါသည်။"
+              "Safely buy and sell Mobile Legends accounts or Game Items.",
+              "Mobile Legends အကောင့်များကို လုံခြုံစိတ်ချစွာ ရောင်းဝယ်နိုင်ပြီး ဂိမ်း items များကို လွယ်ကူစွာ ထည့်သွင်းနိုင်ပါသည်။"
             )}
           </motion.p>
 
