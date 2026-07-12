@@ -6,7 +6,7 @@ import { str, int, flt, bool } from '../utils/helpers.utils';
 import { uploadImage, deleteImage } from '../services/cloudinary.service';
 import { AccountStatus, Prisma } from '@prisma/client';
 import { config } from '../config';
-import { sendMediaGroupToChat, sendMessageToChannel } from '../services/telegram.service';
+import { sendMediaGroupToChat, sendMessageToChannel, sendPhotoToChat } from '../services/telegram.service';
 
 export const listAccounts = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -358,7 +358,10 @@ export const buyRequest = async (req: Request, res: Response, next: NextFunction
     }
 
     // 1. Send the album (Media Group) - Telegram allows max 10 photos per group
-    if (account.images.length > 0) {
+    // Also, Media Group MUST have at least 2 photos.
+    if (account.images.length === 1) {
+      await sendPhotoToChat(account.images[0].url, adminChatId);
+    } else if (account.images.length > 1) {
       const media = account.images.slice(0, 10).map((img) => ({
         type: 'photo',
         media: img.url,

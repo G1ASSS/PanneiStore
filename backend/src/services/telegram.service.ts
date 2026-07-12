@@ -65,3 +65,25 @@ export const sendMediaGroupToChat = async (media: any[], chatId: string = config
     throw new Error('Failed to send Telegram media group');
   }
 };
+
+/**
+ * Sends a single photo to a specific Telegram chat.
+ * @param photoUrl URL of the photo
+ * @param chatId The target chat ID
+ */
+export const sendPhotoToChat = async (photoUrl: string, chatId: string = config.telegram.channelId) => {
+  if (!config.telegram.botToken || !chatId) {
+    console.warn('Telegram bot token or channel ID is missing.');
+    return;
+  }
+
+  try {
+    await axios.post(`${TELEGRAM_API_URL}/sendPhoto`, {
+      chat_id: chatId,
+      photo: photoUrl,
+    });
+  } catch (error: any) {
+    console.error('Failed to send Telegram photo:', error?.response?.data || error.message);
+    throw new Error('Failed to send Telegram photo');
+  }
+};
