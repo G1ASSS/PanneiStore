@@ -38,10 +38,8 @@ const requirements: Requirement[] = [
     en: "NRC, Location, Household registration, and Mail Changeable required",
     my: "Nrc, location, အိမ်ထောင်စုစာရင်း, mail chg ရမှ ယူပါတယ်",
     examples: [
-      { src: "/sell-examples/nrc.jpeg", caption: "NRC Example", captionMy: "NRC နမူနာ" },
+      { src: "/sell-examples/nrc.jpeg", caption: "NRC Example", captionMy: "NRC ရှေ့နောက်ပုံ" },
       { src: "/sell-examples/household.jpeg", caption: "Household Registration Example", captionMy: "အိမ်ထောင်စုစာရင်း နမူနာ" },
-      { src: "/sell-examples/location.png", caption: "Location Screenshot Example", captionMy: "တည်နေရာ Screenshot နမူနာ" },
-      { src: "/sell-examples/mail-change.png", caption: "Mail Changeable Example", captionMy: "Mail chg ရသည့် နမူနာ" },
     ],
   },
   {
