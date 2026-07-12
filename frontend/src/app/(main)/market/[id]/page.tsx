@@ -15,7 +15,9 @@ import {
   X,
   ChevronLeft,
   ZoomIn,
+  Loader2,
 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { AccountDetail } from '@/types/account';
 
 import { buildAccountInquiryMessage, buildOwnerTelegramUrl } from '@/utils/telegram';
@@ -31,6 +33,28 @@ export default function AccountDetailPage() {
   const [activeTab, setActiveTab] = useState<'overview' | 'skins'>('overview');
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [isBuying, setIsBuying] = useState(false);
+
+  const handleBuyNow = async () => {
+    setIsBuying(true);
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5001/api/v1';
+      const response = await fetch(`${apiUrl}/accounts/${accountId}/buy-request`, {
+        method: 'POST',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to send purchase request');
+      }
+      
+      // Success, open telegram link with the prefilled message
+      window.open(telegramBuyUrl, '_blank', 'noopener,noreferrer');
+    } catch (error) {
+      console.error(error);
+      toast.error(t('Failed to prepare purchase request. Please try again.', 'ဝယ်ယူရန် တောင်းဆိုမှု မအောင်မြင်ပါ။ ထပ်မံကြိုးစားကြည့်ပါ။'));
+    } finally {
+      setIsBuying(false);
+    }
+  };
 
   useLayoutEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
@@ -275,15 +299,14 @@ export default function AccountDetailPage() {
 
             <div className="ad-actions ad-actions--desktop">
               {isAvailable ? (
-                <a
-                  href={telegramBuyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  onClick={handleBuyNow}
+                  disabled={isBuying}
                   className="hero-cta hero-cta-primary ad-buy-btn"
                 >
-                  <ShoppingBag size={18} strokeWidth={2} />
-                  {t("Buy Now", "ယခုဝယ်မည်")}
-                </a>
+                  {isBuying ? <Loader2 size={18} strokeWidth={2} className="animate-spin" /> : <ShoppingBag size={18} strokeWidth={2} />}
+                  {isBuying ? t("Processing...", "ဆောင်ရွက်နေပါသည်...") : t("Buy Now", "ယခုဝယ်မည်")}
+                </button>
               ) : (
                 <div className="ad-sold-msg">{t("This account has been sold.", "ဤအကောင့်သည် ရောင်းထွက်သွားပြီဖြစ်သည်။")}</div>
               )}
@@ -294,15 +317,14 @@ export default function AccountDetailPage() {
 
       {isAvailable && (
         <div className="ad-mobile-bar">
-          <a
-            href={telegramBuyUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={handleBuyNow}
+            disabled={isBuying}
             className="hero-cta hero-cta-primary ad-mobile-buy"
           >
-            <ShoppingBag size={16} strokeWidth={2} />
-            {t("Buy Now", "ယခုဝယ်မည်")}
-          </a>
+            {isBuying ? <Loader2 size={16} strokeWidth={2} className="animate-spin" /> : <ShoppingBag size={16} strokeWidth={2} />}
+            {isBuying ? t("Processing...", "ဆောင်ရွက်နေပါသည်...") : t("Buy Now", "ယခုဝယ်မည်")}
+          </button>
         </div>
       )}
 

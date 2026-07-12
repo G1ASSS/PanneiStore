@@ -41,3 +41,25 @@ export const getTelegramFileUrl = async (fileId: string): Promise<string | null>
     return null;
   }
 };
+
+/**
+ * Sends a media group (album) to a specific Telegram chat.
+ * @param media Array of InputMedia objects (e.g., { type: 'photo', media: 'https://...' })
+ * @param chatId The target chat ID
+ */
+export const sendMediaGroupToChat = async (media: any[], chatId: string = config.telegram.channelId) => {
+  if (!config.telegram.botToken || !chatId) {
+    console.warn('Telegram bot token or channel ID is missing.');
+    return;
+  }
+
+  try {
+    await axios.post(`${TELEGRAM_API_URL}/sendMediaGroup`, {
+      chat_id: chatId,
+      media,
+    });
+  } catch (error: any) {
+    console.error('Failed to send Telegram media group:', error?.response?.data || error.message);
+    throw new Error('Failed to send Telegram media group');
+  }
+};

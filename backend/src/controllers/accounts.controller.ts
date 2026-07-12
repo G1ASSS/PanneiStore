@@ -5,6 +5,8 @@ import { ApiError, successResponse } from '../utils/response.utils';
 import { str, int, flt, bool } from '../utils/helpers.utils';
 import { uploadImage, deleteImage } from '../services/cloudinary.service';
 import { AccountStatus, Prisma } from '@prisma/client';
+import { config } from '../config';
+import { sendMediaGroupToChat, sendMessageToChannel } from '../services/telegram.service';
 
 export const listAccounts = async (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -330,6 +332,59 @@ export const deleteAccount = async (req: AuthRequest, res: Response, next: NextF
     });
 
     return successResponse(res, null, 'Account deleted successfully');
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const buyRequest = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+
+    const account = await prisma.account.findFirst({
+      where: {
+        OR: [{ id }, { listingCode: id }],
+      },
+      include: {
+        images: { orderBy: { order: 'asc' } },
+      },
+    });
+
+    if (!account) throw new ApiError(404, 'Account not found');
+
+    const adminChatId = config.telegram.adminIds[0];
+    if (!adminChatId) {
+      throw new ApiError(500, 'Telegram Admin Chat ID is not configured on the server');
+    }
+
+    // 1. Send the album (Media Group)
+    if (account.images.length > 0) {
+      const media = account.images.map((img) => ({
+        type: 'photo',
+        media: img.url,
+      }));
+      await sendMediaGroupToChat(media, adminChatId);
+    }
+
+    // 2. Send the text message
+    const formattedPrice = new Intl.NumberFormat('en-US').format(Number(account.price));
+    const listingIdStr = account.listingCode ? account.listingCode : account.id;
+    const accountUrl = `${process.env.FRONTEND_URL || 'https://panneistore.vercel.app'}/market/${account.id}`;
+
+    const text = `🛒 <b>New Purchase Request</b>
+
+Title: ${account.title}
+Listing ID: ${listingIdStr}
+Price: ${formattedPrice} MMK
+
+Customer clicked Buy Now.
+
+Account URL:
+${accountUrl}`;
+
+    await sendMessageToChannel(text, adminChatId);
+
+    return successResponse(res, null, 'Purchase request sent successfully');
   } catch (err) {
     next(err);
   }
