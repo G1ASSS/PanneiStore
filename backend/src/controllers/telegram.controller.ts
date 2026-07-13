@@ -178,44 +178,55 @@ const handleAdminCommand = async (text: string, senderId: string) => {
       }
 
     } else if (command === '/setprice') {
-      const rest = text.substring('/setprice'.length).trim();
-      const parts = rest.split('=');
-      if (parts.length !== 2) {
-        await sendMessageToChannel('❌ Usage: <code>/setprice Package Name = New Price</code>\nExample: <code>/setprice 86 Diamond = 1500</code>', senderId);
-        return;
-      }
+      const lines = text.split('\n').filter(line => line.trim().startsWith('/setprice'));
+      const results: string[] = [];
 
-      const pkgName = parts[0].trim();
-      const newPriceStr = parts[1].trim();
-      const newPrice = parseFloat(newPriceStr.replace(/[^0-9.]/g, ''));
-
-      if (isNaN(newPrice)) {
-        await sendMessageToChannel('❌ Invalid price format.', senderId);
-        return;
-      }
-
-      const packages = await prisma.topUpPackage.findMany({
-        where: { packageName: { contains: pkgName, mode: 'insensitive' } }
-      });
-
-      if (packages.length === 0) {
-        await sendMessageToChannel(`❌ No package found matching <b>${pkgName}</b>.`, senderId);
-        return;
-      } else if (packages.length > 1) {
-        const exact = packages.find(p => p.packageName.toLowerCase() === pkgName.toLowerCase());
-        if (exact) {
-          await prisma.topUpPackage.update({ where: { id: exact.id }, data: { price: newPrice } });
-          await sendMessageToChannel(`✅ Updated <b>${exact.packageName}</b> to <b>${newPrice.toLocaleString()} MMK</b>.`, senderId);
-          return;
+      for (const line of lines) {
+        const rest = line.trim().substring('/setprice'.length).trim();
+        const parts = rest.split('=');
+        if (parts.length !== 2) {
+          results.push(`❌ <code>${line}</code>: Invalid format. Use <code>Package Name = New Price</code>`);
+          continue;
         }
-        const names = packages.map(p => p.packageName).join(', ');
-        await sendMessageToChannel(`❌ Multiple packages matched: ${names}. Please be more specific.`, senderId);
-        return;
+
+        const pkgName = parts[0].trim();
+        const newPriceStr = parts[1].trim();
+        const newPrice = parseFloat(newPriceStr.replace(/[^0-9.]/g, ''));
+
+        if (isNaN(newPrice)) {
+          results.push(`❌ <b>${pkgName}</b>: Invalid price format.`);
+          continue;
+        }
+
+        const packages = await prisma.topUpPackage.findMany({
+          where: { packageName: { contains: pkgName, mode: 'insensitive' } }
+        });
+
+        if (packages.length === 0) {
+          results.push(`❌ <b>${pkgName}</b>: Not found.`);
+        } else if (packages.length > 1) {
+          const exact = packages.find(p => p.packageName.toLowerCase() === pkgName.toLowerCase());
+          if (exact) {
+            await prisma.topUpPackage.update({ where: { id: exact.id }, data: { price: newPrice } });
+            results.push(`✅ <b>${exact.packageName}</b> ➜ <b>${newPrice.toLocaleString()} MMK</b>`);
+          } else {
+            results.push(`❌ <b>${pkgName}</b>: Multiple matches found. Be more specific.`);
+          }
+        } else {
+          const exact = packages[0];
+          await prisma.topUpPackage.update({ where: { id: exact.id }, data: { price: newPrice } });
+          results.push(`✅ <b>${exact.packageName}</b> ➜ <b>${newPrice.toLocaleString()} MMK</b>`);
+        }
       }
 
-      const exact = packages[0];
-      await prisma.topUpPackage.update({ where: { id: exact.id }, data: { price: newPrice } });
-      await sendMessageToChannel(`✅ Updated <b>${exact.packageName}</b> to <b>${newPrice.toLocaleString()} MMK</b>.`, senderId);
+      const fullText = results.join('\n');
+      if (fullText.length <= 4096) {
+        await sendMessageToChannel(fullText, senderId);
+      } else {
+        for (let i = 0; i < results.length; i += 20) {
+          await sendMessageToChannel(results.slice(i, i + 20).join('\n'), senderId);
+        }
+      }
     }
   } catch (err: any) {
     const safeMsg = (err.message || 'Unknown error').replace(/<[^>]*>?/gm, '');
