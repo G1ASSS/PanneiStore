@@ -32,8 +32,8 @@ export const handleWebhook = async (req: Request, res: Response) => {
     // Only process if sender is admin
     if (!config.telegram.adminIds.includes(senderId)) return;
 
-    // ─── 1. Admin Commands (/banner, /stock, /sold, /delete, /addphoto) ───
-    if (text.startsWith('/banner') || text.startsWith('/stock') || text.startsWith('/sold') || text.startsWith('/delete')) {
+    // ─── 1. Admin Commands (/banner, /stock, /sold, /delete, /addphoto, /prices, /setprice) ───
+    if (text.startsWith('/banner') || text.startsWith('/stock') || text.startsWith('/sold') || text.startsWith('/delete') || text.startsWith('/prices') || text.startsWith('/setprice')) {
       await handleAdminCommand(text, senderId);
       return;
     }
@@ -151,6 +151,71 @@ const handleAdminCommand = async (text: string, senderId: string) => {
       await prisma.accountImage.deleteMany({ where: { accountId: account.id } });
       await prisma.account.delete({ where: { id: account.id } });
       await sendMessageToChannel(`🗑️ Account <b>${listingCode}</b> has been permanently deleted.`, senderId);
+
+    } else if (command === '/prices') {
+      const packages = await prisma.topUpPackage.findMany({
+        orderBy: [{ category: 'asc' }, { displayOrder: 'asc' }],
+      });
+
+      if (packages.length === 0) {
+        await sendMessageToChannel('📦 No top-up packages found.', senderId);
+        return;
+      }
+
+      const lines = packages.map(p => `💎 <b>${p.packageName}</b> : ${Number(p.price).toLocaleString()} MMK`);
+      const header = `📋 <b>Top Up Prices:</b>\n${'━'.repeat(20)}`;
+      const footer = `${'━'.repeat(20)}\n<i>Use <code>/setprice Package Name = New Price</code> to update.</i>`;
+      const fullText = `${header}\n${lines.join('\n')}\n${footer}`;
+
+      if (fullText.length <= 4096) {
+        await sendMessageToChannel(fullText, senderId);
+      } else {
+        await sendMessageToChannel(header, senderId);
+        for (let i = 0; i < lines.length; i += 20) {
+          await sendMessageToChannel(lines.slice(i, i + 20).join('\n'), senderId);
+        }
+        await sendMessageToChannel(footer, senderId);
+      }
+
+    } else if (command === '/setprice') {
+      const rest = text.substring('/setprice'.length).trim();
+      const parts = rest.split('=');
+      if (parts.length !== 2) {
+        await sendMessageToChannel('❌ Usage: <code>/setprice Package Name = New Price</code>\nExample: <code>/setprice 86 Diamond = 1500</code>', senderId);
+        return;
+      }
+
+      const pkgName = parts[0].trim();
+      const newPriceStr = parts[1].trim();
+      const newPrice = parseFloat(newPriceStr.replace(/[^0-9.]/g, ''));
+
+      if (isNaN(newPrice)) {
+        await sendMessageToChannel('❌ Invalid price format.', senderId);
+        return;
+      }
+
+      const packages = await prisma.topUpPackage.findMany({
+        where: { packageName: { contains: pkgName, mode: 'insensitive' } }
+      });
+
+      if (packages.length === 0) {
+        await sendMessageToChannel(`❌ No package found matching <b>${pkgName}</b>.`, senderId);
+        return;
+      } else if (packages.length > 1) {
+        const exact = packages.find(p => p.packageName.toLowerCase() === pkgName.toLowerCase());
+        if (exact) {
+          await prisma.topUpPackage.update({ where: { id: exact.id }, data: { price: newPrice } });
+          await sendMessageToChannel(`✅ Updated <b>${exact.packageName}</b> to <b>${newPrice.toLocaleString()} MMK</b>.`, senderId);
+          return;
+        }
+        const names = packages.map(p => p.packageName).join(', ');
+        await sendMessageToChannel(`❌ Multiple packages matched: ${names}. Please be more specific.`, senderId);
+        return;
+      }
+
+      const exact = packages[0];
+      await prisma.topUpPackage.update({ where: { id: exact.id }, data: { price: newPrice } });
+      await sendMessageToChannel(`✅ Updated <b>${exact.packageName}</b> to <b>${newPrice.toLocaleString()} MMK</b>.`, senderId);
     }
   } catch (err: any) {
     const safeMsg = (err.message || 'Unknown error').replace(/<[^>]*>?/gm, '');
