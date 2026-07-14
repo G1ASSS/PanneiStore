@@ -45,8 +45,8 @@ const layout = (
   <!-- ── Logo row ── -->
   <tr>
     <td align="center" style="padding-bottom:24px;">
-      <span style="font-size:20px;font-weight:800;color:#ffffff;letter-spacing:-0.5px;">
-        Pannei<span style="color:#a78bfa;">Store</span>
+      <span style="font-size:20px;font-weight:900;color:#0f172a;letter-spacing:-0.5px;">
+        Pannei<span style="color:#e11d48;">Store</span>
       </span>
     </td>
   </tr>
