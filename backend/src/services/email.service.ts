@@ -1,9 +1,9 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 
-const FROM       = process.env.EMAIL_FROM || 'PanneiStore <official.glass.acc@gmail.com>';
-const SITE       = 'PanneiStore';
-const BASE_URL   = process.env.FRONTEND_URL || 'https://panneistore.vercel.app';
-const YEAR       = new Date().getFullYear();
+const FROM     = process.env.EMAIL_FROM || 'PanneiStore <no-reply@panneistore.com>';
+const SITE     = 'PanneiStore';
+const BASE_URL = process.env.FRONTEND_URL || 'https://panneistore.com';
+const YEAR     = new Date().getFullYear();
 
 const ICONS = {
   key:      'https://img.icons8.com/fluency/128/key.png',
@@ -145,32 +145,14 @@ const checkItem = (en: string, my: string) =>
   </table>`;
 
 const send = async (to: string, subject: string, html: string) => {
-  if (process.env.NODE_ENV === 'production') {
-    const frontendUrl = process.env.FRONTEND_URL || 'https://panneistore.vercel.app';
-    const response = await fetch(`${frontendUrl}/api/email`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        to,
-        subject,
-        html,
-        authSecret: 'panneistore_proxy_fallback_2026',
-        emailUser: process.env.EMAIL_USER,
-        emailPass: process.env.EMAIL_PASS,
-      }),
-    });
-    if (!response.ok) {
-      throw new Error(`Proxy email failed: ${response.statusText}`);
-    }
-  } else {
-    const transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST || 'smtp.gmail.com',
-      port: Number(process.env.EMAIL_PORT) || 465,
-      secure: true,
-      auth: { user: process.env.EMAIL_USER, pass: process.env.EMAIL_PASS },
-    });
-    return transporter.sendMail({ from: FROM, to, subject, html });
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    console.error('RESEND_API_KEY is not set — email not sent.');
+    return;
   }
+  const resend = new Resend(apiKey);
+  const { error } = await resend.emails.send({ from: FROM, to, subject, html });
+  if (error) throw new Error(`Resend error: ${error.message}`);
 };
 
 // ─── 1. Password Reset ────────────────────────────────────────────────────────
