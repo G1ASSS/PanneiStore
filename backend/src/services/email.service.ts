@@ -33,10 +33,10 @@ const layout = (
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>${SITE}</title>
 </head>
-<body style="margin:0;padding:0;background:#08080f;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+<body style="margin:0;padding:0;background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
 
 <!-- outer wrapper -->
-<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#08080f" style="padding:40px 16px 56px;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#f8fafc" style="padding:40px 16px 56px;">
 <tr><td align="center">
 
 <!-- container -->
@@ -64,7 +64,7 @@ const layout = (
 
   <!-- ── Body card ── -->
   <tr>
-    <td style="background:#111127;border-radius:0 0 20px 20px;border:1px solid rgba(139,92,246,0.2);border-top:none;padding:32px 40px 36px;">
+    <td style="background:#ffffff;border-radius:0 0 20px 20px;border:1px solid rgba(0,0,0,0.08);border-top:none;padding:32px 40px 36px;box-shadow:0 8px 24px rgba(0,0,0,0.04);">
       ${body}
     </td>
   </tr>
@@ -72,9 +72,9 @@ const layout = (
   <!-- ── Footer ── -->
   <tr>
     <td align="center" style="padding-top:28px;">
-      <p style="margin:0;color:#2a2a45;font-size:12px;line-height:1.8;">
+      <p style="margin:0;color:#64748b;font-size:12px;line-height:1.8;">
         © ${YEAR} ${SITE} &nbsp;·&nbsp; Mobile Legends Account Marketplace<br/>
-        <span style="font-size:11px;">ဤအီးမေးလ် မတောင်းဆိုပါက လျစ်လျူရှုနိုင်သည်။&nbsp;|&nbsp;If you didn't request this, no action is needed.</span>
+        <span style="font-size:11px;color:#94a3b8;">ဤအီးမေးလ် မတောင်းဆိုပါက လျစ်လျူရှုနိုင်သည်။&nbsp;|&nbsp;If you didn't request this, no action is needed.</span>
       </p>
     </td>
   </tr>
@@ -88,11 +88,11 @@ const layout = (
 
 // ─── Body helpers ─────────────────────────────────────────────────────────────
 const p = (en: string, my?: string) =>
-  `<p style="margin:0 0 10px;color:#9898c0;font-size:14px;line-height:1.75;">${en}</p>
-  ${my ? `<p style="margin:0 0 18px;color:#555578;font-size:13px;line-height:1.75;">${my}</p>` : ''}`;
+  `<p style="margin:0 0 10px;color:#334155;font-size:15px;line-height:1.75;">${en}</p>
+  ${my ? `<p style="margin:0 0 18px;color:#64748b;font-size:14px;line-height:1.75;">${my}</p>` : ''}`;
 
 const rule = () =>
-  `<div style="height:1px;background:linear-gradient(90deg,transparent,#2a2a55,transparent);margin:24px 0;"></div>`;
+  `<div style="height:1px;background:linear-gradient(90deg,transparent,#e2e8f0,transparent);margin:24px 0;"></div>`;
 
 const cta = (en: string, my: string, url: string, from: string, to: string) =>
   `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:28px 0 8px;">
@@ -111,24 +111,24 @@ const cta = (en: string, my: string, url: string, from: string, to: string) =>
   </table>`;
 
 const linkBox = (url: string) =>
-  `<div style="margin-top:16px;padding:12px 16px;background:#0a0a1a;border-radius:10px;border:1px solid #1e1e38;">
-    <p style="margin:0 0 4px;color:#35355a;font-size:10px;letter-spacing:1px;text-transform:uppercase;">Copy link &nbsp;·&nbsp; လင့်ကူးယူပါ</p>
-    <p style="margin:0;color:#5555a0;font-size:12px;word-break:break-all;">${url}</p>
+  `<div style="margin-top:16px;padding:12px 16px;background:#f8fafc;border-radius:10px;border:1px solid #e2e8f0;">
+    <p style="margin:0 0 4px;color:#64748b;font-size:10px;letter-spacing:1px;text-transform:uppercase;font-weight:600;">Copy link &nbsp;·&nbsp; လင့်ကူးယူပါ</p>
+    <p style="margin:0;color:#3b82f6;font-size:12px;word-break:break-all;">${url}</p>
   </div>`;
 
 const infoCard = (rows: [string, string, string, string, string?][]) =>
-  `<div style="background:#0c0c20;border-radius:14px;border:1px solid #1e1e38;padding:20px 24px;margin:20px 0;">
+  `<div style="background:#fafafa;border-radius:14px;border:1px solid #e2e8f0;padding:20px 24px;margin:20px 0;">
     ${rows.map(([en, my, val, valColor]) =>
       `<table width="100%" cellpadding="0" cellspacing="0" border="0" style="margin-bottom:12px;">
         <tr>
           <td>
-            <span style="color:#4a4a78;font-size:12px;display:block;">${en}</span>
-            <span style="color:#30304e;font-size:10px;">${my}</span>
+            <span style="color:#64748b;font-size:13px;display:block;">${en}</span>
+            <span style="color:#94a3b8;font-size:11px;">${my}</span>
           </td>
-          <td align="right" style="color:${valColor || '#e0e0ff'};font-size:14px;font-weight:700;vertical-align:middle;">${val}</td>
+          <td align="right" style="color:${valColor || '#0f172a'};font-size:15px;font-weight:700;vertical-align:middle;">${val}</td>
         </tr>
       </table>`
-    ).join('<div style="height:1px;background:#17173a;margin-bottom:12px;"></div>')}
+    ).join('<div style="height:1px;background:#f1f5f9;margin-bottom:12px;"></div>')}
   </div>`;
 
 const checkItem = (en: string, my: string) =>
@@ -138,8 +138,8 @@ const checkItem = (en: string, my: string) =>
         <img src="${ICONS.check}" width="18" height="18" alt="✓"/>
       </td>
       <td>
-        <span style="color:#9898c0;font-size:14px;display:block;line-height:1.5;">${en}</span>
-        <span style="color:#50507a;font-size:12px;line-height:1.5;">${my}</span>
+        <span style="color:#334155;font-size:14px;display:block;line-height:1.5;font-weight:500;">${en}</span>
+        <span style="color:#64748b;font-size:13px;line-height:1.5;">${my}</span>
       </td>
     </tr>
   </table>`;
@@ -163,8 +163,8 @@ export const sendPasswordResetEmail = async (email: string, resetLink: string) =
       'သင့် PanneiStore အကောင့်၏ စကားဝှက် ပြောင်းလဲရန် တောင်းဆိုချက် ရရှိပါသည်။'
     )}
     ${p(
-      'This link is valid for <strong style="color:#c4b5fd;">1 hour</strong> and can only be used once. If you did not make this request, you can safely ignore this email.',
-      'ဤလင့်ခ်သည် <strong style="color:#a78bfa;">၁ နာရီ</strong> သာ သက်တမ်းရှိပြီး တစ်ကြိမ်သာ သုံးနိုင်သည်။ မတောင်းဆိုပါက လျစ်လျူရှုနိုင်သည်။'
+      'This link is valid for <strong style="color:#ec4899;">1 hour</strong> and can only be used once. If you did not make this request, you can safely ignore this email.',
+      'ဤလင့်ခ်သည် <strong style="color:#ec4899;">၁ နာရီ</strong> သာ သက်တမ်းရှိပြီး တစ်ကြိမ်သာ သုံးနိုင်သည်။ မတောင်းဆိုပါက လျစ်လျူရှုနိုင်သည်။'
     )}
     ${cta('Reset My Password', 'စကားဝှက် ပြောင်းလဲပါ', resetLink, '#6d28d9', '#ec4899')}
     ${rule()}
@@ -182,8 +182,8 @@ export const sendPasswordResetEmail = async (email: string, resetLink: string) =
 export const sendWelcomeEmail = async (email: string, name: string) => {
   const body = `
     ${p(
-      `Your account is ready, <strong style="color:#e0e0ff;">${name}</strong>. Here's what you can do right now:`,
-      `သင့်အကောင့် အသင့်ဖြစ်ပြီ <strong style="color:#c4b5fd;">${name}</strong>။ ယခု စတင်နိုင်သည်များ —`
+      `Your account is ready, <strong style="color:#1d4ed8;">${name}</strong>. Here's what you can do right now:`,
+      `သင့်အကောင့် အသင့်ဖြစ်ပြီ <strong style="color:#1d4ed8;">${name}</strong>။ ယခု စတင်နိုင်သည်များ —`
     )}
     ${rule()}
     ${checkItem('Browse hundreds of MLBB accounts in the marketplace', 'ဈေးကွက်တွင် MLBB အကောင့်များ ကြည့်ရှုနိုင်သည်')}
