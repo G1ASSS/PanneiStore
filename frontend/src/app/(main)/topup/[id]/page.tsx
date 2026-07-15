@@ -21,18 +21,19 @@ const getPkgIcon = (pkg: TopupPackage): string => {
   const cat = pkg.category;
   const name = pkg.packageName.toLowerCase();
 
-  // PUBG Mobile UC
+  // PUBG Mobile UC — exact package mapping
   if (cat === "UC" || name.includes("uc")) {
     const ucAmount = parseInt(name.match(/^(\d+)/)?.[1] ?? "0");
-    if (ucAmount <= 60) return "/pubg_uc/01K82CBPDT15TZZDX2FWH7GEPY.png";
-    if (ucAmount <= 120) return "/pubg_uc/01K82CD3ZBZQKR1W66J21VQ69E.png";
-    if (ucAmount <= 180) return "/pubg_uc/01K82EE5K0H41N5DAVYYMGYNRH.png";
-    if (ucAmount <= 325) return "/pubg_uc/01K82EYJGPH4EKW99DPRKXS0CS.png";
-    if (ucAmount <= 660) return "/pubg_uc/01K82F00QTF4C1NYJ9RZM23YSK.png";
-    if (ucAmount <= 720) return "/pubg_uc/01K82F2N1Y2JPYKZ299BN02Z2F.png";
-    if (ucAmount <= 985) return "/pubg_uc/01K82FA80Q5RNQGGTSF3YAE6QB.png";
-    if (ucAmount <= 1800) return "/pubg_uc/01K82FJG7HZ5K0G631HN5SE8Y5.png";
-    return "/pubg_uc/01K82FPR77RN1Y369PWA6ZF2ZX.png";
+    if (ucAmount === 60)   return "/pubg_uc/01K82F2N1Y2JPYKZ299BN02Z2F.png";  // small flat badges
+    if (ucAmount === 120)  return "/pubg_uc/01K82EYJGPH4EKW99DPRKXS0CS.png";  // single large badge
+    if (ucAmount === 180)  return "/pubg_uc/01K82F00QTF4C1NYJ9RZM23YSK.png";  // two UC boxes
+    if (ucAmount === 325)  return "/pubg_uc/01K82CD3ZBZQKR1W66J21VQ69E.png";  // medium pile
+    if (ucAmount === 660)  return "/pubg_uc/01K82EE5K0H41N5DAVYYMGYNRH.png";  // medium pile (larger)
+    if (ucAmount === 720)  return "/pubg_uc/01K82CBPDT15TZZDX2FWH7GEPY.png";  // large scattered pile
+    if (ucAmount === 985)  return "/pubg_uc/01K82FA80Q5RNQGGTSF3YAE6QB.png";  // large pile
+    if (ucAmount === 1800) return "/pubg_uc/01K82FJG7HZ5K0G631HN5SE8Y5.png";  // bigger pile
+    if (ucAmount === 3850) return "/pubg_uc/01K82FPR77RN1Y369PWA6ZF2ZX.png";  // massive pile
+    return "/pubg_uc/01K82FPR77RN1Y369PWA6ZF2ZX.png"; // 8100 UC — reuse largest
   }
 
   // Named bundle types — exact match first
