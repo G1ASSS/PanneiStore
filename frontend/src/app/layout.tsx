@@ -28,14 +28,22 @@ export const metadata: Metadata = {
     title: "PanneiStore — Myanmar's #1 MLBB Marketplace",
     description: "Buy and sell verified Mobile Legends accounts and diamond top-ups in Myanmar.",
     type: "website",
+    url: "https://panneistore.com",
+    siteName: "PanneiStore",
     images: [
       {
-        url: "/image.png",
+        url: "https://panneistore.com/image.png",
         width: 1200,
         height: 630,
         alt: "PanneiStore - Myanmar's #1 MLBB Marketplace",
       },
     ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "PanneiStore — Myanmar's #1 MLBB Marketplace",
+    description: "Buy and sell verified Mobile Legends accounts and diamond top-ups in Myanmar.",
+    images: ["https://panneistore.com/image.png"],
   },
 };
 
