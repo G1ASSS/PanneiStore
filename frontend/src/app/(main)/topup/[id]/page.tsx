@@ -214,17 +214,17 @@ export default function GameTopUpPage() {
 
             {/* 2x Diamonds */}
             {twoDiamonds.length > 0 && (
-              <PackageSection title={t("2x Diamonds", "ဆတိုး စိန်များ")} accent="#ff2e93" packages={twoDiamonds} selPkg={selPkg} onSelect={setSelPkg} />
+              <PackageSection title="2x Diamonds" accent="#ff2e93" packages={twoDiamonds} selPkg={selPkg} onSelect={setSelPkg} />
             )}
 
             {/* Mobile Legends Pass */}
             {passPkgs.length > 0 && (
-              <PackageSection title={t("Mobile Legends Pass", "Mobile Legends လက်မှတ်များ")} accent="#10b981" packages={passPkgs} selPkg={selPkg} onSelect={setSelPkg} />
+              <PackageSection title="Mobile Legends Pass" accent="#10b981" packages={passPkgs} selPkg={selPkg} onSelect={setSelPkg} />
             )}
 
             {/* Diamond/UC List */}
             {diamondPkgs.length > 0 && (
-              <PackageSection title={isPubg ? t("UC List", "UC စာရင်း") : t("Diamond List", "စိန်စာရင်း")} accent="#a12cff" packages={diamondPkgs} selPkg={selPkg} onSelect={setSelPkg} />
+              <PackageSection title={isPubg ? "UC List" : "Diamond List"} accent="#a12cff" packages={diamondPkgs} selPkg={selPkg} onSelect={setSelPkg} />
             )}
 
             {/* Fallback: Show all packages if none are categorized */}
