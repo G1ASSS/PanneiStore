@@ -221,9 +221,9 @@ export default function GameTopUpPage() {
               <PackageSection title={t("Mobile Legends Pass", "Mobile Legends လက်မှတ်များ")} accent="#10b981" packages={passPkgs} selPkg={selPkg} onSelect={setSelPkg} />
             )}
 
-            {/* Diamond List */}
+            {/* Diamond/UC List */}
             {diamondPkgs.length > 0 && (
-              <PackageSection title={t("Diamond List", "စိန်စာရင်း")} accent="#a12cff" packages={diamondPkgs} selPkg={selPkg} onSelect={setSelPkg} />
+              <PackageSection title={isPubg ? t("UC List", "UC စာရင်း") : t("Diamond List", "စိန်စာရင်း")} accent="#a12cff" packages={diamondPkgs} selPkg={selPkg} onSelect={setSelPkg} />
             )}
 
             {/* Fallback: Show all packages if none are categorized */}
