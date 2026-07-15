@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/seo.jpg",
+        url: "/image.png",
         width: 1200,
         height: 630,
         alt: "PanneiStore - Myanmar's #1 MLBB Marketplace",
