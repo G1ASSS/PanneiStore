@@ -146,10 +146,10 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl sm:text-[2.95rem] lg:text-[3.45rem] xl:text-[4rem] font-black theme-heading leading-tight uppercase"
+            className="text-4xl sm:text-[2.95rem] lg:text-[3.45rem] xl:text-[4rem] font-black theme-heading leading-tight"
           >
-            {t("YOUR", "YOUR")} <br />
-            <span className="text-gradient-pink-purple">{t("GAMING HUB", "GAMING HUB")}</span>
+            Pann Ei <br />
+            <span className="text-gradient-pink-purple">with Koko</span>
           </motion.h1>
 
           <motion.p
