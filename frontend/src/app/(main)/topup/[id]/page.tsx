@@ -197,9 +197,6 @@ export default function GameTopUpPage() {
                       src={game?.logo || "/gamelogo/mobilelegends.png"}
                       alt={game?.name || "Game Logo"}
                       className="w-full h-full object-contain p-1.5"
-                      onError={e => {
-                        if (game?.logo) (e.currentTarget as HTMLImageElement).src = game.logo;
-                      }}
                     />
                   </div>
                 </div>

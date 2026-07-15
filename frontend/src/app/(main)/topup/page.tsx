@@ -163,9 +163,6 @@ export default function DiamondsPage() {
                         src={game.logo || "/gamelogo/mobilelegends.png"}
                         alt={game.name}
                         className="w-full h-full object-contain filter drop-shadow-md"
-                        onError={e => {
-                          (e.currentTarget as HTMLImageElement).src = "/gamelogo/mobilelegends.png";
-                        }}
                       />
                     </div>
                     <div className="pkg-amount">{game.name}</div>
