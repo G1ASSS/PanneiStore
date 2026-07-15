@@ -214,7 +214,14 @@ export default function GameTopUpPage() {
 
             {/* 2x Diamonds */}
             {twoDiamonds.length > 0 && (
-              <PackageSection title="2x Diamonds" accent="#ff2e93" packages={twoDiamonds} selPkg={selPkg} onSelect={setSelPkg} />
+              <PackageSection
+                title="2x Diamonds"
+                subtitle="ဂိမ်းအကောင့်တစ်ခုလျှင် တစ်ကြိမ်သာ အပိုရမှာဖြစ်ပါတယ် ။ ထည့်ပြီးသားဖြစ်ပါက အပိုမရရှိနိုင်ပါ"
+                accent="#ff2e93"
+                packages={twoDiamonds}
+                selPkg={selPkg}
+                onSelect={setSelPkg}
+              />
             )}
 
             {/* Mobile Legends Pass */}
@@ -320,9 +327,10 @@ export default function GameTopUpPage() {
 
 /* ─── Package Section ──────────────────────────────────────────── */
 function PackageSection({
-  title, accent, packages, selPkg, onSelect,
+  title, subtitle, accent, packages, selPkg, onSelect,
 }: {
   title: string;
+  subtitle?: string;
   accent: string;
   packages: TopupPackage[];
   selPkg: TopupPackage | null;
@@ -348,6 +356,14 @@ function PackageSection({
         >
           {title}
         </h2>
+        {/* Optional subtitle / note */}
+        {subtitle && (
+          <p className="text-xs sm:text-sm text-center px-4 py-2 rounded-xl font-medium"
+            style={{ color: accent, background: `${accent}12`, border: `1px solid ${accent}25` }}
+          >
+            ⚠️ {subtitle}
+          </p>
+        )}
       </div>
 
       {/* Package grid */}
