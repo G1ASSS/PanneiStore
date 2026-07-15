@@ -21,6 +21,20 @@ const getPkgIcon = (pkg: TopupPackage): string => {
   const cat = pkg.category;
   const name = pkg.packageName.toLowerCase();
 
+  // PUBG Mobile UC
+  if (cat === "UC" || name.includes("uc")) {
+    const ucAmount = parseInt(name.match(/^(\d+)/)?.[1] ?? "0");
+    if (ucAmount <= 60) return "/pubg_uc/01K82CBPDT15TZZDX2FWH7GEPY.png";
+    if (ucAmount <= 120) return "/pubg_uc/01K82CD3ZBZQKR1W66J21VQ69E.png";
+    if (ucAmount <= 180) return "/pubg_uc/01K82EE5K0H41N5DAVYYMGYNRH.png";
+    if (ucAmount <= 325) return "/pubg_uc/01K82EYJGPH4EKW99DPRKXS0CS.png";
+    if (ucAmount <= 660) return "/pubg_uc/01K82F00QTF4C1NYJ9RZM23YSK.png";
+    if (ucAmount <= 720) return "/pubg_uc/01K82F2N1Y2JPYKZ299BN02Z2F.png";
+    if (ucAmount <= 985) return "/pubg_uc/01K82FA80Q5RNQGGTSF3YAE6QB.png";
+    if (ucAmount <= 1800) return "/pubg_uc/01K82FJG7HZ5K0G631HN5SE8Y5.png";
+    return "/pubg_uc/01K82FPR77RN1Y369PWA6ZF2ZX.png";
+  }
+
   // Named bundle types — exact match first
   if (name.includes("epic bundle") || name.includes("epic")) return "/diamonds/EpicBundle.png";
   if (name.includes("elite bundle") || name.includes("elite")) return "/diamonds/EliteBundle.png";
@@ -114,13 +128,16 @@ export default function GameTopUpPage() {
 
   const handleOrder = () => {
     if (!selPkg) return;
+    const isPubg = game?.name?.toLowerCase().includes("pubg") || false;
+    const accountInfo = isPubg ? `Player ID: ${userId}` : `User ID: ${userId} (Server: ${serverId})`;
     const msg = encodeURIComponent(
-      `🎮 Top Up Order\nGame: ${game?.name}\nPackage: ${selPkg.packageName}\nPrice: ${selPkg.price.toLocaleString()} MMK\nUser ID: ${userId} (Server: ${serverId})\nPayment: ${payment}\n\nPlease send payment screenshot after payment.`
+      `🎮 Top Up Order\nGame: ${game?.name}\nPackage: ${selPkg.packageName}\nPrice: ${selPkg.price.toLocaleString()} MMK\n${accountInfo}\nPayment: ${payment}\n\nPlease send payment screenshot after payment.`
     );
     window.open(`https://t.me/panneisan2002?text=${msg}`, "_blank");
   };
 
-  const canOrder = selPkg && userId && serverId && payment;
+  const isPubg = game?.name?.toLowerCase().includes("pubg") || false;
+  const canOrder = isPubg ? (selPkg && userId && payment) : (selPkg && userId && serverId && payment);
 
   // Group packages into sections
   const twoDiamonds = pkgs.filter(p => sectionOf(p) === "2x");
@@ -177,8 +194,8 @@ export default function GameTopUpPage() {
                   <div className="absolute inset-0 rounded-2xl blur-xl bg-gradient-to-br from-brand-pink/40 to-brand-purple/40" />
                   <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl overflow-hidden glass-panel flex items-center justify-center border border-brand-pink/20">
                     <img
-                      src="/gamelogo/mobilelegends.png"
-                      alt={game?.name ?? "Mobile Legends"}
+                      src={game?.logo || "/gamelogo/mobilelegends.png"}
+                      alt={game?.name || "Game Logo"}
                       className="w-full h-full object-contain p-1.5"
                       onError={e => {
                         if (game?.logo) (e.currentTarget as HTMLImageElement).src = game.logo;
@@ -254,6 +271,7 @@ export default function GameTopUpPage() {
                   canOrder={!!canOrder}
                   onOrder={handleOrder}
                   onClose={() => setSelPkg(null)}
+                  game={game}
                 />
               </div>
             </motion.div>
@@ -292,6 +310,7 @@ export default function GameTopUpPage() {
                 onOrder={handleOrder}
                 onClose={() => setSelPkg(null)}
                 isMobile
+                game={game}
               />
             </motion.div>
           </>
@@ -445,7 +464,7 @@ function PkgCard({ pkg, accent, index, isSelected, onSelect }: {
 /* ─── Checkout Card ────────────────────────────────────────────── */
 function CheckoutCard({
   pkg, userId, setUserId, serverId, setServerId,
-  payment, setPayment, canOrder, onOrder, onClose, isMobile,
+  payment, setPayment, canOrder, onOrder, onClose, isMobile, game
 }: {
   pkg: TopupPackage;
   userId: string; setUserId: (v: string) => void;
@@ -453,8 +472,10 @@ function CheckoutCard({
   payment: string; setPayment: (v: string) => void;
   canOrder: boolean; onOrder: () => void; onClose: () => void;
   isMobile?: boolean;
+  game?: Game | null;
 }) {
   const { t } = useLanguage();
+  const isPubg = game?.name?.toLowerCase().includes("pubg") || pkg.category === "UC";
   const sectionAccent =
     sectionOf(pkg) === "2x" ? "#ff2e93" :
       sectionOf(pkg) === "pass" ? "#10b981" : "#a12cff";
@@ -514,26 +535,29 @@ function CheckoutCard({
                 type="text"
                 value={userId}
                 onChange={e => setUserId(e.target.value)}
-                placeholder={t("User ID (e.g. 123456789)", "User ID (ဥပမာ - 123456789)")}
+                placeholder={isPubg ? t("Player ID", "Player ID") : t("User ID (e.g. 123456789)", "User ID (ဥပမာ - 123456789)")}
                 className="w-full h-[42px] rounded-xl text-sm font-semibold transition-colors outline-none"
                 style={{ paddingLeft: '44px', paddingRight: '16px', border: '1px solid var(--card-border)', background: 'var(--background)', color: 'var(--heading)' }}
                 onFocus={e => { e.currentTarget.style.borderColor = '#ff2e93'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(255,46,147,0.1)'; }}
                 onBlur={e => { e.currentTarget.style.borderColor = 'var(--card-border)'; e.currentTarget.style.boxShadow = 'none'; }}
               />
             </div>
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 font-bold text-lg theme-muted opacity-50 select-none">#</span>
-              <input
-                type="text"
-                value={serverId}
-                onChange={e => setServerId(e.target.value)}
-                placeholder={t("Server ID (e.g. 2501)", "Server ID (ဥပမာ - 2501)")}
-                className="w-full h-[42px] rounded-xl text-sm font-semibold transition-colors outline-none"
-                style={{ paddingLeft: '44px', paddingRight: '16px', border: '1px solid var(--card-border)', background: 'var(--background)', color: 'var(--heading)' }}
-                onFocus={e => { e.currentTarget.style.borderColor = '#ff2e93'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(255,46,147,0.1)'; }}
-                onBlur={e => { e.currentTarget.style.borderColor = 'var(--card-border)'; e.currentTarget.style.boxShadow = 'none'; }}
-              />
-            </div>
+            
+            {!isPubg && (
+              <div className="relative">
+                <Layers size={18} className="absolute left-4 top-1/2 -translate-y-1/2 theme-muted opacity-50" />
+                <input
+                  type="text"
+                  value={serverId}
+                  onChange={e => setServerId(e.target.value)}
+                  placeholder={t("Server ID (e.g. 1234)", "Server ID (ဥပမာ - 1234)")}
+                  className="w-full h-[42px] rounded-xl text-sm font-semibold transition-colors outline-none"
+                  style={{ paddingLeft: '44px', paddingRight: '16px', border: '1px solid var(--card-border)', background: 'var(--background)', color: 'var(--heading)' }}
+                  onFocus={e => { e.currentTarget.style.borderColor = '#ff2e93'; e.currentTarget.style.boxShadow = '0 0 0 3px rgba(255,46,147,0.1)'; }}
+                  onBlur={e => { e.currentTarget.style.borderColor = 'var(--card-border)'; e.currentTarget.style.boxShadow = 'none'; }}
+                />
+              </div>
+            )}
           </div>
         </div>
 
