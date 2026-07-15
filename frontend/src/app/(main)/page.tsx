@@ -148,8 +148,8 @@ export default function HomePage() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-4xl sm:text-[2.95rem] lg:text-[3.45rem] xl:text-[4rem] font-black theme-heading leading-tight"
           >
-            Pann Ei <br />
-            <span className="text-gradient-pink-purple">with Koko</span>
+            Welcome To <br />
+            <span className="text-gradient-pink-purple">My Store</span>
           </motion.h1>
 
           <motion.p
